@@ -10,5 +10,5 @@
 * 일반적으로, 이곳은 해당 작업을 열람하는 개발자를 위한 설명서입니다.
 * https://ko.wikipedia.org/wiki/%EB%A6%AC%EB%93%9C%EB%AF%B8
 
-* Description
+# Description
 [各国の主要アニメプラットフォームを一目で見ることができる「Anime Sanctuary」サービスです。]
