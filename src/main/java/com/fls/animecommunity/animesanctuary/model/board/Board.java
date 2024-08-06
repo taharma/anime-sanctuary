@@ -26,7 +26,7 @@ import jakarta.persistence.Entity;
 public class Board extends Timestamped{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @Column(nullable = false)
@@ -50,8 +50,13 @@ public class Board extends Timestamped{
         this.password = requestsDto.getPassword();
     }
 
-	public Board(BoardResponseDto requestsDto) {
-		// TODO Auto-generated constructor stub
+	
+
+	public void update(BoardRequestsDto requestsDto) {
+		setAuthor(requestsDto.getAuthor());
+		setContents(requestsDto.getContents());
+		setTitle(requestsDto.getTitle());
+		
 	}
     
     }

@@ -3,6 +3,7 @@ package com.fls.animecommunity.animesanctuary.controller;
 import com.fls.animecommunity.animesanctuary.model.board.Board;
 import com.fls.animecommunity.animesanctuary.model.board.dto.BoardRequestsDto;
 import com.fls.animecommunity.animesanctuary.model.board.dto.BoardResponseDto;
+import com.fls.animecommunity.animesanctuary.model.board.dto.SuccessResponseDto;
 import com.fls.animecommunity.animesanctuary.service.BoardService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class BoardController {
     
     //선택한 게시글 조회
     @GetMapping("/api/post/{id}")
-    public BoardResponseDto getPost(@PathVariable Long id) {
+    public BoardResponseDto getPost(@PathVariable("id") Long id) {
         return boardService.getPost(id);
     }
     
@@ -38,16 +39,15 @@ public class BoardController {
     public BoardResponseDto createPost(@RequestBody BoardRequestsDto requestsDto) {
         return boardService.createPost(requestsDto);
     }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Board> updatePost(@PathVariable Long id, @RequestBody Board postDetails) {
-        Board updatedPost = boardService.updatePost(id, postDetails);
-        return ResponseEntity.ok(updatedPost);
+    //수정
+    @PutMapping("/api/post/{id}")
+    public BoardResponseDto updatePost(@PathVariable("id") Long id, @RequestBody BoardRequestsDto requestsDto) throws Exception {
+        return boardService.updatePost(id, requestsDto);
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
-    	boardService.deletePost(id);
-        return ResponseEntity.noContent().build();
+    //삭제
+    @DeleteMapping("/api/post/{id}")
+    public SuccessResponseDto deletePost(@PathVariable("id") Long id, 
+    									 @RequestBody BoardRequestsDto requestsDto) throws Exception {
+        return boardService.deletePost(id, requestsDto);
     }
 }
