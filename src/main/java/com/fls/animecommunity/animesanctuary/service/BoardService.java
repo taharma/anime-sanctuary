@@ -1,44 +1,58 @@
 package com.fls.animecommunity.animesanctuary.service;
 
-import com.fls.animecommunity.animesanctuary.model.Board;
+import com.fls.animecommunity.animesanctuary.model.board.Board;
+import com.fls.animecommunity.animesanctuary.model.board.dto.BoardRequestsDto;
+import com.fls.animecommunity.animesanctuary.model.board.dto.BoardResponseDto;
 import com.fls.animecommunity.animesanctuary.repository.BoardRepository;
+
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class BoardService {
 
-    @Autowired
-    private BoardRepository postRepository;
+    private final BoardRepository boardRepository;
 
-    //Read post list
-    public List<Board> getAllPosts() {
-        return postRepository.findAll();
+    //list
+    @Transactional(readOnly = true)
+    public List<BoardResponseDto> getPosts() {
+        return boardRepository.findAllByOrderByModifiedAtDesc().stream().map(BoardResponseDto::new).toList();
     }
     
-    //Read post 하나 찾기
-    public Optional<Board> getPostById(Long id) {
-        return postRepository.findById(id);
+    //게시글의 id를 가진 데이터를 boardRepository에서 찾아서 BoardResponseDto 객체로 만들어 반환한다.
+    public BoardResponseDto getPost(Long id) {
+    	return boardRepository.findById(id).map(BoardResponseDto::new).orElseThrow(
+                () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
+        );
     }
     
-    //create 
-    public Board createPost(Board post) {
-        return postRepository.save(post);
+    //write
+    @Transactional
+    public BoardResponseDto createPost(BoardRequestsDto requestsDto) {
+        Board board = new Board(requestsDto);
+        boardRepository.save(board);
+    	
+    	return new BoardResponseDto(board);
     }
     
     //update
     public Board updatePost(Long id, Board postDetails) {
-        Board post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
+        Board post = boardRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
         post.setTitle(postDetails.getTitle());
         post.setContents(postDetails.getContents());
-        return postRepository.save(post);
+        return boardRepository.save(post);
     }
     
     //delete
     public void deletePost(Long id) {
-        postRepository.deleteById(id);
+    	boardRepository.deleteById(id);
     }
 }

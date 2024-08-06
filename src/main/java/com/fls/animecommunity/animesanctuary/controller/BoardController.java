@@ -1,6 +1,8 @@
 package com.fls.animecommunity.animesanctuary.controller;
 
-import com.fls.animecommunity.animesanctuary.model.Board;
+import com.fls.animecommunity.animesanctuary.model.board.Board;
+import com.fls.animecommunity.animesanctuary.model.board.dto.BoardRequestsDto;
+import com.fls.animecommunity.animesanctuary.model.board.dto.BoardResponseDto;
 import com.fls.animecommunity.animesanctuary.service.BoardService;
 
 import lombok.RequiredArgsConstructor;
@@ -12,27 +14,29 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/boards")
+
 @RequiredArgsConstructor
 public class BoardController {
 
     
     private final BoardService boardService;
-
-    @GetMapping
-    public List<Board> getAllPosts() {
-        return boardService.getAllPosts();
+    
+    //전체 목록을 가져온다.
+    @GetMapping("/api/posts")
+    public List<BoardResponseDto> getPosts() {
+        return boardService.getPosts();
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Board> getPostById(@PathVariable Long id) {
-        Board post = boardService.getPostById(id).orElseThrow(() -> new RuntimeException("Post not found"));
-        return ResponseEntity.ok(post);
+    
+    //선택한 게시글 조회
+    @GetMapping("/api/post/{id}")
+    public BoardResponseDto getPost(@PathVariable Long id) {
+        return boardService.getPost(id);
     }
-
-    @PostMapping
-    public Board createPost(@RequestBody Board post) {
-        return boardService.createPost(post);
+    
+    //게시글작성
+    @PostMapping("/api/post")
+    public BoardResponseDto createPost(@RequestBody BoardRequestsDto requestsDto) {
+        return boardService.createPost(requestsDto);
     }
 
     @PutMapping("/{id}")
