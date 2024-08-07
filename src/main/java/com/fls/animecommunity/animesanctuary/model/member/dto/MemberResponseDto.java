@@ -1,4 +1,4 @@
-package com.fls.animecommunity.animesanctuary.dto;
+package com.fls.animecommunity.animesanctuary.model.member.dto;
 
 public class MemberResponseDto {
     private Long id;
