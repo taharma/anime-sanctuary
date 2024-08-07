@@ -1,10 +1,10 @@
 package com.fls.animecommunity.animesanctuary.service;
 
-import com.fls.animecommunity.animesanctuary.model.board.Board;
-import com.fls.animecommunity.animesanctuary.model.board.dto.BoardRequestsDto;
-import com.fls.animecommunity.animesanctuary.model.board.dto.BoardResponseDto;
-import com.fls.animecommunity.animesanctuary.model.board.dto.SuccessResponseDto;
-import com.fls.animecommunity.animesanctuary.repository.BoardRepository;
+import com.fls.animecommunity.animesanctuary.model.post.Post;
+import com.fls.animecommunity.animesanctuary.model.post.dto.BoardRequestsDto;
+import com.fls.animecommunity.animesanctuary.model.post.dto.BoardResponseDto;
+import com.fls.animecommunity.animesanctuary.model.post.dto.SuccessResponseDto;
+import com.fls.animecommunity.animesanctuary.repository.PostRepository;
 
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BoardService {
 
-    private final BoardRepository boardRepository;
+    private final PostRepository boardRepository;
 
     //list
     @Transactional(readOnly = true)
@@ -39,7 +39,7 @@ public class BoardService {
     //write
     @Transactional
     public BoardResponseDto createPost(BoardRequestsDto requestsDto) {
-        Board board = new Board(requestsDto);
+        Post board = new Post(requestsDto);
         boardRepository.save(board);
     	
     	return new BoardResponseDto(board);
@@ -48,7 +48,7 @@ public class BoardService {
     //update
     @Transactional
     public BoardResponseDto updatePost(Long id, BoardRequestsDto requestsDto) throws Exception {
-        Board board = boardRepository.findById(id).orElseThrow(
+        Post board = boardRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );
         if (!requestsDto.getPassword().equals(board.getPassword()))
@@ -61,7 +61,7 @@ public class BoardService {
     //delete
     @Transactional
     public SuccessResponseDto deletePost(Long id, BoardRequestsDto requestsDto) throws Exception{
-    	Board board = boardRepository.findById(id).orElseThrow(
+    	Post board = boardRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );
 
