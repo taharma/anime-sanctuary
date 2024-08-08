@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class BoardResponseDto {//응답값을 모아서 보내는 놈
+public class PostResponseDto {//응답값을 모아서 보내는 놈
 	private Long id;
     private String title;
     private String contents;
@@ -17,7 +17,7 @@ public class BoardResponseDto {//응답값을 모아서 보내는 놈
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     
-    public BoardResponseDto(Post entity) {//따라서 생성자가 필요
+    public PostResponseDto(Post entity) {//따라서 생성자가 필요
         this.id = entity.getId();
         this.title = entity.getTitle();
         this.contents = entity.getContents();

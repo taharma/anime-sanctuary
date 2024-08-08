@@ -1,10 +1,10 @@
 package com.fls.animecommunity.animesanctuary.controller;
 
 import com.fls.animecommunity.animesanctuary.model.post.Post;
-import com.fls.animecommunity.animesanctuary.model.post.dto.BoardRequestsDto;
-import com.fls.animecommunity.animesanctuary.model.post.dto.BoardResponseDto;
+import com.fls.animecommunity.animesanctuary.model.post.dto.PostRequestsDto;
+import com.fls.animecommunity.animesanctuary.model.post.dto.PostResponseDto;
 import com.fls.animecommunity.animesanctuary.model.post.dto.SuccessResponseDto;
-import com.fls.animecommunity.animesanctuary.service.BoardService;
+import com.fls.animecommunity.animesanctuary.service.PostService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,38 +16,40 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/boards/{board_id}")
 public class PostController {
 
-    //의존성 주입
-    private final BoardService boardService;
+    //IoC
+    private final PostService postService;
     
-    //전체 목록
-    @GetMapping("/api/posts")
-    public List<BoardResponseDto> getPosts() {
-        return boardService.getPosts();
-    }
-    
-    //선택한 게시글 조회
-    @GetMapping("/api/posts/{id}")
-    public BoardResponseDto getPost(@PathVariable("id") Long id) {
-        return boardService.getPost(id);
-    }
-    
-    //게시글 작성
+    //create
     @PostMapping("/api/posts")
-    public BoardResponseDto createPost(@RequestBody BoardRequestsDto requestsDto) {
-        return boardService.createPost(requestsDto);
+    public PostResponseDto createPost(@RequestBody PostRequestsDto requestsDto) {
+        return postService.createPost(requestsDto);
     }
-    //게시글 수정
+    
+    //list
+    @GetMapping("/api/posts")
+    public List<PostResponseDto> getPosts() {
+        return postService.getPosts();
+    }
+    
+    //find
+    @GetMapping("/api/posts/{id}")
+    public PostResponseDto getPost(@PathVariable("id") Long id) {
+        return postService.getPost(id);
+    }
+    
+    
+    //update
     @PutMapping("/api/posts/{id}")
-    public BoardResponseDto updatePost(@PathVariable("id") Long id, @RequestBody BoardRequestsDto requestsDto) throws Exception {
-        return boardService.updatePost(id, requestsDto);
+    public PostResponseDto updatePost(@PathVariable("id") Long id, @RequestBody PostRequestsDto requestsDto) throws Exception {
+        return postService.updatePost(id, requestsDto);
     }
-    //게시글 삭제
+    
+    //delete
     @DeleteMapping("/api/posts/{id}")
     public SuccessResponseDto deletePost(@PathVariable("id") Long id, 
-    									 @RequestBody BoardRequestsDto requestsDto) throws Exception {
-        return boardService.deletePost(id, requestsDto);
+    									 @RequestBody PostRequestsDto requestsDto) throws Exception {
+        return postService.deletePost(id, requestsDto);
     }
 }

@@ -14,8 +14,8 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 
 import com.fls.animecommunity.animesanctuary.model.member.Member;
-import com.fls.animecommunity.animesanctuary.model.post.dto.BoardRequestsDto;
-import com.fls.animecommunity.animesanctuary.model.post.dto.BoardResponseDto;
+import com.fls.animecommunity.animesanctuary.model.post.dto.PostRequestsDto;
+import com.fls.animecommunity.animesanctuary.model.post.dto.PostResponseDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,7 +48,7 @@ public class Post extends Timestamped{
     
     private Long hit;	
     
-    public Post(BoardRequestsDto requestsDto) {
+    public Post(PostRequestsDto requestsDto) {
         this.title = requestsDto.getTitle();
         this.contents = requestsDto.getContents();
         this.author = requestsDto.getAuthor();
@@ -57,7 +57,7 @@ public class Post extends Timestamped{
 
 	
 
-	public void update(BoardRequestsDto requestsDto) {
+	public void update(PostRequestsDto requestsDto) {
 		setAuthor(requestsDto.getAuthor());
 		setContents(requestsDto.getContents());
 		setTitle(requestsDto.getTitle());

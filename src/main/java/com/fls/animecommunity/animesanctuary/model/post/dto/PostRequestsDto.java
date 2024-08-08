@@ -3,7 +3,7 @@ package com.fls.animecommunity.animesanctuary.model.post.dto;
 import lombok.Getter;
 
 @Getter
-public class BoardRequestsDto {
+public class PostRequestsDto {
 	private String title;
     private String contents;
     private String author;

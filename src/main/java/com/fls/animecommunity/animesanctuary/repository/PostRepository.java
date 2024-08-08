@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.fls.animecommunity.animesanctuary.model.post.Post;
-import com.fls.animecommunity.animesanctuary.model.post.dto.BoardResponseDto;
+import com.fls.animecommunity.animesanctuary.model.post.dto.PostResponseDto;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
