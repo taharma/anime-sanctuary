@@ -24,7 +24,7 @@ public class PostController {
     //create
     @PostMapping("/api/posts")
     public PostResponseDto createPost(@RequestBody PostRequestsDto requestsDto) {
-        return postService.createPost(requestsDto);
+    	return postService.createPost(requestsDto);
     }
     
     //list

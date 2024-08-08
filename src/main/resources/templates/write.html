@@ -10,17 +10,21 @@
         $('#writeForm').submit(function(event) {
           event.preventDefault();
 
-          var formData = new FormData(this);
+          var formData = {
+            title: $('input[name="title"]').val(),
+            contents: $('textarea[name="contents"]').val(),
+            author: $('input[name="author"]').val(),
+            password: $('input[name="password"]').val()
+          };
 
           $.ajax({
-            url: "/api/posts", // Ensure this matches your endpoint
+            url: "/api/posts",
             type: "POST",
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: JSON.stringify(formData),
+            contentType: "application/json",
             success: function(response) {
               alert('글이 성공적으로 등록되었습니다.');
-              window.location.href = '/';
+              window.location.href = '/board/list';
             },
             error: function(xhr, status, error) {
               alert('글 등록에 실패했습니다. 오류 메시지: ' + xhr.responseText);
@@ -36,7 +40,7 @@
   <h1>[ 게시판 - 글쓰기 ]</h1>
   <input type="button" onclick="location.href='/'" value="메인으로">
   <p>
-  <form id="writeForm" enctype="multipart/form-data">
+  <form id="writeForm">
     <table>
       <tr>
         <th>제목</th>
