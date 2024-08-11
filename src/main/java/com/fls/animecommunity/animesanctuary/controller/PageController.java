@@ -45,7 +45,7 @@ public class PageController {
 	}
 	
 	//update
-	@GetMapping("update")
+	@GetMapping("update/{id}")
 	public String update() {
 		return "update";
 	}
