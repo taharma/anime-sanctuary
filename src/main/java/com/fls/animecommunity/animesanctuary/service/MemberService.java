@@ -16,11 +16,13 @@ public class MemberService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    // 회원 등록
     public Member register(Member member) {
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         return memberRepository.save(member);
     }
 
+    // 로그인
     public Member login(String username, String password) {
         Member member = memberRepository.findByUsername(username);
         if (member != null && passwordEncoder.matches(password, member.getPassword())) {
@@ -28,8 +30,18 @@ public class MemberService {
         }
         return null;
     }
+    
+    // 회원 삭제 메서드, 비밀번호 확인 포함
+    public boolean deleteMember(Long id, String password) {
+    	Member member = memberRepository.findById(id).orElse(null);
+    	if (member != null && passwordEncoder.matches(password, member.getPassword())) {
+    		memberRepository.deleteById(id);
+    		return true;  // 삭제 성공
+    	}
+    	return false;  // 비밀번호 불일치 또는 회원이 존재하지 않음
+    }
 
-    // 이메일로 사용자 찾기 기능 (추가 기능 예시)
+    // 이메일로 사용자 찾기
     public Member findByEmail(String email) {
         return memberRepository.findByEmail(email);
     }
