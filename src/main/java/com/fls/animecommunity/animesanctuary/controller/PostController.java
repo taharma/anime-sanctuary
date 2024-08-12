@@ -34,21 +34,21 @@ public class PostController {
     }
     
     //find
-    @GetMapping("/api/posts/{id}")
-    public PostResponseDto getPost(@PathVariable("id") Long id) {
+    @GetMapping("/api/posts/{postId}")
+    public PostResponseDto getPost(@PathVariable("postId") Long id) {
         return postService.getPost(id);
     }
     
     
     //update
-    @PutMapping("/api/posts/{id}")
-    public PostResponseDto updatePost(@PathVariable("id") Long id, @RequestBody PostRequestsDto requestsDto) throws Exception {
+    @PutMapping("/api/posts/{postId}")
+    public PostResponseDto updatePost(@PathVariable("postId") Long id, @RequestBody PostRequestsDto requestsDto) throws Exception {
         return postService.updatePost(id, requestsDto);
     }
     
     //delete
-    @DeleteMapping("/api/posts/{id}")
-    public SuccessResponseDto deletePost(@PathVariable("id") Long id, 
+    @DeleteMapping("/api/posts/{postId}")
+    public SuccessResponseDto deletePost(@PathVariable("postId") Long id, 
     									 @RequestBody PostRequestsDto requestsDto) throws Exception {
         return postService.deletePost(id, requestsDto);
     }

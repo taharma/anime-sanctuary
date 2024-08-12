@@ -30,8 +30,8 @@ public class PageController {
 	}
 	
 	//read
-	@GetMapping("read/{id}")
-	public String getPost(@PathVariable("id") Long id, Model model) {
+	@GetMapping("read/{postId}")
+	public String getPost(@PathVariable("postId") Long id, Model model) {
 	    PostResponseDto post = postService.getPost(id);
 	    model.addAttribute("post", post);
 	    return "read"; // "read.html" 템플릿 반환
@@ -45,8 +45,8 @@ public class PageController {
 	}
 	
 	//update
-	@GetMapping("update/{id}")
-	public String update() {
+	@GetMapping("update/{postId}")
+	public String update(@PathVariable("postId") Long id) {
 		return "update";
 	}
 	
