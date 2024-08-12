@@ -46,3 +46,8 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// JVM 컴파일러 플래그 >> 메서드 파라미터의 이름 정보를 인식할 수 있도록...? 파라미터의 이름 정보 유지
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-parameters'
+}

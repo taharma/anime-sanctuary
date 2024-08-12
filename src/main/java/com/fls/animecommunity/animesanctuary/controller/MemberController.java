@@ -28,7 +28,8 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Member> login(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<Member> login(@RequestParam(name = "username") String username,
+                                         @RequestParam(name = "password") String password) {
         Member member = memberService.login(username, password);
         if (member != null) {
             return ResponseEntity.ok(member);
