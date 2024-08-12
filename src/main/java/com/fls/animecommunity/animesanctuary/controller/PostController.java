@@ -1,55 +1,75 @@
 package com.fls.animecommunity.animesanctuary.controller;
 
-import com.fls.animecommunity.animesanctuary.model.post.Post;
 import com.fls.animecommunity.animesanctuary.model.post.dto.PostRequestsDto;
 import com.fls.animecommunity.animesanctuary.model.post.dto.PostResponseDto;
 import com.fls.animecommunity.animesanctuary.model.post.dto.SuccessResponseDto;
 import com.fls.animecommunity.animesanctuary.service.PostService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/posts")
 public class PostController {
 
-    //IoC
     private final PostService postService;
-    
-    //create
-    @PostMapping("/api/posts")
-    public PostResponseDto createPost(@RequestBody PostRequestsDto requestsDto) {
-    	return postService.createPost(requestsDto);
+
+    // Create
+    @PostMapping
+    public ResponseEntity<?> createPost(@Validated @RequestBody PostRequestsDto requestsDto, 
+    									BindingResult result) {
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body(result.getAllErrors());
+        }
+        PostResponseDto responseDto = postService.createPost(requestsDto);
+        return ResponseEntity.ok(responseDto);
     }
-    
-    //list
-    @GetMapping("/api/posts")
-    public List<PostResponseDto> getPosts() {
-        return postService.getPosts();
+
+    // List
+    @GetMapping
+    public ResponseEntity<List<PostResponseDto>> getPosts() {
+        List<PostResponseDto> posts = postService.getPosts();
+        return ResponseEntity.ok(posts);
     }
-    
-    //find
-    @GetMapping("/api/posts/{postId}")
-    public PostResponseDto getPost(@PathVariable("postId") Long id) {
-        return postService.getPost(id);
+
+    // Find
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostResponseDto> getPost(@PathVariable("postId") Long id) {
+        PostResponseDto post = postService.getPost(id);
+        if (post == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(post);
     }
-    
-    
-    //update
-    @PutMapping("/api/posts/{postId}")
-    public PostResponseDto updatePost(@PathVariable("postId") Long id, @RequestBody PostRequestsDto requestsDto) throws Exception {
-        return postService.updatePost(id, requestsDto);
+
+    // Update
+    @PutMapping("/{postId}")
+    public ResponseEntity<?> updatePost(@PathVariable("postId") Long id, 
+                                        @Validated @RequestBody PostRequestsDto requestsDto, 
+                                        BindingResult result) throws Exception {
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body(result.getAllErrors());
+        }
+        PostResponseDto updatedPost = postService.updatePost(id, requestsDto);
+        return ResponseEntity.ok(updatedPost);
     }
-    
-    //delete
-    @DeleteMapping("/api/posts/{postId}")
-    public SuccessResponseDto deletePost(@PathVariable("postId") Long id, 
-    									 @RequestBody PostRequestsDto requestsDto) throws Exception {
-        return postService.deletePost(id, requestsDto);
+
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<SuccessResponseDto> deletePost(@PathVariable("postId") Long id, 
+                                                         @RequestBody PostRequestsDto requestsDto) throws Exception {
+        // Password 검증 로직 수행
+        SuccessResponseDto responseDto = postService.deletePost(id, requestsDto);
+        return ResponseEntity.ok(responseDto);
     }
+
+
+
+
 }
