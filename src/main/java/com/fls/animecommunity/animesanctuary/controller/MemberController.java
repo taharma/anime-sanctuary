@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fls.animecommunity.animesanctuary.model.Member;
 import com.fls.animecommunity.animesanctuary.service.MemberService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 @RestController
 @RequestMapping("/api/members")
 public class MemberController {
@@ -28,14 +31,22 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Member> login(@RequestParam(name = "username") String username,
-                                         @RequestParam(name = "password") String password) {
-        Member member = memberService.login(username, password);
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
+        Member member = memberService.login(loginRequest.getUsername(), loginRequest.getPassword());
         if (member != null) {
-            return ResponseEntity.ok(member);
+            // 세션 생성
+            request.getSession().setAttribute("user", member);
+            return ResponseEntity.ok("Login successful");
         } else {
-            return ResponseEntity.status(401).build(); // Unauthorized
+            return ResponseEntity.status(401).body("Invalid username or password");
         }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        // 세션 무효화
+        request.getSession().invalidate();
+        return ResponseEntity.ok("Logout successful");
     }
     
     @DeleteMapping("/delete/{id}")
