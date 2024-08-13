@@ -1,21 +1,25 @@
 package com.fls.animecommunity.animesanctuary.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fls.animecommunity.animesanctuary.exception.InvalidCredentialsException;
+import com.fls.animecommunity.animesanctuary.exception.InvalidPasswordException;
+import com.fls.animecommunity.animesanctuary.exception.UserNotFoundException;
 import com.fls.animecommunity.animesanctuary.model.Member;
 import com.fls.animecommunity.animesanctuary.repository.MemberRepository;
 
 @Service
 public class MemberService {
 
-    @Autowired
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
+        this.memberRepository = memberRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     // 회원 등록 (트랜잭션 적용)
     @Transactional
@@ -32,24 +36,30 @@ public class MemberService {
     // 로그인
     public Member login(String username, String password) {
         Member member = memberRepository.findByUsername(username);
-        if (member != null && passwordEncoder.matches(password, member.getPassword())) {
-            return member;
+        if (member == null || !passwordEncoder.matches(password, member.getPassword())) {
+            throw new InvalidCredentialsException("Invalid username or password");
         }
-        return null;
-    }
-    
-    // 회원 삭제 메서드, 비밀번호 확인 포함
-    public boolean deleteMember(Long id, String password) {
-    	Member member = memberRepository.findById(id).orElse(null);
-    	if (member != null && passwordEncoder.matches(password, member.getPassword())) {
-    		memberRepository.deleteById(id);
-    		return true;  // 삭제 성공
-    	}
-    	return false;  // 비밀번호 불일치 또는 회원이 존재하지 않음
+        return member;
     }
 
-    // 이메일로 사용자 찾기
-    public Member findByEmail(String email) {
-        return memberRepository.findByEmail(email);
+    public boolean deleteMember(Long id, String password) {
+    	Member member = memberRepository.findById(id).orElse(null);
+    	if (member == null) {
+    		throw new UserNotFoundException("User not found with ID: " + id);
+    	}
+    	if (!passwordEncoder.matches(password, member.getPassword())) {
+    		throw new InvalidPasswordException("Password is incorrect");
+    	}
+    	memberRepository.deleteById(id);
+    	return true;
     }
+    
+    public Member findByEmail(String email) {
+        Member member = memberRepository.findByEmail(email);
+        if (member == null) {
+            throw new UserNotFoundException("User not found with email: " + email);
+        }
+        return member;
+    }
+    
 }
