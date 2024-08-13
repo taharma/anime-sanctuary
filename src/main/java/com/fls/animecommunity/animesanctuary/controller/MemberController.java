@@ -50,7 +50,7 @@ public class MemberController {
     }
     
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteMember(@PathVariable Long id, @RequestParam String password) {
+    public ResponseEntity<Void> deleteMember(@PathVariable("id") Long id, @RequestParam("password") String password) {
         boolean isDeleted = memberService.deleteMember(id, password);
         if (isDeleted) {
             return ResponseEntity.ok().build(); // 회원 삭제 성공
