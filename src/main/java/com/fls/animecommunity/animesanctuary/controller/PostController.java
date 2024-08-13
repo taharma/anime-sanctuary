@@ -1,45 +1,75 @@
 package com.fls.animecommunity.animesanctuary.controller;
 
-import com.fls.animecommunity.animesanctuary.model.Post;
+import com.fls.animecommunity.animesanctuary.model.post.dto.PostRequestsDto;
+import com.fls.animecommunity.animesanctuary.model.post.dto.PostResponseDto;
+import com.fls.animecommunity.animesanctuary.model.post.dto.SuccessResponseDto;
 import com.fls.animecommunity.animesanctuary.service.PostService;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/posts")
 public class PostController {
 
-    @Autowired
-    private PostService postService;
+    private final PostService postService;
 
-    @GetMapping
-    public List<Post> getAllPosts() {
-        return postService.getAllPosts();
+    // Create
+    @PostMapping
+    public ResponseEntity<?> createPost(@Validated @RequestBody PostRequestsDto requestsDto, 
+    									BindingResult result) {
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body(result.getAllErrors());
+        }
+        PostResponseDto responseDto = postService.createPost(requestsDto);
+        return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Post> getPostById(@PathVariable Long id) {
-        Post post = postService.getPostById(id).orElseThrow(() -> new RuntimeException("Post not found"));
+    // List
+    @GetMapping
+    public ResponseEntity<List<PostResponseDto>> getPosts() {
+        List<PostResponseDto> posts = postService.getPosts();
+        return ResponseEntity.ok(posts);
+    }
+
+    // Find
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostResponseDto> getPost(@PathVariable("postId") Long id) {
+        PostResponseDto post = postService.getPost(id);
+        if (post == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(post);
     }
 
-    @PostMapping
-    public Post createPost(@RequestBody Post post) {
-        return postService.createPost(post);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Post> updatePost(@PathVariable Long id, @RequestBody Post postDetails) {
-        Post updatedPost = postService.updatePost(id, postDetails);
+    // Update
+    @PutMapping("/{postId}")
+    public ResponseEntity<?> updatePost(@PathVariable("postId") Long id, 
+                                        @Validated @RequestBody PostRequestsDto requestsDto, 
+                                        BindingResult result) throws Exception {
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body(result.getAllErrors());
+        }
+        PostResponseDto updatedPost = postService.updatePost(id, requestsDto);
         return ResponseEntity.ok(updatedPost);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
-        postService.deletePost(id);
-        return ResponseEntity.noContent().build();
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<SuccessResponseDto> deletePost(@PathVariable("postId") Long id, 
+                                                         @RequestBody PostRequestsDto requestsDto) throws Exception {
+        // Password 검증 로직 수행
+        SuccessResponseDto responseDto = postService.deletePost(id, requestsDto);
+        return ResponseEntity.ok(responseDto);
     }
+
+
+
+
 }
