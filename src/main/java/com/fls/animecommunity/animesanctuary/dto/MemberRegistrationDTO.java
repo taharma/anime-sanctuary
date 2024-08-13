@@ -1,16 +1,18 @@
 package com.fls.animecommunity.animesanctuary.dto;
 
+import java.time.LocalDate;
+
 public class MemberRegistrationDTO {
 
     private String username;
     private String password;
     private String email;
+    private String name;
+    private LocalDate birthdate;
+    private String gender;
 
-    // 기본 생성자
-    public MemberRegistrationDTO() {
-    }
+    // Getters and setters
 
-    // 필드별 getter 및 setter
     public String getUsername() {
         return username;
     }
@@ -33,5 +35,29 @@ public class MemberRegistrationDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public LocalDate getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(LocalDate birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

@@ -23,17 +23,21 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<MemberResponseDTO> register(@RequestBody MemberRegistrationDTO registrationDTO) {
+    public ResponseEntity<String> register(@RequestBody MemberRegistrationDTO registrationDTO) {
         // DTO를 도메인 모델로 변환
         Member member = new Member();
         member.setUsername(registrationDTO.getUsername());
         member.setPassword(registrationDTO.getPassword());
         member.setEmail(registrationDTO.getEmail());
-        
+        member.setName(registrationDTO.getName());
+        member.setBirthdate(registrationDTO.getBirthdate()); // 생일 필드 설정
+        member.setGender(registrationDTO.getGender());
+
         // 서비스 메소드 호출
         Member registeredMember = memberService.register(member);
-        MemberResponseDTO responseDTO = new MemberResponseDTO(registeredMember);
-        return ResponseEntity.ok(responseDTO);
+
+        String successMessage = "Registration successful";
+        return ResponseEntity.ok(successMessage);
     }
 
     @PostMapping("/login")
