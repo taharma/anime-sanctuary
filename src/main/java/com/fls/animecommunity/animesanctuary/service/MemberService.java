@@ -3,6 +3,7 @@ package com.fls.animecommunity.animesanctuary.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fls.animecommunity.animesanctuary.model.Member;
 import com.fls.animecommunity.animesanctuary.repository.MemberRepository;
@@ -16,8 +17,14 @@ public class MemberService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // 회원 등록
+    // 회원 등록 (트랜잭션 적용)
+    @Transactional
     public Member register(Member member) {
+        if (memberRepository.existsByUsername(member.getUsername())) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+
+        // 비밀번호 암호화 후 저장
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         return memberRepository.save(member);
     }

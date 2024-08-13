@@ -7,7 +7,8 @@ import com.fls.animecommunity.animesanctuary.model.Member;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long>{
-
+	// Username으로 회원이 존재하는지 확인하는 메서드
+    boolean existsByUsername(String username);
 	Member findByUsername(String username);
     Member findByEmail(String email);
 }

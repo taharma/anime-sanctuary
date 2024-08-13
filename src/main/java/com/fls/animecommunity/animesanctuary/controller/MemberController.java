@@ -50,7 +50,14 @@ public class MemberController {
     }
     
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteMember(@PathVariable("id") Long id, @RequestParam("password") String password) {
+    public ResponseEntity<Void> deleteMember(@PathVariable("id") Long id, @RequestParam("password") String password, HttpServletRequest request) {
+        // 로그인 여부 확인
+        Member loggedInMember = (Member) request.getSession().getAttribute("user");
+        if (loggedInMember == null) {
+            return ResponseEntity.status(403).build(); // 로그인하지 않은 경우, Forbidden
+        }
+        
+        // 로그인한 사용자만 삭제 가능
         boolean isDeleted = memberService.deleteMember(id, password);
         if (isDeleted) {
             return ResponseEntity.ok().build(); // 회원 삭제 성공
