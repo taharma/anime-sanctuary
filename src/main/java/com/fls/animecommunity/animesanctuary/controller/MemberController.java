@@ -61,6 +61,17 @@ public class MemberController {
         }
     }
     
+    // 프로필 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<Member> getProfile(@PathVariable("id") Long id) {
+        Member member = memberService.getProfile(id);
+        if (member != null) {
+            return ResponseEntity.ok(member);
+        } else {
+            return ResponseEntity.status(404).build();
+        }
+    }
+    
     // 프로필 수정
     @PutMapping("/{userId}")
     public ResponseEntity<?> updateProfile(
