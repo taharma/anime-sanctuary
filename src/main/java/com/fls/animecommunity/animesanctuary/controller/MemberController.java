@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fls.animecommunity.animesanctuary.model.Member;
+import com.fls.animecommunity.animesanctuary.model.UpdateProfileRequest;
 import com.fls.animecommunity.animesanctuary.service.MemberService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -64,11 +65,10 @@ public class MemberController {
     @PutMapping("/{userId}")
     public ResponseEntity<?> updateProfile(
         @PathVariable("userId") Long userId,
-        @RequestBody Member updatedMember,
-        @RequestParam("currentPassword") String currentPassword
+        @RequestBody UpdateProfileRequest updateRequest
     ) {
         try {
-            Member member = memberService.updateProfile(userId, updatedMember, currentPassword);
+            Member member = memberService.updateProfile(userId, updateRequest);
             if (member != null) {
                 return ResponseEntity.ok(member);
             } else {

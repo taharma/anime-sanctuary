@@ -2,6 +2,7 @@ package com.fls.animecommunity.animesanctuary.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fls.animecommunity.animesanctuary.model.Member;
 import com.fls.animecommunity.animesanctuary.model.Scrap;
+import com.fls.animecommunity.animesanctuary.model.UpdateProfileRequest;
 import com.fls.animecommunity.animesanctuary.repository.MemberRepository;
 
 @Service
@@ -65,24 +67,33 @@ public class MemberService {
 
     // 프로필 수정
     @Transactional
-    public Member updateProfile(Long id, Member updatedMember, String currentPassword) {
+    public Member updateProfile(Long id, UpdateProfileRequest updateRequest) {
+        // 사용자 찾기
         Member existingMember = memberRepository.findById(id).orElse(null);
-        if (existingMember != null) {
-            // 비밀번호 변경 시 확인 절차
-            if (updatedMember.getPassword() != null && !updatedMember.getPassword().isEmpty()) {
-                if (!passwordEncoder.matches(currentPassword, existingMember.getPassword())) {
-                    throw new IllegalArgumentException("Current password is incorrect");
-                }
-                existingMember.setPassword(passwordEncoder.encode(updatedMember.getPassword()));
-            }
-            existingMember.setName(updatedMember.getName());
-            existingMember.setBirthdate(updatedMember.getBirthdate());
-            existingMember.setEmail(updatedMember.getEmail());
-            existingMember.setGender(updatedMember.getGender());
-            return memberRepository.save(existingMember);
+        if (existingMember == null) {
+            return null;  // Member not found
         }
-        return null;
+
+        // 비밀번호 변경 시 확인 절차
+        if (updateRequest.getPassword() != null && !updateRequest.getPassword().isEmpty()) {
+            if (updateRequest.getCurrentPassword() == null ||
+                !passwordEncoder.matches(updateRequest.getCurrentPassword(), existingMember.getPassword())) {
+                throw new IllegalArgumentException("Current password is incorrect");
+            }
+            existingMember.setPassword(passwordEncoder.encode(updateRequest.getPassword()));
+        }
+
+        // 필드 업데이트
+        existingMember.setUsername(updateRequest.getUsername() != null ? updateRequest.getUsername() : existingMember.getUsername());
+        existingMember.setName(updateRequest.getName() != null ? updateRequest.getName() : existingMember.getName());
+        existingMember.setBirthdate(updateRequest.getBirthdate() != null ? updateRequest.getBirthdate() : existingMember.getBirthdate());
+        existingMember.setEmail(updateRequest.getEmail() != null ? updateRequest.getEmail() : existingMember.getEmail());
+        existingMember.setGender(updateRequest.getGender() != null ? updateRequest.getGender() : existingMember.getGender());
+
+        // 업데이트된 회원 저장
+        return memberRepository.save(existingMember);
     }
+
 
     // 스크랩 목록 조회 (가정: 스크랩 데이터 모델과 관련 서비스가 필요)
     public List<Scrap> getScraps(Long userId) {
