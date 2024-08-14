@@ -1,5 +1,7 @@
 package com.fls.animecommunity.animesanctuary.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fls.animecommunity.animesanctuary.model.Member;
+import com.fls.animecommunity.animesanctuary.model.Scrap;
 import com.fls.animecommunity.animesanctuary.model.UpdateProfileRequest;
 import com.fls.animecommunity.animesanctuary.service.MemberService;
+import com.fls.animecommunity.animesanctuary.service.ScrapService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,6 +29,8 @@ public class MemberController {
 
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private ScrapService scrapService;
 
     @PostMapping("/register")
     public ResponseEntity<Member> register(@RequestBody Member member) {
@@ -90,8 +96,18 @@ public class MemberController {
             return ResponseEntity.status(400).body("Error: " + e.getMessage());
         }
     }
-
     
+    // 스크랩 목록 조회
+    @GetMapping("/{memberId}/scraps")
+    public ResponseEntity<List<Scrap>> getScraps(@PathVariable("memberId") Long memberId) {
+        List<Scrap> scraps = scrapService.getScraps(memberId);
+        if (scraps != null && !scraps.isEmpty()) {
+            return ResponseEntity.ok(scraps);
+        } else {
+            return ResponseEntity.status(404).build(); // 스크랩이 없거나 사용자 없음
+        }
+    }
+
     // 이메일로 사용자 찾기 (추가 기능)
     @GetMapping("/findByEmail")
     public ResponseEntity<Member> findByEmail(@RequestParam String email) {

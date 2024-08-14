@@ -10,13 +10,23 @@ public class Scrap {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @Column(nullable = false)
     private String content;
 
-    // Getters and Setters
+    // 기본 생성자
+    public Scrap() {}
+
+    // 모든 필드를 포함한 생성자
+    public Scrap(Member member, String content) {
+        this.member = member;
+        this.content = content;
+    }
+
+    // Getter 및 Setter
     public Long getId() {
         return id;
     }
@@ -25,12 +35,12 @@ public class Scrap {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Member getMember() {
+        return member;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setMember(Member member) {
+        this.member = member;
     }
 
     public String getContent() {

@@ -14,7 +14,8 @@ public class ScrapService {
         this.scrapRepository = scrapRepository;
     }
 
-    public List<Scrap> getScraps(Long userId) {
-        return scrapRepository.findByUserId(userId);
+    public List<Scrap> getScraps(Long memberId) {
+        return scrapRepository.findByMemberId(memberId);
     }
 }
+

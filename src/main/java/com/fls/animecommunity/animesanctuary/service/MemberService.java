@@ -1,8 +1,6 @@
 package com.fls.animecommunity.animesanctuary.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDate;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,16 +10,19 @@ import com.fls.animecommunity.animesanctuary.model.Member;
 import com.fls.animecommunity.animesanctuary.model.Scrap;
 import com.fls.animecommunity.animesanctuary.model.UpdateProfileRequest;
 import com.fls.animecommunity.animesanctuary.repository.MemberRepository;
+import com.fls.animecommunity.animesanctuary.repository.ScrapRepository;
 
 @Service
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final ScrapRepository scrapRepository;
     private final PasswordEncoder passwordEncoder;
 
     // 생성자 주입
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
+    public MemberService(MemberRepository memberRepository, ScrapRepository scrapRepository, PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
+        this.scrapRepository = scrapRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -95,9 +96,8 @@ public class MemberService {
     }
 
 
-    // 스크랩 목록 조회 (가정: 스크랩 데이터 모델과 관련 서비스가 필요)
+    // 스크랩 목록 조회
     public List<Scrap> getScraps(Long userId) {
-        // 스크랩 관련 서비스 또는 레포지토리 호출
-        return new ArrayList<>(); // 임시 반환, 실제 구현 필요
+    	return scrapRepository.findByMemberId(userId); // 사용자 ID로 스크랩 목록 조회
     }
 }
