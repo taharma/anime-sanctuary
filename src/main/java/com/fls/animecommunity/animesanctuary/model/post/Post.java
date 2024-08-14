@@ -1,4 +1,4 @@
-package com.fls.animecommunity.animesanctuary.model.board;
+package com.fls.animecommunity.animesanctuary.model.post;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,17 +13,22 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-import com.fls.animecommunity.animesanctuary.model.board.dto.BoardRequestsDto;
-import com.fls.animecommunity.animesanctuary.model.board.dto.BoardResponseDto;
 import com.fls.animecommunity.animesanctuary.model.member.Member;
+import com.fls.animecommunity.animesanctuary.model.post.dto.PostRequestsDto;
+import com.fls.animecommunity.animesanctuary.model.post.dto.PostResponseDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
+/*
+ * 게시글(Post)을 나타내는 class
+ * 필드 : id title contents author password hit(조회수)
+ * author는 추후 Member 객체를 직접 가지고 있게끔 바꿔야함
+ */
 @Entity
 @Data
 @NoArgsConstructor
-public class Board extends Timestamped{
+public class Post extends Timestamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +48,7 @@ public class Board extends Timestamped{
     
     private Long hit;	
     
-    public Board(BoardRequestsDto requestsDto) {
+    public Post(PostRequestsDto requestsDto) {
         this.title = requestsDto.getTitle();
         this.contents = requestsDto.getContents();
         this.author = requestsDto.getAuthor();
@@ -52,7 +57,7 @@ public class Board extends Timestamped{
 
 	
 
-	public void update(BoardRequestsDto requestsDto) {
+	public void update(PostRequestsDto requestsDto) {
 		setAuthor(requestsDto.getAuthor());
 		setContents(requestsDto.getContents());
 		setTitle(requestsDto.getTitle());

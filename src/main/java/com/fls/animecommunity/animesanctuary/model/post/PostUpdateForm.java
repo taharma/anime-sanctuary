@@ -1,4 +1,4 @@
-package com.fls.animecommunity.animesanctuary.model.board;
+package com.fls.animecommunity.animesanctuary.model.post;
 
 import java.time.LocalDateTime;
 import com.fls.animecommunity.animesanctuary.model.member.Member;
@@ -8,9 +8,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter @Setter @ToString
-public class BoardUpdateForm {
+public class PostUpdateForm {
 	
-	private Long board_id;	
+	private Long post_id;	
 	@NotBlank
 	private String title;
 	@NotBlank
