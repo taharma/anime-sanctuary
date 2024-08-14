@@ -1,4 +1,4 @@
-package com.fls.animecommunity.animesanctuary.model.post.dto;
+package com.fls.animecommunity.animesanctuary.model.note.dto;
 
 import lombok.Getter;
 

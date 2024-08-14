@@ -1,9 +1,9 @@
 package com.fls.animecommunity.animesanctuary.service;
 
-import com.fls.animecommunity.animesanctuary.model.post.Post;
-import com.fls.animecommunity.animesanctuary.model.post.dto.PostRequestsDto;
-import com.fls.animecommunity.animesanctuary.model.post.dto.PostResponseDto;
-import com.fls.animecommunity.animesanctuary.model.post.dto.SuccessResponseDto;
+import com.fls.animecommunity.animesanctuary.model.note.Note;
+import com.fls.animecommunity.animesanctuary.model.note.dto.NoteRequestsDto;
+import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
+import com.fls.animecommunity.animesanctuary.model.note.dto.SuccessResponseDto;
 import com.fls.animecommunity.animesanctuary.repository.PostRepository;
 
 import lombok.NoArgsConstructor;
@@ -18,50 +18,50 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class PostService {
+public class NoteService {
 
     private final PostRepository postRepository;
 
     //list
     @Transactional(readOnly = true)
-    public List<PostResponseDto> getPosts() {
-        return postRepository.findAllByOrderByModifiedAtDesc().stream().map(PostResponseDto::new).toList();
+    public List<NoteResponseDto> getPosts() {
+        return postRepository.findAllByOrderByModifiedAtDesc().stream().map(NoteResponseDto::new).toList();
     }
     
     //find
     @Transactional
-    public PostResponseDto getPost(Long id) {
-    	return postRepository.findById(id).map(PostResponseDto::new).orElseThrow(
+    public NoteResponseDto getPost(Long id) {
+    	return postRepository.findById(id).map(NoteResponseDto::new).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );
     }
     
     //write
     @Transactional
-    public PostResponseDto createPost(PostRequestsDto requestsDto) {
-        Post board = new Post(requestsDto);
+    public NoteResponseDto createPost(NoteRequestsDto requestsDto) {
+        Note board = new Note(requestsDto);
         postRepository.save(board);
     	
-    	return new PostResponseDto(board);
+    	return new NoteResponseDto(board);
     }
     
     //update
     @Transactional
-    public PostResponseDto updatePost(Long id, PostRequestsDto requestsDto) throws Exception {
-        Post board = postRepository.findById(id).orElseThrow(
+    public NoteResponseDto updatePost(Long id, NoteRequestsDto requestsDto) throws Exception {
+        Note board = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );
         if (!requestsDto.getPassword().equals(board.getPassword()))
             throw new Exception("비밀번호가 일치하지 않습니다.");
 
         board.update(requestsDto);
-        return new PostResponseDto(board);
+        return new NoteResponseDto(board);
     }
     
     //delete
     @Transactional
-    public SuccessResponseDto deletePost(Long id, PostRequestsDto requestsDto) throws Exception{
-    	Post board = postRepository.findById(id).orElseThrow(
+    public SuccessResponseDto deletePost(Long id, NoteRequestsDto requestsDto) throws Exception{
+    	Note board = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );
 

@@ -1,4 +1,4 @@
-package com.fls.animecommunity.animesanctuary.model.post;
+package com.fls.animecommunity.animesanctuary.model.note;
 
 import java.time.LocalDateTime;
 

@@ -10,17 +10,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fls.animecommunity.animesanctuary.model.post.dto.PostResponseDto;
-import com.fls.animecommunity.animesanctuary.service.PostService;
+import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
+import com.fls.animecommunity.animesanctuary.service.NoteService;
 
 
 @Slf4j
 @Controller
-@RequestMapping("board")
+@RequestMapping("topic")
 @RequiredArgsConstructor
 public class PageController {
 	
-	private final PostService postService;
+	private final NoteService postService;
 	
 	
 	//list
@@ -32,7 +32,7 @@ public class PageController {
 	//read
 	@GetMapping("read/{postId}")
 	public String getPost(@PathVariable("postId") Long id, Model model) {
-	    PostResponseDto post = postService.getPost(id);
+	    NoteResponseDto post = postService.getPost(id);
 	    model.addAttribute("post", post);
 	    return "read"; // "read.html" 템플릿 반환
 	}
