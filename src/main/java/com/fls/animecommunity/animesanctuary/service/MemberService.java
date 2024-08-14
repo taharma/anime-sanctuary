@@ -32,13 +32,14 @@ public class MemberService {
     }
     
     // 회원 삭제 메서드, 비밀번호 확인 포함
+    @Transactional
     public boolean deleteMember(Long id, String password) {
-    	Member member = memberRepository.findById(id).orElse(null);
-    	if (member != null && passwordEncoder.matches(password, member.getPassword())) {
-    		memberRepository.deleteById(id);
-    		return true;  // 삭제 성공
-    	}
-    	return false;  // 비밀번호 불일치 또는 회원이 존재하지 않음
+        Member member = memberRepository.findById(id).orElse(null);
+        if (member != null && passwordEncoder.matches(password, member.getPassword())) {
+            memberRepository.deleteById(id);
+            return true;  // 삭제 성공
+        }
+        return false;  // 비밀번호 불일치 또는 회원이 존재하지 않음
     }
 
     // 이메일로 사용자 찾기
