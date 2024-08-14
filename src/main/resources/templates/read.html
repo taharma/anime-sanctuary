@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Read</title>
+    <link rel="stylesheet" href="/default.css">
+    <script>
+        // 현재 페이지의 URL에서 ID 추출
+        const postId = window.location.pathname.split('/').pop(); // 마지막 슬래시 뒤에 있는 값 가져오기
+
+        // 서버에서 해당 ID의 포스트 데이터를 가져오기 위한 API 호출
+        fetch(`/api/posts/${postId}`)
+            .then(response => response.json())
+            .then(data => {
+                // 데이터를 받아서 화면에 출력
+                document.getElementById('postTitle').innerText = data.title;
+                document.getElementById('postContents').innerText = data.contents;
+                document.getElementById('postAuthor').innerText = data.author;
+                document.getElementById('postCreatedAt').innerText = new Date(data.createdAt).toLocaleDateString();
+            })
+            .catch(error => {
+                console.error('Error fetching post data:', error);
+                alert('Failed to load post details.');
+            });
+
+        // 삭제하기 버튼 클릭 시
+        function deletePost() {
+            const password = prompt("비밀번호를 입력하세요:");
+
+            if (password) {
+                if (confirm("정말 삭제하시겠습니까?")) {
+                    const requestBody = {
+                        password: password
+                    };
+
+                    fetch(`/api/posts/${postId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(requestBody),
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('삭제되었습니다.');
+                            window.location.href = '/board/list';
+                        } else {
+                            response.text().then(text => {
+                                alert('삭제에 실패했습니다. 오류 메시지: ' + text);
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error deleting post:', error);
+                        alert('삭제 중 오류가 발생했습니다.');
+                    });
+                }
+            } else {
+                alert('비밀번호를 입력하지 않았습니다.');
+            }
+        }
+
+    </script>
+</head>
+<body>
+    <div id="container">
+        <h1>[ 게시판 - 글 ]</h1>
+        <table>
+            <tr>
+                <th>제목</th>
+                <td id="postTitle"></td>
+            </tr>
+            <tr>
+                <th>내용</th>
+                <td id="postContents"></td>
+            </tr>
+            <tr>
+                <th>작성자</th>
+                <td id="postAuthor"></td>
+            </tr>
+            <tr>
+                <th>작성일</th>
+                <td id="postCreatedAt"></td>
+            </tr>
+            
+        </table>
+    </div>
+    <div class="center">
+        <input type="button" onclick="location.href='/board/list'" value="게시판">
+        <input type="button" onclick="location.href='/board/update/' + postId" value="수정하기">
+        <input type="button" onclick="deletePost()" value="삭제하기">
+    </div>
+</body>
+</html>
