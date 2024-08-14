@@ -1,8 +1,8 @@
 package com.fls.animecommunity.animesanctuary.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fls.animecommunity.animesanctuary.model.Member;
 import com.fls.animecommunity.animesanctuary.repository.MemberRepository;
@@ -10,16 +10,25 @@ import com.fls.animecommunity.animesanctuary.repository.MemberRepository;
 @Service
 public class MemberService {
 
-    @Autowired
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    // 생성자 주입
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
+        this.memberRepository = memberRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
-    // 회원 등록
+    // 회원 등록 (트랜잭션 적용)
+    @Transactional
     public Member register(Member member) {
+        if (memberRepository.existsByUsername(member.getUsername())) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+
+        // 비밀번호 암호화 후 저장
         member.setPassword(passwordEncoder.encode(member.getPassword()));
-        return memberRepository.save(member);
+        return memberRepository.save(member); // 저장이 성공하면 id가 자동으로 증가
     }
 
     // 로그인
@@ -30,7 +39,7 @@ public class MemberService {
         }
         return null;
     }
-    
+
     // 회원 삭제 메서드, 비밀번호 확인 포함
     @Transactional
     public boolean deleteMember(Long id, String password) {
