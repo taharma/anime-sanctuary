@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
-import com.fls.animecommunity.animesanctuary.service.NoteService;
+import com.fls.animecommunity.animesanctuary.service.NoteServiceImpl;
 
 
 @Slf4j
@@ -20,7 +20,7 @@ import com.fls.animecommunity.animesanctuary.service.NoteService;
 @RequiredArgsConstructor
 public class PageController {
 	
-	private final NoteService postService;
+	private final NoteServiceImpl postService;
 	
 	
 	//list
