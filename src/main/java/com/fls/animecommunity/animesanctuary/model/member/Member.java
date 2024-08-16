@@ -16,6 +16,7 @@ import lombok.ToString;
 @Entity
 @Getter @Setter @ToString
 public class Member {
+
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     // 데이터베이스에서 자동으로 생성되는 ID
@@ -29,7 +30,7 @@ public class Member {
 	private String password;
 	
 	@Column(length = 50, nullable = false)
-	// 향후 lastname, firstname 개선 필요!
+	// 사용자 이름 (first name, last name 분리 가능)
 	private String name; 
 	
 	@Column(length = 10)
