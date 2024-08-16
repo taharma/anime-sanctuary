@@ -17,7 +17,6 @@ import lombok.ToString;
 @Getter @Setter @ToString
 public class Member {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(length = 20)
 	private String username;	//아이디 = 유저네임
 	
