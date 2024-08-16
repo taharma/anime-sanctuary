@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fls.animecommunity.animesanctuary.model.Member;
+import com.fls.animecommunity.animesanctuary.dto.MemberRegisterDto;
+import com.fls.animecommunity.animesanctuary.model.member.GenderType;
+import com.fls.animecommunity.animesanctuary.model.member.Member;
 import com.fls.animecommunity.animesanctuary.service.MemberService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +27,15 @@ public class MemberController {
     private MemberService memberService;
 
     @PostMapping("/register")
-    public ResponseEntity<Member> register(@RequestBody Member member) {
+    public ResponseEntity<Member> register(@RequestBody MemberRegisterDto memberDto) {
+        Member member = new Member();
+        member.setUsername(memberDto.getUsername());
+        member.setPassword(memberDto.getPassword());
+        member.setName(memberDto.getName());
+        member.setEmail(memberDto.getEmail());
+        member.setGender(GenderType.valueOf(memberDto.getGender().toUpperCase()));
+        member.setBirth(memberDto.getBirth());
+        
         Member registeredMember = memberService.register(member);
         return ResponseEntity.ok(registeredMember);
     }
@@ -49,8 +59,8 @@ public class MemberController {
         return ResponseEntity.ok("Logout successful");
     }
     
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteMember(@PathVariable("id") Long id, @RequestParam("password") String password, HttpServletRequest request) {
+    @DeleteMapping("/delete/{username}")
+    public ResponseEntity<Void> deleteMember(@PathVariable("username") String username, @RequestParam("password") String password, HttpServletRequest request) {
         // 로그인 여부 확인
         Member loggedInMember = (Member) request.getSession().getAttribute("user");
         if (loggedInMember == null) {
@@ -58,7 +68,7 @@ public class MemberController {
         }
         
         // 로그인한 사용자만 삭제 가능
-        boolean isDeleted = memberService.deleteMember(id, password);
+        boolean isDeleted = memberService.deleteMember(username, password);
         if (isDeleted) {
             return ResponseEntity.ok().build(); // 회원 삭제 성공
         } else {
