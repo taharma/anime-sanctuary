@@ -1,9 +1,6 @@
 package com.fls.animecommunity.animesanctuary.model.member;
 
 import java.time.LocalDate;
-
-
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -22,7 +19,7 @@ public class Member {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(length = 20)
-	private String id;	//아이디
+	private String username;	//아이디 = 유저네임
 	
 	@Column(length = 20, nullable = false)
 	private String password;	//패스워드
