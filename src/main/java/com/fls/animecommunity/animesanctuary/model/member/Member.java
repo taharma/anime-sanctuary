@@ -26,7 +26,7 @@ public class Member {
 	// 사용자 이름
 	private String username;
 	
-	@Column(length = 50, nullable = false)
+	@Column(length = 100, nullable = false)
 	private String password;
 	
 	@Column(length = 50, nullable = false)
