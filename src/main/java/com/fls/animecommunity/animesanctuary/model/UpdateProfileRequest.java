@@ -2,12 +2,14 @@ package com.fls.animecommunity.animesanctuary.model;
 
 import java.time.LocalDate;
 
+import com.fls.animecommunity.animesanctuary.model.member.GenderType;
+
 public class UpdateProfileRequest {
 
     private String username;
     private String password;
     private String name;
-    private LocalDate birthdate;
+    private LocalDate birth;
     private String email;
     private GenderType gender;
     private String currentPassword;
@@ -37,12 +39,12 @@ public class UpdateProfileRequest {
         this.name = name;
     }
 
-    public LocalDate getBirthdate() {
-        return birthdate;
+    public LocalDate getBirth() {
+        return birth;
     }
 
-    public void setBirthdate(LocalDate birthdate) {
-        this.birthdate = birthdate;
+    public void setBirth(LocalDate birth) {
+        this.birth = birth;
     }
 
     public String getEmail() {
