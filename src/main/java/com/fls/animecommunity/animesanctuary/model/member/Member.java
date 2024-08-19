@@ -1,9 +1,6 @@
 package com.fls.animecommunity.animesanctuary.model.member;
 
 import java.time.LocalDate;
-
-
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -19,23 +16,29 @@ import lombok.ToString;
 @Entity
 @Getter @Setter @ToString
 public class Member {
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(length = 20)
-	private String id;	//아이디
-	
-	@Column(length = 20, nullable = false)
-	private String password;	//패스워드
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // 데이터베이스에서 자동으로 생성되는 ID
+	private Long id;  
+    
+    @Column(length = 20, nullable = false, unique = true)
+	// 사용자 이름
+	private String username;
 	
 	@Column(length = 50, nullable = false)
-	private String name;		//이름
+	private String password;
+	
+	@Column(length = 50, nullable = false)
+	// 사용자 이름 (first name, last name 분리 가능)
+	private String name; 
 	
 	@Column(length = 10)
 	@Enumerated(EnumType.STRING)
-	private GenderType gender;		//성별
+	private GenderType gender;
 	
-	private LocalDate birth;		//생년월일
+	private LocalDate birth;
 	
 	@Column(length = 100)
-	private String email;		//이메일
+	private String email;
 }
