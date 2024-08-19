@@ -6,12 +6,14 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fls.animecommunity.animesanctuary.dto.MemberRegisterDto;
+import com.fls.animecommunity.animesanctuary.model.UpdateProfileRequest;
 import com.fls.animecommunity.animesanctuary.model.member.GenderType;
 import com.fls.animecommunity.animesanctuary.model.member.Member;
 import com.fls.animecommunity.animesanctuary.service.MemberService;
@@ -59,8 +61,13 @@ public class MemberController {
         return ResponseEntity.ok("Logout successful");
     }
     
-    @DeleteMapping("/delete/{username}")
-    public ResponseEntity<Void> deleteMember(@PathVariable("username") String username, @RequestParam("password") String password, HttpServletRequest request) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteMember(
+        @PathVariable("id") Long id, 
+        @RequestParam("username") String username, 
+        @RequestParam("password") String password, 
+        HttpServletRequest request
+    ) {
         // 로그인 여부 확인
         Member loggedInMember = (Member) request.getSession().getAttribute("user");
         if (loggedInMember == null) {
@@ -68,14 +75,45 @@ public class MemberController {
         }
         
         // 로그인한 사용자만 삭제 가능
-        boolean isDeleted = memberService.deleteMember(username, password);
+        boolean isDeleted = memberService.deleteMember(id, password);
         if (isDeleted) {
             return ResponseEntity.ok().build(); // 회원 삭제 성공
         } else {
             return ResponseEntity.status(401).build(); // 비밀번호가 일치하지 않음, Unauthorized
         }
     }
+
     
+    // 프로필 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<Member> getProfile(@PathVariable("id") Long id) {
+        Member member = memberService.getProfile(id);
+        if (member != null) {
+            return ResponseEntity.ok(member);
+        } else {
+            return ResponseEntity.status(404).build();
+        }
+    }
+    
+    // 프로필 수정
+    @PostMapping("/updateProfile/{userId}")
+    public ResponseEntity<?> updateProfile(
+        @PathVariable("userId") Long userId,
+        @RequestBody UpdateProfileRequest updateRequest
+    ) {
+        try {
+            Member member = memberService.updateProfile(userId, updateRequest);
+            if (member != null) {
+                return ResponseEntity.ok(member);
+            } else {
+                return ResponseEntity.status(404).build();
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(400).body("Error: " + e.getMessage());
+        }
+    }
+
+
     // 이메일로 사용자 찾기 (추가 기능)
     @GetMapping("/findByEmail")
     public ResponseEntity<Member> findByEmail(@RequestParam String email) {
