@@ -61,8 +61,13 @@ public class MemberController {
         return ResponseEntity.ok("Logout successful");
     }
     
-    @DeleteMapping("/delete/{username}")
-    public ResponseEntity<Void> deleteMember(@PathVariable("id") Long id, @PathVariable("username") String username, @RequestParam("password") String password, HttpServletRequest request) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteMember(
+        @PathVariable("id") Long id, 
+        @RequestParam("username") String username, 
+        @RequestParam("password") String password, 
+        HttpServletRequest request
+    ) {
         // 로그인 여부 확인
         Member loggedInMember = (Member) request.getSession().getAttribute("user");
         if (loggedInMember == null) {
@@ -77,6 +82,7 @@ public class MemberController {
             return ResponseEntity.status(401).build(); // 비밀번호가 일치하지 않음, Unauthorized
         }
     }
+
     
     // 프로필 조회
     @GetMapping("/{id}")
@@ -90,7 +96,7 @@ public class MemberController {
     }
     
     // 프로필 수정
-    @PutMapping("/{userId}")
+    @PostMapping("/updateProfile/{userId}")
     public ResponseEntity<?> updateProfile(
         @PathVariable("userId") Long userId,
         @RequestBody UpdateProfileRequest updateRequest
@@ -103,10 +109,10 @@ public class MemberController {
                 return ResponseEntity.status(404).build();
             }
         } catch (IllegalArgumentException e) {
-            // String으로 반환하기 위해 ResponseEntity<String>으로 변경
             return ResponseEntity.status(400).body("Error: " + e.getMessage());
         }
     }
+
 
     // 이메일로 사용자 찾기 (추가 기능)
     @GetMapping("/findByEmail")
