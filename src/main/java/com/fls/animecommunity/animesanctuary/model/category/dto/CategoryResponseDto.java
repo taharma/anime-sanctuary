@@ -7,6 +7,10 @@ import com.fls.animecommunity.animesanctuary.model.note.Note;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/*
+ * Category의 Response , 응답객체
+ */
+
 @Getter
 @NoArgsConstructor
 public class CategoryResponseDto {

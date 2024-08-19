@@ -11,6 +11,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+/*
+ * Category class 
+ * field variable : 
+ * 	2024/08/19 : id , name 만
+ * id : GenerationType.IDENTITY
+ */
+
 @Entity
 @Data
 @Slf4j

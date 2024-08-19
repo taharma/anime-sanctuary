@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
 import com.fls.animecommunity.animesanctuary.service.NoteServiceImpl;
 
+/*
+ * note.com을 benchmarking 일단 그대로 만듬
+ */
 
 @Slf4j
 @Controller
@@ -30,8 +33,8 @@ public class PageController {
 	}
 	
 	//read
-	@GetMapping("read/{postId}")
-	public String getPost(@PathVariable("postId") Long id, Model model) {
+	@GetMapping("read/{note_id}")
+	public String getPost(@PathVariable("note_id") Long id, Model model) {
 	    NoteResponseDto post = NoteService.getNote(id);
 	    model.addAttribute("post", post);
 	    return "read"; // "read.html" 템플릿 반환
@@ -45,8 +48,8 @@ public class PageController {
 	}
 	
 	//update
-	@GetMapping("update/{postId}")
-	public String update(@PathVariable("postId") Long id) {
+	@GetMapping("update/{note_id}")
+	public String update(@PathVariable("note_id") Long id) {
 		return "update";
 	}
 	

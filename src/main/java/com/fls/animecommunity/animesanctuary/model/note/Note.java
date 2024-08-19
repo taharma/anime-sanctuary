@@ -26,8 +26,6 @@ import jakarta.persistence.Entity;
 
 /*
  * 
- * 
- * 
  */
 @Entity
 @Data

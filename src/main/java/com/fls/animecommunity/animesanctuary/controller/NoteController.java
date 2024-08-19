@@ -14,42 +14,49 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/*
+ * NoteController class : Note의 CRUD기능 , api mapping 
+ * DI : NoteServiceImpl
+ * Method Name : createNote , getNotes , getNote , updateNote , deleteNote
+ * parameter = dto: NoteResponseDto, NoteRequestsDto, SuccessResponseDto
+ */
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api")
+@RequestMapping("api/notes")
 public class NoteController {
 
-    
+    //DI
     private final NoteServiceImpl noteService;
     
-    //create
-    @PostMapping("notes")
+    //create Note
+    @PostMapping
     public NoteResponseDto createNote(@RequestBody NoteRequestsDto requestsDto) {
     	return noteService.createNote(requestsDto);
     }
     
-    //list
-    @GetMapping("notes")
+    //list Note
+    @GetMapping
     public List<NoteResponseDto> getNotes() {
         return noteService.getNotes();
     }
     
-    //find
-    @GetMapping("notes/{note_id}")
+    //find Note
+    @GetMapping("/{note_id}")
     public NoteResponseDto getNote(@PathVariable("note_id") Long id) {
         return noteService.getNote(id);
     }
     
     
-    //update
-    @PutMapping("notes/{note_id}")
+    //update Note
+    @PostMapping("/{note_id}")
     public NoteResponseDto updateNote(@PathVariable("note_id") Long id, 
     								  @RequestBody NoteRequestsDto requestsDto) throws Exception {
         return noteService.updateNote(id, requestsDto);
     }
     
-    //delete
-    @DeleteMapping("notes/{note_id}")
+    //delete Note
+    @DeleteMapping("/{note_id}")
     public SuccessResponseDto deleteNote(@PathVariable("note_id") Long id, 
     									 @RequestBody NoteRequestsDto requestsDto) throws Exception {
         return noteService.deleteNote(id, requestsDto);

@@ -25,6 +25,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/*
+ * Category와 관련된 CRUD 
+ * 그러나 생성,조회,삭제는 AdminController로 뺐음.
+ * 1.Category의 조회
+ * 2.1개의 Category에 해당하는 Notes조회
+ */
 
 @RestController
 @RequiredArgsConstructor
@@ -34,7 +40,7 @@ public class CategoryController {
 	private CategoryServiceImpl categoryService;
 	
 	
-	//1.8 카테고리별 노트 목록 조회 API
+	//Category 에 해당하는 Notes조회
 	@GetMapping("/{category_id}/notes")
     public ResponseEntity<?> getNotesByCategory(@PathVariable("category_id") Long categoryId) {
         List<NoteResponseDto> notes = categoryService.getNotesByCategory(categoryId);
@@ -46,7 +52,7 @@ public class CategoryController {
         return ResponseEntity.ok(notes);
     }
 	
-	//1.9 전체 카테고리 목록 조회 API (유저 접근 가능)
+	//Category list
 	@GetMapping
     public ResponseEntity<?> getCategories() {
         List<CategoryResponseDto> categories = categoryService.getCategories();

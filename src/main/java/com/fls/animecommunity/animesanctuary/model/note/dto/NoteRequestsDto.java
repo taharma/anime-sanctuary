@@ -4,6 +4,10 @@ import com.fls.animecommunity.animesanctuary.model.member.Member;
 
 import lombok.Getter;
 
+/*
+ * Note의 Requests 의 DataTransferObject
+ */
+
 @Getter
 public class NoteRequestsDto {
 	private String title;

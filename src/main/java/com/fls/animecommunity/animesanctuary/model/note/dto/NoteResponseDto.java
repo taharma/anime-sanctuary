@@ -8,6 +8,10 @@ import com.fls.animecommunity.animesanctuary.model.note.Note;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/*
+ * Note의 Response , 응답객체
+ */
+
 @Getter
 @NoArgsConstructor
 public class NoteResponseDto {//응답값을 모아서 보내는 놈
