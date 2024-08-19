@@ -13,9 +13,8 @@ import org.springframework.stereotype.Repository;
 import com.fls.animecommunity.animesanctuary.model.member.Member;
 
 @Repository
-public interface MemberRepository extends JpaRepository<Member, String>{
-	// Username으로 회원이 존재하는지 확인하는 메서드
+public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByUsername(String username);
-	Member findByUsername(String username);
+    Member findByUsername(String username);
     Member findByEmail(String email);
 }
