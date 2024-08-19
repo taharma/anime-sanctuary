@@ -5,8 +5,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 @Entity
+@Data
+@Slf4j
+@NoArgsConstructor
 public class Category {
 	
 	@Id
@@ -15,4 +23,7 @@ public class Category {
 	
 	@Column(nullable = false)
 	private String name;
+	
+//	@Column(length = 500)
+//    private String description;
 }

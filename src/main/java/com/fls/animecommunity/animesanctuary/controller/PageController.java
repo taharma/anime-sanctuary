@@ -20,7 +20,7 @@ import com.fls.animecommunity.animesanctuary.service.NoteServiceImpl;
 @RequiredArgsConstructor
 public class PageController {
 	
-	private final NoteServiceImpl postService;
+	private final NoteServiceImpl NoteService;
 	
 	
 	//list
@@ -32,7 +32,7 @@ public class PageController {
 	//read
 	@GetMapping("read/{postId}")
 	public String getPost(@PathVariable("postId") Long id, Model model) {
-	    NoteResponseDto post = postService.getPost(id);
+	    NoteResponseDto post = NoteService.getNote(id);
 	    model.addAttribute("post", post);
 	    return "read"; // "read.html" 템플릿 반환
 	}

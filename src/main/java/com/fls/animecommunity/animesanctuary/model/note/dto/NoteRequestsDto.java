@@ -8,7 +8,4 @@ import lombok.Getter;
 public class NoteRequestsDto {
 	private String title;
     private String contents;
-    //
-    private Member member;
-    private String password;
 }

@@ -17,40 +17,41 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api")
-public class PostController {
+public class NoteController {
 
-    //IoC
+    
     private final NoteServiceImpl noteService;
     
     //create
     @PostMapping("notes")
-    public NoteResponseDto createPost(@RequestBody NoteRequestsDto requestsDto) {
-    	return noteService.createPost(requestsDto);
+    public NoteResponseDto createNote(@RequestBody NoteRequestsDto requestsDto) {
+    	return noteService.createNote(requestsDto);
     }
     
     //list
     @GetMapping("notes")
-    public List<NoteResponseDto> getPosts() {
-        return noteService.getPosts();
+    public List<NoteResponseDto> getNotes() {
+        return noteService.getNotes();
     }
     
     //find
     @GetMapping("notes/{note_id}")
-    public NoteResponseDto getPost(@PathVariable("note_id") Long id) {
-        return noteService.getPost(id);
+    public NoteResponseDto getNote(@PathVariable("note_id") Long id) {
+        return noteService.getNote(id);
     }
     
     
     //update
     @PutMapping("notes/{note_id}")
-    public NoteResponseDto updatePost(@PathVariable("note_id") Long id, @RequestBody NoteRequestsDto requestsDto) throws Exception {
-        return noteService.updatePost(id, requestsDto);
+    public NoteResponseDto updateNote(@PathVariable("note_id") Long id, 
+    								  @RequestBody NoteRequestsDto requestsDto) throws Exception {
+        return noteService.updateNote(id, requestsDto);
     }
     
     //delete
     @DeleteMapping("notes/{note_id}")
-    public SuccessResponseDto deletePost(@PathVariable("note_id") Long id, 
+    public SuccessResponseDto deleteNote(@PathVariable("note_id") Long id, 
     									 @RequestBody NoteRequestsDto requestsDto) throws Exception {
-        return noteService.deletePost(id, requestsDto);
+        return noteService.deleteNote(id, requestsDto);
     }
 }

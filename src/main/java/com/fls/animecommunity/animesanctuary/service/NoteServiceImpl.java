@@ -4,7 +4,7 @@ import com.fls.animecommunity.animesanctuary.model.note.Note;
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteRequestsDto;
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
 import com.fls.animecommunity.animesanctuary.model.note.dto.SuccessResponseDto;
-import com.fls.animecommunity.animesanctuary.repository.PostRepository;
+import com.fls.animecommunity.animesanctuary.repository.NoteRepository;
 
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -20,20 +20,20 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class NoteServiceImpl implements NoteService{
 
-    private final PostRepository postRepository;
+    private final NoteRepository noteRepository;
 
     //list
     @Override
     @Transactional(readOnly = true)
-    public List<NoteResponseDto> getPosts() {
-        return postRepository.findAllByOrderByModifiedAtDesc().stream().map(NoteResponseDto::new).toList();
+    public List<NoteResponseDto> getNotes() {
+        return noteRepository.findAllByOrderByModifiedAtDesc().stream().map(NoteResponseDto::new).toList();
     }
     
     //find
     @Override
     @Transactional
-    public NoteResponseDto getPost(Long id) {
-    	return postRepository.findById(id).map(NoteResponseDto::new).orElseThrow(
+    public NoteResponseDto getNote(Long id) {
+    	return noteRepository.findById(id).map(NoteResponseDto::new).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );
     }
@@ -41,9 +41,9 @@ public class NoteServiceImpl implements NoteService{
     //write
     @Override
     @Transactional
-    public NoteResponseDto createPost(NoteRequestsDto requestsDto) {
+    public NoteResponseDto createNote(NoteRequestsDto requestsDto) {
         Note board = new Note(requestsDto);
-        postRepository.save(board);
+        noteRepository.save(board);
     	
     	return new NoteResponseDto(board);
     }
@@ -51,12 +51,10 @@ public class NoteServiceImpl implements NoteService{
     //update
     @Override
     @Transactional
-    public NoteResponseDto updatePost(Long id, NoteRequestsDto requestsDto) throws Exception {
-        Note board = postRepository.findById(id).orElseThrow(
+    public NoteResponseDto updateNote(Long id, NoteRequestsDto requestsDto) throws Exception {
+        Note board = noteRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );
-        if (!requestsDto.getPassword().equals(board.getPassword()))
-            throw new Exception("비밀번호가 일치하지 않습니다.");
 
         board.update(requestsDto);
         return new NoteResponseDto(board);
@@ -65,15 +63,12 @@ public class NoteServiceImpl implements NoteService{
     //delete
     @Override
     @Transactional
-    public SuccessResponseDto deletePost(Long id, NoteRequestsDto requestsDto) throws Exception{
-    	Note board = postRepository.findById(id).orElseThrow(
+    public SuccessResponseDto deleteNote(Long id, NoteRequestsDto requestsDto) throws Exception{
+    	Note board = noteRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );
 
-        if (!requestsDto.getPassword().equals(board.getPassword()))
-            throw new Exception("비밀번호가 일치하지 않습니다.");
-
-        postRepository.deleteById(id);
+    	noteRepository.deleteById(id);
         return new SuccessResponseDto(true);
     }
 }

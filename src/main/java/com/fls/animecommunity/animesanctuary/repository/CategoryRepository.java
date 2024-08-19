@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.fls.animecommunity.animesanctuary.model.category.Category;
 
 @Repository
-public interface CategoryController extends JpaRepository<Category, Long>{
+public interface CategoryRepository extends JpaRepository<Category, Long>{
 
 }

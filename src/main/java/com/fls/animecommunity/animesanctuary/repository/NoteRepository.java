@@ -10,7 +10,7 @@ import com.fls.animecommunity.animesanctuary.model.note.Note;
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
 
 @Repository
-public interface PostRepository extends JpaRepository<Note, Long> {
+public interface NoteRepository extends JpaRepository<Note, Long> {
 
 	List<Note> findAllByOrderByModifiedAtDesc();
 }
