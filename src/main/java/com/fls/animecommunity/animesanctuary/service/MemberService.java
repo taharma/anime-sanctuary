@@ -1,8 +1,15 @@
 package com.fls.animecommunity.animesanctuary.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.UUID;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fls.animecommunity.animesanctuary.model.UpdateProfileRequest;
 import com.fls.animecommunity.animesanctuary.model.member.Member;
@@ -93,5 +100,35 @@ public class MemberService {
         // 업데이트된 회원 저장
         return memberRepository.save(existingMember);
     }
+    
+    public String uploadProfileImage(Long userId, MultipartFile image) throws IOException {
+        Member member = memberRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // 이미지 저장 경로 설정 (로컬 서버의 경로 또는 S3와 같은 외부 저장소를 사용)
+        String uploadDir = "uploads/profile-images/";
+        Files.createDirectories(Paths.get(uploadDir)); // 경로가 없으면 생성
+
+        // 이미지 파일명 생성
+        String originalFilename = image.getOriginalFilename();
+        String newFilename = UUID.randomUUID().toString() + "_" + originalFilename;
+        String imagePath = uploadDir + newFilename;
+
+        // 이미지 파일 저장
+        File imageFile = new File(imagePath);
+        image.transferTo(imageFile);
+
+        // Member 엔티티에 이미지 파일명 저장
+        member.setProfileImage(imagePath);
+        memberRepository.save(member);
+
+        return imagePath; // 이미지 파일 경로 또는 URL 반환
+    }
+    
+    public void updateProfileImage(Long userId, String filePath) {
+        Member member = memberRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+        member.setProfileImage(filePath); // profile_image 필드에 경로 설정
+        memberRepository.save(member); // 변경 사항 저장
+    }
+
 
 }
