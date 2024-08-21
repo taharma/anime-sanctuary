@@ -1,16 +1,20 @@
 package com.fls.animecommunity.animesanctuary.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fls.animecommunity.animesanctuary.dto.MemberRegisterDto;
 import com.fls.animecommunity.animesanctuary.model.UpdateProfileRequest;
@@ -112,7 +116,41 @@ public class MemberController {
             return ResponseEntity.status(400).body("Error: " + e.getMessage());
         }
     }
+    
+    @PostMapping("/{userId}/uploadProfileImage")
+    public ResponseEntity<?> uploadProfileImage(
+            @PathVariable("userId") Long userId, 
+            @RequestParam("image") MultipartFile image) {
+        try {
+            // 저장할 파일 경로를 지정합니다 (절대 경로 사용).
+            String uploadDir = System.getProperty("user.dir") + "/uploads/profile-images/" + userId;
+            
+            // 파일 저장 경로를 확인하고 디렉토리가 존재하지 않으면 생성합니다.
+            File directory = new File(uploadDir);
+            if (!directory.exists()) {
+                boolean created = directory.mkdirs();  // 여러 디렉토리를 한 번에 생성합니다.
+                if (!created) {
+                    throw new IOException("Failed to create directory: " + uploadDir);
+                }
+            }
 
+            // 파일 이름을 설정합니다.
+            String originalFilename = image.getOriginalFilename();
+            String filePath = uploadDir + "/" + UUID.randomUUID().toString() + "_" + originalFilename; // 파일 이름 앞에 UUID 추가
+
+            // 파일을 저장합니다.
+            File destinationFile = new File(filePath);
+            image.transferTo(destinationFile);
+
+            // 업로드된 파일의 경로를 데이터베이스에 저장합니다.
+            memberService.updateProfileImage(userId, filePath);
+
+            // 저장된 파일의 경로 또는 URL을 반환합니다.
+            return ResponseEntity.ok(filePath);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body("Error: " + e.getMessage());
+        }
+    }
 
     // 이메일로 사용자 찾기 (추가 기능)
     @GetMapping("/findByEmail")

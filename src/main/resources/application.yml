@@ -3,7 +3,7 @@ server:
   error:
     whitelabel:
       enabled: true
-  
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -15,19 +15,18 @@ spring:
     hibernate:
       ddl-auto: update
     properties:
-
       hibernate: 
         show-sql: true
         format-sql: true
   servlet:
     multipart:
-      max-file-size: 10MB #한 파일당 최대 용량 제한
-      max-request-size: 50MB #모든 파일의 최대 용량 제한
+      max-file-size: 10MB # 한 파일당 최대 용량 제한
+      max-request-size: 50MB # 모든 파일의 최대 용량 제한
   data:
     web:
       pageable:
-        default-page-size: 10 #한 페이지당 게시글 수
-        one-indexed-parameters: true #페이지를 0부터 말고 1부터
+        default-page-size: 10 # 한 페이지당 게시글 수
+        one-indexed-parameters: true # 페이지를 0부터 말고 1부터
         
   security:
     oauth2:
@@ -43,3 +42,6 @@ spring:
             token-uri: https://oauth2.googleapis.com/token
             user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
             user-name-attribute: sub
+
+file:
+  upload-dir: uploads/profile-images/
