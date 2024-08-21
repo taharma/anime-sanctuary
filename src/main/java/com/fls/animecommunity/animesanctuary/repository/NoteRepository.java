@@ -13,4 +13,5 @@ import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
 public interface NoteRepository extends JpaRepository<Note, Long> {
 
 	List<Note> findAllByOrderByModifiedAtDesc();
+	List<Note> findByCategoryIdOrderByModifiedAtDesc(Long categoryId);
 }

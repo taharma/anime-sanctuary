@@ -4,8 +4,10 @@ import com.fls.animecommunity.animesanctuary.model.note.Note;
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteRequestsDto;
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
 import com.fls.animecommunity.animesanctuary.model.note.dto.SuccessResponseDto;
+import com.fls.animecommunity.animesanctuary.service.NoteService;
 import com.fls.animecommunity.animesanctuary.service.NoteServiceImpl;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,38 +29,43 @@ import java.util.List;
 public class NoteController {
 
     //DI
-    private final NoteServiceImpl noteService;
+    private final NoteService noteService;
     
     //create Note
     @PostMapping
-    public NoteResponseDto createNote(@RequestBody NoteRequestsDto requestsDto) {
+    public NoteResponseDto createNote(@Valid @RequestBody NoteRequestsDto requestsDto) {
+//		log.info("createNote 실행");
     	return noteService.createNote(requestsDto);
     }
     
     //list Note
     @GetMapping
     public List<NoteResponseDto> getNotes() {
+//		log.info("getNotes 실행");
         return noteService.getNotes();
     }
     
     //find Note
     @GetMapping("/{note_id}")
     public NoteResponseDto getNote(@PathVariable("note_id") Long id) {
-        return noteService.getNote(id);
+//		log.info("getNote 실행");
+    	return noteService.getNote(id);
     }
     
     
     //update Note
     @PostMapping("/{note_id}")
-    public NoteResponseDto updateNote(@PathVariable("note_id") Long id, 
+    public NoteResponseDto updateNote(@Valid @PathVariable("note_id") Long id, 
     								  @RequestBody NoteRequestsDto requestsDto) throws Exception {
-        return noteService.updateNote(id, requestsDto);
+//		log.info("updateNote 실행");
+    	return noteService.updateNote(id, requestsDto);
     }
     
     //delete Note
     @DeleteMapping("/{note_id}")
     public SuccessResponseDto deleteNote(@PathVariable("note_id") Long id, 
     									 @RequestBody NoteRequestsDto requestsDto) throws Exception {
-        return noteService.deleteNote(id, requestsDto);
+//		log.info("deleteNote 실행");        
+    	return noteService.deleteNote(id, requestsDto);
     }
 }

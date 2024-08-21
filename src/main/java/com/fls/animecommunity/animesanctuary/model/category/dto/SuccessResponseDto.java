@@ -1,5 +1,6 @@
 package com.fls.animecommunity.animesanctuary.model.category.dto;
 
+import lombok.Data;
 import lombok.Getter;
 
 /*
@@ -8,7 +9,7 @@ import lombok.Getter;
  */
 
 
-@Getter
+@Data
 public class SuccessResponseDto {
 	private boolean success;
 	

@@ -34,16 +34,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/categories")
+@RequestMapping("api/categories")
 public class CategoryController {
 	
-	private CategoryServiceImpl categoryService;
+	private final CategoryService categoryService;
 	
 	
 	//Category 에 해당하는 Notes조회
 	@GetMapping("/{category_id}/notes")
     public ResponseEntity<?> getNotesByCategory(@PathVariable("category_id") Long categoryId) {
-        List<NoteResponseDto> notes = categoryService.getNotesByCategory(categoryId);
+        
+//		log.info("getNotesByCategory 실행");
+		List<NoteResponseDto> notes = categoryService.getNotesByCategory(categoryId);
 
         if (notes.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -55,7 +57,9 @@ public class CategoryController {
 	//Category list
 	@GetMapping
     public ResponseEntity<?> getCategories() {
-        List<CategoryResponseDto> categories = categoryService.getCategories();
+        
+//		log.info("getCategories 실행");
+		List<CategoryResponseDto> categories = categoryService.getCategories();
 
         if (categories.isEmpty()) {
             return ResponseEntity.noContent().build();

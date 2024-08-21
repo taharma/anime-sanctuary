@@ -19,7 +19,7 @@ public interface CategoryService {
     CategoryResponseDto createCategory(CategoryRequestsDto categoryRequestDto);
     
     //admin , 카테고리 삭제
-    SuccessResponseDto deleteCategory(Long id, CategoryRequestsDto requestsDto) throws Exception;
+    SuccessResponseDto deleteCategory(Long id) throws Exception;
     
     //admin , 카테고리 수정
     CategoryResponseDto updateCategory(Long id, CategoryRequestsDto requestsDto) throws Exception;

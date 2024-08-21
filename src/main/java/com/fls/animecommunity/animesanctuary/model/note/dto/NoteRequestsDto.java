@@ -2,6 +2,7 @@ package com.fls.animecommunity.animesanctuary.model.note.dto;
 
 import com.fls.animecommunity.animesanctuary.model.member.Member;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 /*
@@ -10,6 +11,8 @@ import lombok.Getter;
 
 @Getter
 public class NoteRequestsDto {
+	@NotBlank(message = "title must not be blank")
 	private String title;
+	@NotBlank(message = "contents must not be blank")
     private String contents;
 }

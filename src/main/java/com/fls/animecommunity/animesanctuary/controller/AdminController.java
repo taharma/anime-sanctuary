@@ -8,9 +8,11 @@ import com.fls.animecommunity.animesanctuary.model.category.dto.SuccessResponseD
 import com.fls.animecommunity.animesanctuary.service.CategoryService;
 import com.fls.animecommunity.animesanctuary.service.CategoryServiceImpl;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,30 +28,35 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
 @Slf4j
-@RequestMapping("admin")
+@RequestMapping("api/admin")
 @RequiredArgsConstructor
 public class AdminController {
 	
-	private final CategoryServiceImpl categoryService;
+	private final CategoryService categoryService;
 	
 	//create category 
-	@PostMapping("categories")
-    public CategoryResponseDto createCategory(@RequestBody CategoryRequestsDto categoryRequestDto) {
+	@PostMapping("/categories")
+    public ResponseEntity<CategoryResponseDto>  createCategory(@Valid @RequestBody CategoryRequestsDto requestsDto) {
         // 카테고리 생성 로직 호출
-        return categoryService.createCategory(categoryRequestDto);
+        CategoryResponseDto responseDto = categoryService.createCategory(requestsDto);
+//		log.info("create category 실행");
+		return ResponseEntity.ok(responseDto);
     }
 	
 	//카테고리 삭제
-	@DeleteMapping("{category_id}")
-	public SuccessResponseDto deleteNote(@PathVariable("category_id")Long id,
-										 @RequestBody CategoryRequestsDto requestsDto) throws Exception{
-		return categoryService.deleteCategory(id,requestsDto);
+	@DeleteMapping("/categories/{category_id}")
+	public ResponseEntity<SuccessResponseDto> deleteNote(@PathVariable("category_id")Long id) throws Exception{
+//		log.info("delete category 실행");
+		SuccessResponseDto responseDto  = categoryService.deleteCategory(id);
+		return ResponseEntity.ok(responseDto);
 	}
 	
-	//카테고리 수정?
-	@PostMapping("/{category_id}")
-	public CategoryResponseDto updateCategory(@PathVariable("{category_id}")Long id,
+	//카테고리 수정
+	@PostMapping("/categories/{category_id}")
+	public ResponseEntity<CategoryResponseDto> updateCategory(@Valid @PathVariable("category_id")Long id,
 											  @RequestBody CategoryRequestsDto requestsDto) throws Exception{
-		return categoryService.updateCategory(id,requestsDto);
+//		log.info("update category 실행");
+		CategoryResponseDto responseDto = categoryService.updateCategory(id,requestsDto);
+		return ResponseEntity.ok(responseDto);
 	}
 }

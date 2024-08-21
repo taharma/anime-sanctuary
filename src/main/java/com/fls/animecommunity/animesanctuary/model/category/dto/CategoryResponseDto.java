@@ -2,25 +2,26 @@ package com.fls.animecommunity.animesanctuary.model.category.dto;
 
 import java.time.LocalDateTime;
 
+import com.fls.animecommunity.animesanctuary.model.category.Category;
 import com.fls.animecommunity.animesanctuary.model.note.Note;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /*
  * Category의 Response , 응답객체
  */
 
-@Getter
+@Data
 @NoArgsConstructor
 public class CategoryResponseDto {
 	private Long id;
-    private String title;
-    private String contents;
+    private String name;
     
-    public CategoryResponseDto(Note entity) {
+    public CategoryResponseDto(Category entity) {
         this.id = entity.getId();
-        this.title = entity.getTitle();
-        this.contents = entity.getContents();
+        this.name = entity.getName();
     }
 }
