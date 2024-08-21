@@ -44,6 +44,9 @@ public class Member {
 	@Column(nullable = false)
 	private GenderType gender;
 	
+	@Column(length = 255)
+    private String profileImage;
+	
 	// 기본 생성자
     public Member() {}
 
@@ -112,6 +115,14 @@ public class Member {
 
     public void setGender(GenderType gender) {
         this.gender = gender;
+    }
+    
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
 }
