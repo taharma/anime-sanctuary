@@ -171,6 +171,16 @@ public class MemberController {
             return ResponseEntity.status(400).body("Error: " + e.getMessage());
         }
     }
+    
+    @DeleteMapping("/{userId}/deleteProfileImage")
+    public ResponseEntity<?> deleteProfileImage(@PathVariable("userId") Long userId) {
+        try {
+            memberService.deleteProfileImage(userId);
+            return ResponseEntity.ok("Profile image deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body("Error: " + e.getMessage());
+        }
+    }
 
     // 이메일로 사용자 찾기 (추가 기능)
     @GetMapping("/findByEmail")
