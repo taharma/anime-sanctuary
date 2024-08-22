@@ -2,8 +2,6 @@ package com.fls.animecommunity.animesanctuary.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,26 +31,6 @@ public class MemberController {
 
     @Autowired
     private MemberService memberService;
-
-    @GetMapping
-    public List<Member> getAllMembers() {
-        return memberService.getAllMembers();
-    }
-
-    @GetMapping("/{id}")
-    public Optional<Member> getMemberById(@PathVariable Long id) {
-        return memberService.getMemberById(id);
-    }
-
-    @PostMapping
-    public Member createMember(@RequestBody Member member) {
-        return memberService.saveMember(member);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteMember(@PathVariable Long id) {
-        memberService.deleteMember(id);
-    }
 
     @PostMapping("/register")
     public ResponseEntity<Member> register(@RequestBody MemberRegisterDto memberDto) {
