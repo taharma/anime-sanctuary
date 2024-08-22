@@ -1,10 +1,11 @@
-package com.fls.animecommunity.animesanctuary.model.post;
+package com.fls.animecommunity.animesanctuary.model.note;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,53 +13,62 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import com.fls.animecommunity.animesanctuary.model.category.Category;
 import com.fls.animecommunity.animesanctuary.model.member.Member;
-import com.fls.animecommunity.animesanctuary.model.post.dto.PostRequestsDto;
-import com.fls.animecommunity.animesanctuary.model.post.dto.PostResponseDto;
+import com.fls.animecommunity.animesanctuary.model.note.dto.NoteRequestsDto;
+import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 
 /*
- * 게시글(Post)을 나타내는 class
- * 필드 : id title contents author password hit(조회수)
- * author는 추후 Member 객체를 직접 가지고 있게끔 바꿔야함
+ * 
  */
 @Entity
 @Data
 @NoArgsConstructor
-public class Post extends Timestamped{
+public class Note extends Timestamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    //제목
     @Column(nullable = false)
     private String title;
     
-    @Column(nullable = false)
+    //내용
+    @Column(nullable = false )
     private String contents;
     
-    @Column(nullable = false)
-    private String author;
+//    //회원 사용자
+//    @ManyToOne
+//    @JoinColumn(name = "member_id")
+//    private Member member;
     
-    @Column(nullable = false)
-    private String password;
-    
+    //조회수
     private Long hit;	
     
-    public Post(PostRequestsDto requestsDto) {
+    //카테고리
+    @ManyToOne
+    @JoinColumn(name = "categoryId",nullable = true)
+    private Category category;
+    
+    // 노트와 연관된 태그들
+    @ElementCollection
+    private List<String> tags;
+    
+    public Note(NoteRequestsDto requestsDto) {
         this.title = requestsDto.getTitle();
         this.contents = requestsDto.getContents();
-        this.author = requestsDto.getAuthor();
-        this.password = requestsDto.getPassword();
     }
 
 	
 
-	public void update(PostRequestsDto requestsDto) {
-		setAuthor(requestsDto.getAuthor());
+	public void update(NoteRequestsDto requestsDto) {
 		setContents(requestsDto.getContents());
 		setTitle(requestsDto.getTitle());
 		
