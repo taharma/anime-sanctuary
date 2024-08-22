@@ -32,13 +32,13 @@ public class CategoryServiceImpl implements CategoryService{
 	//getNotesByCategory 특정 category별 Notes 목록 조회
 	@Override
 	@Transactional(readOnly = true)
-	public List<NoteResponseDto> getNotesByCategory(Long categoryId) {
+	public List<NoteResponseDto> getNotesByCategory(Long categoryId ) {
 		
 //		log.info("getNotesByCategory 실행");
-//		log.info("categoryId:{}",categoryId);
+//		log.info("categoryId :{}",categoryId );
 		
-		List<Note> notes = noteRepository.findByCategoryIdOrderByModifiedAtDesc(categoryId);
-//		log.debug("Found {} notes for category ID: {}", notes.size(), categoryId);
+		List<Note> notes = noteRepository.findByCategoryId(categoryId );
+//		log.debug("Found {} notes for category ID: {}", notes.size(), categoryId );
 		
 		return notes.stream()
                 .map(NoteResponseDto::new)

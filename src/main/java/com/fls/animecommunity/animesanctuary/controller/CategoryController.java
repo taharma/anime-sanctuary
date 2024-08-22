@@ -41,11 +41,11 @@ public class CategoryController {
 	
 	
 	//Category 에 해당하는 Notes조회
-	@GetMapping("/{category_id}/notes")
-    public ResponseEntity<?> getNotesByCategory(@PathVariable("category_id") Long categoryId) {
+	@GetMapping("/{categoryId}/notes")
+    public ResponseEntity<?> getNotesByCategory(@PathVariable("categoryId") Long categoryId) {
         
 //		log.info("getNotesByCategory 실행");
-		List<NoteResponseDto> notes = categoryService.getNotesByCategory(categoryId);
+		List<NoteResponseDto> notes = categoryService.getNotesByCategory(categoryId );
 
         if (notes.isEmpty()) {
             return ResponseEntity.noContent().build();

@@ -15,4 +15,6 @@ public class NoteRequestsDto {
 	private String title;
 	@NotBlank(message = "contents must not be blank")
     private String contents;
+	
+	private Long categoryId;
 }

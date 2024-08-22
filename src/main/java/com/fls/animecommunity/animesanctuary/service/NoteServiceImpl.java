@@ -1,9 +1,12 @@
 package com.fls.animecommunity.animesanctuary.service;
 
+import com.fls.animecommunity.animesanctuary.exception.ResourceNotFoundException;
+import com.fls.animecommunity.animesanctuary.model.category.Category;
 import com.fls.animecommunity.animesanctuary.model.note.Note;
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteRequestsDto;
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
 import com.fls.animecommunity.animesanctuary.model.note.dto.SuccessResponseDto;
+import com.fls.animecommunity.animesanctuary.repository.CategoryRepository;
 import com.fls.animecommunity.animesanctuary.repository.NoteRepository;
 
 import lombok.NoArgsConstructor;
@@ -23,6 +26,7 @@ import java.util.Optional;
 public class NoteServiceImpl implements NoteService{
 
     private final NoteRepository noteRepository;
+    private final CategoryRepository categoryRepository;
 
     //list
     @Override
@@ -50,10 +54,17 @@ public class NoteServiceImpl implements NoteService{
     public NoteResponseDto createNote(NoteRequestsDto requestsDto) {
 //    	log.info("createNote()");
     	
-    	Note note = new Note(requestsDto);
-        noteRepository.save(note);
-//        log.info("create success");
-    	return new NoteResponseDto(note);
+    	Category category = categoryRepository.findById(requestsDto.getCategoryId())
+    	        .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + requestsDto.getCategoryId()));
+    	    
+	    Note note = new Note();
+	    note.setTitle(requestsDto.getTitle());
+	    note.setContents(requestsDto.getContents());
+	    note.setCategory(category);
+	    
+	    Note savedNote = noteRepository.save(note);
+//      log.info("create success");
+    	return new NoteResponseDto(savedNote);
     }
     
     //update

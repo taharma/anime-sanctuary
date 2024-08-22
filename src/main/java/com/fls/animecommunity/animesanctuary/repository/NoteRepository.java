@@ -14,4 +14,5 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
 
 	List<Note> findAllByOrderByModifiedAtDesc();
 	List<Note> findByCategoryIdOrderByModifiedAtDesc(Long categoryId);
+	List<Note> findByCategoryId(Long categoryId);
 }

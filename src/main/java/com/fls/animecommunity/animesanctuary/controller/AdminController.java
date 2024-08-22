@@ -44,16 +44,16 @@ public class AdminController {
     }
 	
 	//카테고리 삭제
-	@DeleteMapping("/categories/{category_id}")
-	public ResponseEntity<SuccessResponseDto> deleteNote(@PathVariable("category_id")Long id) throws Exception{
+	@DeleteMapping("/categories/{categoryId}")
+	public ResponseEntity<SuccessResponseDto> deleteNote(@PathVariable("categoryId")Long id) throws Exception{
 //		log.info("delete category 실행");
 		SuccessResponseDto responseDto  = categoryService.deleteCategory(id);
 		return ResponseEntity.ok(responseDto);
 	}
 	
 	//카테고리 수정
-	@PostMapping("/categories/{category_id}")
-	public ResponseEntity<CategoryResponseDto> updateCategory(@Valid @PathVariable("category_id")Long id,
+	@PostMapping("/categories/{categoryId}")
+	public ResponseEntity<CategoryResponseDto> updateCategory(@Valid @PathVariable("categoryId")Long id,
 											  @RequestBody CategoryRequestsDto requestsDto) throws Exception{
 //		log.info("update category 실행");
 		CategoryResponseDto responseDto = categoryService.updateCategory(id,requestsDto);

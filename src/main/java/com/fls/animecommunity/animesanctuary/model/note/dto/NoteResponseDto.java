@@ -20,6 +20,7 @@ public class NoteResponseDto {//응답값을 모아서 보내는 놈
     private String contents;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+    private Long categoryId;
     
     public NoteResponseDto(Note entity) {//따라서 생성자가 필요
         this.id = entity.getId();
@@ -27,5 +28,6 @@ public class NoteResponseDto {//응답값을 모아서 보내는 놈
         this.contents = entity.getContents();
         this.createdAt = entity.getCreatedAt();
         this.modifiedAt = entity.getModifiedAt();
+        this.categoryId = entity.getCategory().getId();
     }
 }

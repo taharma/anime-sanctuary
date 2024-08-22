@@ -54,7 +54,7 @@ public class Note extends Timestamped{
     
     //카테고리
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "categoryId",nullable = true)
     private Category category;
     
     // 노트와 연관된 태그들
