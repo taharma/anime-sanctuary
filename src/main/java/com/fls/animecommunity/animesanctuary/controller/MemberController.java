@@ -111,7 +111,7 @@ public class MemberController {
 
     
     // 프로필 조회
-    @GetMapping("/{id}")
+    @GetMapping("/profile/{id}")
     public ResponseEntity<Member> getProfile(@PathVariable("id") Long id) {
         Member member = memberService.getProfile(id);
         if (member != null) {
