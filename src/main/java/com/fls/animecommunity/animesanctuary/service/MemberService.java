@@ -4,11 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,24 +18,7 @@ import com.fls.animecommunity.animesanctuary.repository.MemberRepository;
 @Service
 public class MemberService {
 
-    @Autowired
-    private MemberRepository memberRepository;
-
-    public List<Member> getAllMembers() {
-        return memberRepository.findAll();
-    }
-
-    public Optional<Member> getMemberById(Long id) {
-        return memberRepository.findById(id);
-    }
-
-    public Member saveMember(Member member) {
-        return memberRepository.save(member);
-    }
-
-    public void deleteMember(Long id) {
-        memberRepository.deleteById(id);
-    }
+    private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
     // 생성자 주입
