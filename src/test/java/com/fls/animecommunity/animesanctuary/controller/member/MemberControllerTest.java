@@ -8,10 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fls.animecommunity.animesanctuary.service.MemberService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -21,6 +24,9 @@ public class MemberControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private MemberService memberService;
 
     @Test
     public void shouldRegisterMemberSuccessfully() throws Exception {
