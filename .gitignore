@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+## top secret - sensitive data
+.env
