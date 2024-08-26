@@ -54,8 +54,8 @@ public class NoteController {
     }
     
     //find Note
-    @GetMapping("/{note_id}")
-    public ResponseEntity<NoteResponseDto> getNote(@PathVariable("note_id") Long id) {
+    @GetMapping("/{noteId}")
+    public ResponseEntity<NoteResponseDto> getNote(@PathVariable("noteId") Long id) {
     	//log.info("getNote 실행");
     	NoteResponseDto note = noteService.getNote(id);
     	return ResponseEntity.ok(note);
@@ -63,8 +63,8 @@ public class NoteController {
     
     
     //update Note
-    @PostMapping("/{note_id}")
-    public ResponseEntity<?> updateNote(@Valid @PathVariable("note_id") Long id, 
+    @PostMapping("/{noteId}")
+    public ResponseEntity<?> updateNote(@Valid @PathVariable("noteId") Long id, 
     								    @RequestBody NoteRequestsDto requestsDto
     								    ,BindingResult result) throws Exception {
     	//log.info("updateNote 실행");
@@ -73,8 +73,8 @@ public class NoteController {
     }
     
     //delete Note
-    @DeleteMapping("/{note_id}")
-    public ResponseEntity<SuccessResponseDto> deleteNote(@PathVariable("note_id") Long id, 
+    @DeleteMapping("/{noteId}")
+    public ResponseEntity<SuccessResponseDto> deleteNote(@PathVariable("noteId") Long id, 
     									 				 @RequestBody NoteRequestsDto requestsDto) throws Exception {
     	//log.info("deleteNote 실행");
     	SuccessResponseDto responseDto = noteService.deleteNote(id, requestsDto);

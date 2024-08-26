@@ -41,7 +41,7 @@ public class Note extends Timestamped{
     private String title;
     
     //내용
-    @Column(nullable = false )
+    @Column(nullable = false)
     private String contents;
     
 //    //회원 사용자
