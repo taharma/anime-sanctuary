@@ -19,7 +19,7 @@ import java.util.List;
 
 /*
  * NoteController class : Note의 CRUD기능 , api mapping 
- * DI : NoteServiceImpl
+ * DI : 의존성 주입 NoteServiceImpl
  * Method Name : createNote , getNotes , getNote , updateNote , deleteNote
  * parameter = dto: NoteResponseDto, NoteRequestsDto, SuccessResponseDto
  */
