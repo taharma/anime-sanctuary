@@ -33,7 +33,7 @@ public class NoteServiceImpl implements NoteService{
     @Override
     @Transactional(readOnly = true)
     public List<NoteResponseDto> getNotes() {
-//    	log.info("getNotes()");
+    	//    	log.info("getNotes()");
         return noteRepository.findAllByOrderByModifiedAtDesc().stream().map(NoteResponseDto::new).toList();
     }
     
@@ -41,8 +41,8 @@ public class NoteServiceImpl implements NoteService{
     @Override
     @Transactional
     public NoteResponseDto getNote(Long id) {
-//    	log.info("getNote()");
-//    	log.info("ID: {}", id);
+    	//    	log.info("getNote()");
+    	//    	log.info("ID: {}", id);
     	
     	return noteRepository.findById(id).map(NoteResponseDto::new).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
@@ -53,7 +53,7 @@ public class NoteServiceImpl implements NoteService{
     @Override
     @Transactional
     public NoteResponseDto createNote(NoteRequestsDto requestsDto) {
-//    	log.info("createNote()");
+    	//    	log.info("createNote()");
     	
     	Category category = categoryRepository.findById(requestsDto.getCategoryId())
     	        .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + requestsDto.getCategoryId()));
@@ -64,7 +64,7 @@ public class NoteServiceImpl implements NoteService{
 	    note.setCategory(category);
 	    
 	    Note savedNote = noteRepository.save(note);
-//      log.info("create success");
+	    //      log.info("create success");
     	return new NoteResponseDto(savedNote);
     }
     
@@ -72,15 +72,15 @@ public class NoteServiceImpl implements NoteService{
     @Override
     @Transactional
     public NoteResponseDto updateNote(Long id, NoteRequestsDto requestsDto) throws Exception {
-//    	log.info("updateNote()");
-//    	log.info("ID: {}", id);
+    	//    	log.info("updateNote()");
+    	//    	log.info("ID: {}", id);
     	
     	Note note = noteRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );
 
         note.update(requestsDto);
-//        log.info("update success ID: {}", id);
+        //        log.info("update success ID: {}", id);
         
         return new NoteResponseDto(note);
     }
@@ -89,15 +89,15 @@ public class NoteServiceImpl implements NoteService{
     @Override
     @Transactional
     public SuccessResponseDto deleteNote(Long id, NoteRequestsDto requestsDto) throws Exception{
-//    	log.info("deleteNote()");
-//    	log.info("ID: {}", id);
+    	//    	log.info("deleteNote()");
+    	//    	log.info("ID: {}", id);
     	
     	Note note = noteRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );
 
     	noteRepository.deleteById(id);
-//    	log.info("delete success ID: {}", id);
+    	//    	log.info("delete success ID: {}", id);
     	
         return new SuccessResponseDto(true);
     }
