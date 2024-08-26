@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,39 +34,50 @@ public class NoteController {
     
     //create Note
     @PostMapping
-    public NoteResponseDto createNote(@Valid @RequestBody NoteRequestsDto requestsDto) {
-//		log.info("createNote 실행");
-    	return noteService.createNote(requestsDto);
+    public ResponseEntity<?> createNote(@Valid @RequestBody NoteRequestsDto requestsDto
+    								    ,BindingResult result) {
+    	//log.info("createNote 실행");
+    	
+    	if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body(result.getAllErrors());
+        }
+    	NoteResponseDto responseDto = noteService.createNote(requestsDto);
+    	return ResponseEntity.ok(responseDto);
     }
     
     //list Note
     @GetMapping
-    public List<NoteResponseDto> getNotes() {
-//		log.info("getNotes 실행");
-        return noteService.getNotes();
+    public ResponseEntity<List<NoteResponseDto>> getNotes() {
+    	//log.info("getNotes 실행");
+    	List<NoteResponseDto> list = noteService.getNotes();
+        return ResponseEntity.ok(list);
     }
     
     //find Note
     @GetMapping("/{note_id}")
-    public NoteResponseDto getNote(@PathVariable("note_id") Long id) {
-//		log.info("getNote 실행");
-    	return noteService.getNote(id);
+    public ResponseEntity<NoteResponseDto> getNote(@PathVariable("note_id") Long id) {
+    	//log.info("getNote 실행");
+    	NoteResponseDto note = noteService.getNote(id);
+    	return ResponseEntity.ok(note);
     }
     
     
     //update Note
     @PostMapping("/{note_id}")
-    public NoteResponseDto updateNote(@Valid @PathVariable("note_id") Long id, 
-    								  @RequestBody NoteRequestsDto requestsDto) throws Exception {
-//		log.info("updateNote 실행");
-    	return noteService.updateNote(id, requestsDto);
+    public ResponseEntity<?> updateNote(@Valid @PathVariable("note_id") Long id, 
+    								    @RequestBody NoteRequestsDto requestsDto
+    								    ,BindingResult result) throws Exception {
+    	//log.info("updateNote 실행");
+    	NoteResponseDto updateNote = noteService.updateNote(id, requestsDto);
+    	return ResponseEntity.ok(updateNote);
     }
     
     //delete Note
     @DeleteMapping("/{note_id}")
-    public SuccessResponseDto deleteNote(@PathVariable("note_id") Long id, 
-    									 @RequestBody NoteRequestsDto requestsDto) throws Exception {
-//		log.info("deleteNote 실행");        
-    	return noteService.deleteNote(id, requestsDto);
+    public ResponseEntity<SuccessResponseDto> deleteNote(@PathVariable("note_id") Long id, 
+    									 				 @RequestBody NoteRequestsDto requestsDto) throws Exception {
+    	//log.info("deleteNote 실행");
+    	SuccessResponseDto responseDto = noteService.deleteNote(id, requestsDto);
+    	return ResponseEntity.ok(responseDto);
     }
 }
