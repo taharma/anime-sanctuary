@@ -1,4 +1,4 @@
-package com.fls.animecommunity.animesanctuary.service;
+package com.fls.animecommunity.animesanctuary.service.impl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +15,7 @@ import com.fls.animecommunity.animesanctuary.model.note.Note;
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
 import com.fls.animecommunity.animesanctuary.repository.CategoryRepository;
 import com.fls.animecommunity.animesanctuary.repository.NoteRepository;
+import com.fls.animecommunity.animesanctuary.service.interfaces.CategoryService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

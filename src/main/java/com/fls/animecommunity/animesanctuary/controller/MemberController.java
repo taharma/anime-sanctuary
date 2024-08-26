@@ -22,7 +22,7 @@ import com.fls.animecommunity.animesanctuary.dto.MemberRegisterDto;
 import com.fls.animecommunity.animesanctuary.model.UpdateProfileRequest;
 import com.fls.animecommunity.animesanctuary.model.member.GenderType;
 import com.fls.animecommunity.animesanctuary.model.member.Member;
-import com.fls.animecommunity.animesanctuary.service.MemberService;
+import com.fls.animecommunity.animesanctuary.service.impl.MemberService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

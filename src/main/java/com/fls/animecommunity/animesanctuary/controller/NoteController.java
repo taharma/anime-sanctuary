@@ -4,8 +4,8 @@ import com.fls.animecommunity.animesanctuary.model.note.Note;
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteRequestsDto;
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
 import com.fls.animecommunity.animesanctuary.model.note.dto.SuccessResponseDto;
-import com.fls.animecommunity.animesanctuary.service.NoteService;
-import com.fls.animecommunity.animesanctuary.service.NoteServiceImpl;
+import com.fls.animecommunity.animesanctuary.service.impl.NoteServiceImpl;
+import com.fls.animecommunity.animesanctuary.service.interfaces.NoteService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.fls.animecommunity.animesanctuary.service;
+package com.fls.animecommunity.animesanctuary.service.interfaces;
 
 import java.util.List;
 

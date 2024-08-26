@@ -1,4 +1,4 @@
-package com.fls.animecommunity.animesanctuary.service;
+package com.fls.animecommunity.animesanctuary.service.impl;
 
 import java.io.File;
 import java.io.IOException;

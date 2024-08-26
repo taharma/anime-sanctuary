@@ -1,4 +1,4 @@
-package com.fls.animecommunity.animesanctuary.service;
+package com.fls.animecommunity.animesanctuary.service.impl;
 
 import com.fls.animecommunity.animesanctuary.exception.ResourceNotFoundException;
 import com.fls.animecommunity.animesanctuary.model.category.Category;
@@ -8,6 +8,7 @@ import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
 import com.fls.animecommunity.animesanctuary.model.note.dto.SuccessResponseDto;
 import com.fls.animecommunity.animesanctuary.repository.CategoryRepository;
 import com.fls.animecommunity.animesanctuary.repository.NoteRepository;
+import com.fls.animecommunity.animesanctuary.service.interfaces.NoteService;
 
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;

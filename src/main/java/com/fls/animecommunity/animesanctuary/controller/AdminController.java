@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fls.animecommunity.animesanctuary.model.category.dto.CategoryRequestsDto;
 import com.fls.animecommunity.animesanctuary.model.category.dto.CategoryResponseDto;
 import com.fls.animecommunity.animesanctuary.model.category.dto.SuccessResponseDto;
-import com.fls.animecommunity.animesanctuary.service.CategoryService;
-import com.fls.animecommunity.animesanctuary.service.CategoryServiceImpl;
+import com.fls.animecommunity.animesanctuary.service.impl.CategoryServiceImpl;
+import com.fls.animecommunity.animesanctuary.service.interfaces.CategoryService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

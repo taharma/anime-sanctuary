@@ -7,9 +7,9 @@ import com.fls.animecommunity.animesanctuary.model.category.dto.CategoryResponse
 import com.fls.animecommunity.animesanctuary.model.category.dto.SuccessResponseDto;
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
 import com.fls.animecommunity.animesanctuary.repository.CategoryRepository;
-import com.fls.animecommunity.animesanctuary.service.CategoryService;
-import com.fls.animecommunity.animesanctuary.service.CategoryServiceImpl;
-import com.fls.animecommunity.animesanctuary.service.NoteService;
+import com.fls.animecommunity.animesanctuary.service.impl.CategoryServiceImpl;
+import com.fls.animecommunity.animesanctuary.service.interfaces.CategoryService;
+import com.fls.animecommunity.animesanctuary.service.interfaces.NoteService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -45,7 +45,7 @@ public class CategoryController {
     public ResponseEntity<?> getNotesByCategory(@PathVariable("categoryId") Long categoryId) {
         
 //		log.info("getNotesByCategory 실행");
-		List<NoteResponseDto> notes = categoryService.getNotesByCategory(categoryId );
+		List<NoteResponseDto> notes = categoryService.getNotesByCategory(categoryId);
 
         if (notes.isEmpty()) {
             return ResponseEntity.noContent().build();
