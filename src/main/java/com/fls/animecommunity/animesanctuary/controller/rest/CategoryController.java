@@ -44,7 +44,7 @@ public class CategoryController {
 	@GetMapping("/{categoryId}/notes")
     public ResponseEntity<?> getNotesByCategory(@PathVariable("categoryId") Long categoryId) {
         
-//		log.info("getNotesByCategory 실행");
+		//log.info("getNotesByCategory 실행");
 		List<NoteResponseDto> notes = categoryService.getNotesByCategory(categoryId);
 
         if (notes.isEmpty()) {
@@ -58,7 +58,7 @@ public class CategoryController {
 	@GetMapping
     public ResponseEntity<?> getCategories() {
         
-//		log.info("getCategories 실행");
+		//log.info("getCategories 실행");
 		List<CategoryResponseDto> categories = categoryService.getCategories();
 
         if (categories.isEmpty()) {
