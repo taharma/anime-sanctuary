@@ -1,4 +1,4 @@
-package com.fls.animecommunity.animesanctuary.controller;
+package com.fls.animecommunity.animesanctuary.controller.rest;
 
 import java.io.File;
 import java.io.IOException;

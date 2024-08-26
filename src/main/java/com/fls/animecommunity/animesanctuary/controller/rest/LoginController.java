@@ -1,4 +1,4 @@
-package com.fls.animecommunity.animesanctuary.controller;
+package com.fls.animecommunity.animesanctuary.controller.rest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

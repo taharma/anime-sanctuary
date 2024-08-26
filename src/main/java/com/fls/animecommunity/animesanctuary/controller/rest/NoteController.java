@@ -1,4 +1,4 @@
-package com.fls.animecommunity.animesanctuary.controller;
+package com.fls.animecommunity.animesanctuary.controller.rest;
 
 import com.fls.animecommunity.animesanctuary.model.note.Note;
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteRequestsDto;
@@ -68,6 +68,10 @@ public class NoteController {
     								    @RequestBody NoteRequestsDto requestsDto
     								    ,BindingResult result) throws Exception {
     	//log.info("updateNote 실행");
+    	// 유효성 검사 오류 확인
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body(result.getAllErrors());
+        }
     	NoteResponseDto updateNote = noteService.updateNote(id, requestsDto);
     	return ResponseEntity.ok(updateNote);
     }
