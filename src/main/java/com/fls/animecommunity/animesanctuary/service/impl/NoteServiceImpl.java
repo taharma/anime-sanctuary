@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -34,7 +35,14 @@ public class NoteServiceImpl implements NoteService{
     @Transactional(readOnly = true)
     public List<NoteResponseDto> getNotes() {
     	//    	log.info("getNotes()");
-        return noteRepository.findAllByOrderByModifiedAtDesc().stream().map(NoteResponseDto::new).toList();
+    	List<Note> notes = noteRepository.findAllByOrderByModifiedAtDesc();
+        List<NoteResponseDto> noteResponseDtos = new ArrayList<>();
+
+        for (Note note : notes) {
+            noteResponseDtos.add(new NoteResponseDto(note));
+        }
+
+        return noteResponseDtos;
     }
     
     //find
@@ -44,9 +52,13 @@ public class NoteServiceImpl implements NoteService{
     	//    	log.info("getNote()");
     	//    	log.info("ID: {}", id);
     	
-    	return noteRepository.findById(id).map(NoteResponseDto::new).orElseThrow(
-                () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
-        );
+    	Optional<Note> optionalNote = noteRepository.findById(id);
+
+        if (optionalNote.isPresent()) {
+            return new NoteResponseDto(optionalNote.get());
+        } else {
+            throw new IllegalArgumentException("아이디가 존재하지 않습니다.");
+        }
     }
     
     //write , create
@@ -55,8 +67,13 @@ public class NoteServiceImpl implements NoteService{
     public NoteResponseDto createNote(NoteRequestsDto requestsDto) {
     	//    	log.info("createNote()");
     	
-    	Category category = categoryRepository.findById(requestsDto.getCategoryId())
-    	        .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + requestsDto.getCategoryId()));
+    	Optional<Category> optionalCategory = categoryRepository.findById(requestsDto.getCategoryId());
+
+        if (!optionalCategory.isPresent()) {
+            throw new ResourceNotFoundException("Category not found with id: " + requestsDto.getCategoryId());
+        }
+
+        Category category = optionalCategory.get();
     	    
 	    Note note = new Note();
 	    note.setTitle(requestsDto.getTitle());
@@ -75,9 +92,13 @@ public class NoteServiceImpl implements NoteService{
     	//    	log.info("updateNote()");
     	//    	log.info("ID: {}", id);
     	
-    	Note note = noteRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
-        );
+    	 Optional<Note> optionalNote = noteRepository.findById(id);
+
+    	    if (!optionalNote.isPresent()) {
+    	        throw new IllegalArgumentException("아이디가 존재하지 않습니다.");
+    	    }
+
+    	    Note note = optionalNote.get();
 
         note.update(requestsDto);
         //        log.info("update success ID: {}", id);
@@ -92,9 +113,11 @@ public class NoteServiceImpl implements NoteService{
     	//    	log.info("deleteNote()");
     	//    	log.info("ID: {}", id);
     	
-    	Note note = noteRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
-        );
+    	Optional<Note> optionalNote = noteRepository.findById(id);
+
+        if (!optionalNote.isPresent()) {
+            throw new IllegalArgumentException("아이디가 존재하지 않습니다.");
+        }
 
     	noteRepository.deleteById(id);
     	//    	log.info("delete success ID: {}", id);
