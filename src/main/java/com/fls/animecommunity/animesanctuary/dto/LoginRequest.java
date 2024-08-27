@@ -1,4 +1,4 @@
-package com.fls.animecommunity.animesanctuary.controller;
+package com.fls.animecommunity.animesanctuary.dto;
 
 import lombok.Data;
 

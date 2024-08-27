@@ -13,6 +13,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/*
+ * Member class : 회원 사용자 클래스
+ * 기본적인 vaildation
+ * id 의 GenerationType.IDENTITY
+ */
+
 
 @Entity
 @Getter @Setter @ToString
