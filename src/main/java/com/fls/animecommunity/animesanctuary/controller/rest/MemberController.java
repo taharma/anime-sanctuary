@@ -1,4 +1,4 @@
-package com.fls.animecommunity.animesanctuary.controller;
+package com.fls.animecommunity.animesanctuary.controller.rest;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,11 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fls.animecommunity.animesanctuary.dto.LoginRequest;
 import com.fls.animecommunity.animesanctuary.dto.MemberRegisterDto;
 import com.fls.animecommunity.animesanctuary.model.UpdateProfileRequest;
 import com.fls.animecommunity.animesanctuary.model.member.GenderType;
 import com.fls.animecommunity.animesanctuary.model.member.Member;
-import com.fls.animecommunity.animesanctuary.service.MemberService;
+import com.fls.animecommunity.animesanctuary.service.impl.MemberService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -89,7 +90,7 @@ public class MemberController {
 
     
     // 프로필 조회
-    @GetMapping("/{id}")
+    @GetMapping("/profile/{id}")
     public ResponseEntity<Member> getProfile(@PathVariable("id") Long id) {
         Member member = memberService.getProfile(id);
         if (member != null) {

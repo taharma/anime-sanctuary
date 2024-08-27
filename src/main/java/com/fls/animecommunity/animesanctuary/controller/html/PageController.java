@@ -1,4 +1,4 @@
-package com.fls.animecommunity.animesanctuary.controller;
+package com.fls.animecommunity.animesanctuary.controller.html;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,17 +10,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fls.animecommunity.animesanctuary.model.post.dto.PostResponseDto;
-import com.fls.animecommunity.animesanctuary.service.PostService;
+import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
+import com.fls.animecommunity.animesanctuary.service.interfaces.NoteService;
 
+/*
+ * note.com을 benchmarking 일단 그대로 만듬
+ */
 
 @Slf4j
 @Controller
-@RequestMapping("board")
+@RequestMapping("topic")
 @RequiredArgsConstructor
 public class PageController {
 	
-	private final PostService postService;
+	private final NoteService NoteService;
 	
 	
 	//list
@@ -30,9 +33,9 @@ public class PageController {
 	}
 	
 	//read
-	@GetMapping("read/{postId}")
-	public String getPost(@PathVariable("postId") Long id, Model model) {
-	    PostResponseDto post = postService.getPost(id);
+	@GetMapping("read/{note_id}")
+	public String getPost(@PathVariable("note_id") Long id, Model model) {
+	    NoteResponseDto post = NoteService.getNote(id);
 	    model.addAttribute("post", post);
 	    return "read"; // "read.html" 템플릿 반환
 	}
@@ -45,8 +48,8 @@ public class PageController {
 	}
 	
 	//update
-	@GetMapping("update/{postId}")
-	public String update(@PathVariable("postId") Long id) {
+	@GetMapping("update/{note_id}")
+	public String update(@PathVariable("note_id") Long id) {
 		return "update";
 	}
 	

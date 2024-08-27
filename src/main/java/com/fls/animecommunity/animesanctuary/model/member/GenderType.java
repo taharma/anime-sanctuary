@@ -1,5 +1,7 @@
 package com.fls.animecommunity.animesanctuary.model.member;
 
+
+
 public enum GenderType {
 	MALE("남성"),
 	FEMALE("여성");
