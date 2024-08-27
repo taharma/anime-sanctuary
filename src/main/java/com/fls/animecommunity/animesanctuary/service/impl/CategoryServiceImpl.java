@@ -1,6 +1,8 @@
 package com.fls.animecommunity.animesanctuary.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -35,29 +37,34 @@ public class CategoryServiceImpl implements CategoryService{
 	@Transactional(readOnly = true)
 	public List<NoteResponseDto> getNotesByCategory(Long categoryId ) {
 		
-//		log.info("getNotesByCategory 실행");
-//		log.info("categoryId :{}",categoryId );
+		//		log.info("getNotesByCategory 실행");
+		//		log.info("categoryId :{}",categoryId );
 		
-		List<Note> notes = noteRepository.findByCategoryId(categoryId );
-//		log.debug("Found {} notes for category ID: {}", notes.size(), categoryId );
+		List<Note> notes = noteRepository.findByCategoryId(categoryId);
+		//		log.debug("Found {} notes for category ID: {}", notes.size(), categoryId );
 		
-		return notes.stream()
-                .map(NoteResponseDto::new)
-                .collect(Collectors.toList());
+		List<NoteResponseDto> noteResponseDtos = new ArrayList<>();
+        for (Note note : notes) {
+            NoteResponseDto dto = new NoteResponseDto(note);
+            noteResponseDtos.add(dto);
+        }
+        return noteResponseDtos;
 	}
 	
 	//find All categoies 모든 카테고리를 가져옴
 	@Override
 	@Transactional(readOnly = true)
 	public List<CategoryResponseDto> getCategories() {
-//		log.info("getCategories() 실행");
+		//		log.info("getCategories() 실행");
+		//      log.debug("Found {} categories", categories.size());
 		
-		List<CategoryResponseDto> categories = categoryRepository.findAll().stream()
-                .map(CategoryResponseDto::new)
-                .collect(Collectors.toList());
-        
-//        log.debug("Found {} categories", categories.size());
-        return categories;
+		 List<Category> categories = categoryRepository.findAll();
+	        List<CategoryResponseDto> categoryResponseDtos = new ArrayList<>();
+	        for (Category category : categories) {
+	            CategoryResponseDto dto = new CategoryResponseDto(category);
+	            categoryResponseDtos.add(dto);
+	        }
+	        return categoryResponseDtos;
 	}
 	
 	//write , create
@@ -82,9 +89,13 @@ public class CategoryServiceImpl implements CategoryService{
 //		log.info("deleteCategory() 실행");
 //		log.info("Deleting category with ID: {}", id);
 		
-		Category category = categoryRepository.findById(id).orElseThrow(
-				() -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
-		);
+		Optional<Category> optionalCategory = categoryRepository.findById(id);
+
+		if (!optionalCategory.isPresent()) {
+		    throw new IllegalArgumentException("아이디가 존재하지 않습니다.");
+		}
+
+		Category category = optionalCategory.get();
 		
 		categoryRepository.deleteById(id);
 //		log.info("Category deleted successfully with ID: {}", id);
@@ -99,8 +110,14 @@ public class CategoryServiceImpl implements CategoryService{
 //		log.info("updateCategory() 실행");
 //		log.info("Updating category with ID: {}", id);
 		
-		Category category = categoryRepository.findById(id)
-	            .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
+		Optional<Category> optionalCategory = categoryRepository.findById(id);
+
+		if (!optionalCategory.isPresent()) {
+		    throw new ResourceNotFoundException("Category not found with id: " + id);
+		}
+
+		Category category = optionalCategory.get();
+
 	    category.setName(requestsDto.getName());
 	    Category updatedCategory = categoryRepository.save(category);
 //	    log.info("Category updated successfully with ID: {}", updatedCategory.getId());
