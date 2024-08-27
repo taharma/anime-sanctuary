@@ -4,11 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,24 +18,7 @@ import com.fls.animecommunity.animesanctuary.repository.MemberRepository;
 @Service
 public class MemberService {
 
-    @Autowired
-    private MemberRepository memberRepository;
-
-    public List<Member> getAllMembers() {
-        return memberRepository.findAll();
-    }
-
-    public Optional<Member> getMemberById(Long id) {
-        return memberRepository.findById(id);
-    }
-
-    public Member saveMember(Member member) {
-        return memberRepository.save(member);
-    }
-
-    public void deleteMember(Long id) {
-        memberRepository.deleteById(id);
-    }
+    private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
     // 생성자 주입
@@ -150,5 +130,25 @@ public class MemberService {
         memberRepository.save(member); // 변경 사항 저장
     }
 
+    public void deleteProfileImage(Long userId) throws IOException {
+        Member member = memberRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        String filePath = member.getProfileImage();
+        if (filePath != null && !filePath.isEmpty()) {
+            // 파일 시스템에서 이미지 삭제
+            File file = new File(filePath);
+            if (file.exists()) {
+                boolean deleted = file.delete();
+                if (!deleted) {
+                    throw new IOException("Failed to delete file: " + filePath);
+                }
+            }
+
+            // 데이터베이스에서 이미지 경로 삭제
+            member.setProfileImage(null);
+            memberRepository.save(member);
+        }
+    }
 
 }

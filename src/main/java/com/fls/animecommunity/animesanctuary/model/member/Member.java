@@ -57,7 +57,7 @@ public class Member {
     public Member() {}
 
     // 모든 필드를 포함한 생성자
-    public Member(String username, String password, String name, LocalDate birthdate, String email, GenderType gender) {
+    public Member(String username, String password, String name, LocalDate birth, String email, GenderType gender) {
         this.username = username;
         this.password = password;
         this.name = name;
