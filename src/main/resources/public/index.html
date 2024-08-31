@@ -15,6 +15,8 @@
         <input type="text" id="title" name="title" required><br>
         <label for="content">Content:</label>
         <textarea id="content" name="content" required></textarea><br>
+        <label for="categoryId">Category ID (optional):</label>
+        <input type="number" id="categoryId" name="categoryId"><br>
         <button type="submit">Create Note</button>
     </form>
     <pre id="createNoteResult"></pre>
@@ -40,6 +42,8 @@
         <input type="text" id="updateTitle" name="updateTitle" required><br>
         <label for="updateContent">Content:</label>
         <textarea id="updateContent" name="updateContent" required></textarea><br>
+        <label for="updateCategoryId">Category ID (optional):</label>
+        <input type="number" id="updateCategoryId" name="updateCategoryId"><br>
         <button type="submit">Update Note</button>
     </form>
     <pre id="updateNoteResult"></pre>
@@ -54,37 +58,66 @@
     <pre id="deleteNoteResult"></pre>
 
     <script>
-        const apiUrl = 'http://localhost:8080/api/notes'; // API 기본 URL
+        const apiUrl = 'http://localhost:9000/api/notes'; // API 기본 URL
 
         // Note 생성
         document.getElementById('createNoteForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const title = document.getElementById('title').value;
             const content = document.getElementById('content').value;
+            const categoryId = document.getElementById('categoryId').value || null;
 
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, content })
-            });
+            console.log('Creating note with data:', { title, content, categoryId });
 
-            const result = await response.json();
-            document.getElementById('createNoteResult').textContent = JSON.stringify(result, null, 2);
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, contents: content, categoryId })
+                });
+
+                if (!response.ok) { // HTTP 상태 코드 확인
+                    const errorText = await response.text();
+                    console.error('Error creating note:', errorText);
+                    document.getElementById('createNoteResult').textContent = `Error: ${errorText}`;
+                } else {
+                    const result = await response.json();
+                    console.log('Create note response:', result);
+                    document.getElementById('createNoteResult').textContent = JSON.stringify(result, null, 2);
+                }
+            } catch (error) {
+                console.error('Error creating note:', error);
+            }
+
         });
 
         // Note 목록 가져오기
         document.getElementById('getNotesBtn').addEventListener('click', async function () {
-            const response = await fetch(apiUrl);
-            const notes = await response.json();
-            document.getElementById('notesList').textContent = JSON.stringify(notes, null, 2);
+            console.log('Fetching notes list');
+
+            try {
+                const response = await fetch(apiUrl);
+                const notes = await response.json();
+                console.log('Notes list response:', notes);
+                document.getElementById('notesList').textContent = JSON.stringify(notes, null, 2);
+            } catch (error) {
+                console.error('Error fetching notes list:', error);
+            }
         });
 
         // Note 조회
         document.getElementById('getNoteBtn').addEventListener('click', async function () {
             const noteId = document.getElementById('noteId').value;
-            const response = await fetch(`${apiUrl}/${noteId}`);
-            const note = await response.json();
-            document.getElementById('noteDetail').textContent = JSON.stringify(note, null, 2);
+            console.log('Fetching note with ID:', noteId);
+
+            try {
+                const response = await fetch(`${apiUrl}/${noteId}`);
+                const note = await response.json();
+                console.log('Get note response:', note);
+                document.getElementById('noteDetail').textContent = JSON.stringify(note, null, 2);
+            } catch (error) {
+                console.error('Error fetching note:', error);
+            }
         });
 
         // Note 수정
@@ -93,15 +126,23 @@
             const noteId = document.getElementById('updateNoteId').value;
             const title = document.getElementById('updateTitle').value;
             const content = document.getElementById('updateContent').value;
+            const categoryId = document.getElementById('updateCategoryId').value || null;
 
-            const response = await fetch(`${apiUrl}/${noteId}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, content })
-            });
+            console.log('Updating note with ID:', noteId, 'and data:', { title, content, categoryId });
 
-            const result = await response.json();
-            document.getElementById('updateNoteResult').textContent = JSON.stringify(result, null, 2);
+            try {
+                const response = await fetch(`${apiUrl}/${noteId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, contents: content, categoryId })
+                });
+
+                const result = await response.json();
+                console.log('Update note response:', result);
+                document.getElementById('updateNoteResult').textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                console.error('Error updating note:', error);
+            }
         });
 
         // Note 삭제
@@ -109,13 +150,20 @@
             e.preventDefault();
             const noteId = document.getElementById('deleteNoteId').value;
 
-            const response = await fetch(`${apiUrl}/${noteId}`, {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' }
-            });
+            console.log('Deleting note with ID:', noteId);
 
-            const result = await response.json();
-            document.getElementById('deleteNoteResult').textContent = JSON.stringify(result, null, 2);
+            try {
+                const response = await fetch(`${apiUrl}/${noteId}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const result = await response.json();
+                console.log('Delete note response:', result);
+                document.getElementById('deleteNoteResult').textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                console.error('Error deleting note:', error);
+            }
         });
     </script>
 </body>

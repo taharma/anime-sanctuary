@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class NoteResponseDto {//응답값을 모아서 보내는 놈
+public class NoteResponseDto {
 	private Long id;
     private String title;
     private String contents;
@@ -22,12 +22,18 @@ public class NoteResponseDto {//응답값을 모아서 보내는 놈
     private LocalDateTime modifiedAt;
     private Long categoryId;
     
-    public NoteResponseDto(Note entity) {//따라서 생성자가 필요
+    public NoteResponseDto(Note entity) {
         this.id = entity.getId();
         this.title = entity.getTitle();
         this.contents = entity.getContents();
         this.createdAt = entity.getCreatedAt();
         this.modifiedAt = entity.getModifiedAt();
-        this.categoryId = entity.getCategory().getId();
+        // Null 체크 후 categoryId 설정
+        if (entity.getCategory() != null) {
+            this.categoryId = entity.getCategory().getId();
+        } else {
+            this.categoryId = null; // 또는 기본값 설정
+        }
     }
 }
+
