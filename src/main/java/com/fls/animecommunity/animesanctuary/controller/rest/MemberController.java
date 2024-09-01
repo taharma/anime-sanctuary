@@ -51,13 +51,13 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
-        Member member = memberService.login(loginRequest.getUsername(), loginRequest.getPassword());
+        Member member = memberService.login(loginRequest.getUsernameOrEmail(), loginRequest.getPassword());
         if (member != null) {
             // 세션 생성
             request.getSession().setAttribute("user", member);
             return ResponseEntity.ok("Login successful");
         } else {
-            return ResponseEntity.status(401).body("Invalid username or password");
+            return ResponseEntity.status(401).body("Invalid username/email or password");
         }
     }
 

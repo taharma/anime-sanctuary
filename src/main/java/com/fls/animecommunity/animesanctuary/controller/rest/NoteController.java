@@ -9,6 +9,7 @@ import com.fls.animecommunity.animesanctuary.service.interfaces.NoteService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +24,11 @@ import java.util.List;
  * Method Name : createNote , getNotes , getNote , updateNote , deleteNote
  * parameter = dto: NoteResponseDto, NoteRequestsDto, SuccessResponseDto
  */
-
+@CrossOrigin(origins = "http://localhost:9000") // 클라이언트의 도메인을 명시
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/notes")
+@Slf4j
 public class NoteController {
 
     //DI
@@ -36,8 +38,8 @@ public class NoteController {
     @PostMapping
     public ResponseEntity<?> createNote(@Valid @RequestBody NoteRequestsDto requestsDto
     								    ,BindingResult result) {
-    	//log.info("createNote 실행");
-    	
+    	log.info("createNote 실행");
+    	log.info("Received Note request with title: {} and contents: {}", requestsDto.getTitle(), requestsDto.getContents());
     	if (result.hasErrors()) {
             return ResponseEntity.badRequest().body(result.getAllErrors());
         }
