@@ -34,8 +34,10 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/members/**").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/api/members/**").permitAll()  // /api/members/** 경로는 인증 없이 접근 가능
+                .requestMatchers("/api/notes/**").permitAll()  // /api/notes/** 경로는 인증 없이 접근 가능
+                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**").permitAll()  // Swagger 관련 URL 접근 허용
+                .anyRequest().authenticated()  // 나머지 모든 요청은 인증 필요
             )
             .oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(userInfo -> userInfo
@@ -74,5 +76,4 @@ public class SecurityConfig {
             );
         };
     }
-
 }

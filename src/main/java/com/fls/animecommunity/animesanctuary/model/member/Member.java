@@ -67,7 +67,7 @@ public class Member {
         this.providerId = providerId;
         this.role = role;
         this.username = email;
-        this.birth = LocalDate.of(2000, 1, 1);  // 기본 생년월일 설정
+        this.birth = LocalDate.of(1900, 1, 1);  // 기본 생년월일 설정
         this.gender = GenderType.OTHER;  // 기본 성별 설정
     }
 
