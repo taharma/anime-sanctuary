@@ -86,4 +86,11 @@ public class NoteController {
     	SuccessResponseDto responseDto = noteService.deleteNote(id, requestsDto);
     	return ResponseEntity.ok(responseDto);
     }
+    
+    //Search Note
+    @GetMapping("/search")
+    public ResponseEntity<List<NoteResponseDto>> searchNotes(@RequestParam("keyword") String keyword) {
+        List<NoteResponseDto> results = noteService.searchNotes(keyword);
+        return ResponseEntity.ok(results);
+    }
 }
