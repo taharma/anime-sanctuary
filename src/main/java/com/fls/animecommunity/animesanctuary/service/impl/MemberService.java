@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fls.animecommunity.animesanctuary.model.UpdateProfileRequest;
 import com.fls.animecommunity.animesanctuary.model.member.Member;
+import com.fls.animecommunity.animesanctuary.model.member.Role;
 import com.fls.animecommunity.animesanctuary.repository.MemberRepository;
 
 @Service
@@ -31,6 +32,12 @@ public class MemberService {
         if (memberRepository.existsByUsername(member.getUsername())) {
             throw new IllegalArgumentException("Username already exists");
         }
+
+        if (member.getPassword() == null || member.getPassword().isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be null or empty");
+        }
+
+        System.out.println("Password before encoding: " + member.getPassword());
 
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         return memberRepository.save(member);
@@ -128,4 +135,22 @@ public class MemberService {
             memberRepository.save(member);
         }
     }
+
+    @Transactional
+    public Member registerOrLoginWithSocial(String name, String email, String provider, String providerId) {
+        Member existingMember = memberRepository.findByEmail(email);
+
+        if (existingMember != null) {
+            // 기존 회원인 경우
+            return existingMember;
+        } else {
+            // 신규 회원인 경우
+            Member newMember = new Member(name, email, provider, providerId, Role.USER);
+            // 패스워드를 비워두거나 기본값으로 설정
+            newMember.setPassword("");  // 패스워드를 빈 문자열로 설정
+            return memberRepository.save(newMember);
+        }
+    }
+
+
 }
