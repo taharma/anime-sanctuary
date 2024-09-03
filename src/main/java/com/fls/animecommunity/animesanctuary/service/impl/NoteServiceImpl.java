@@ -1,5 +1,13 @@
 package com.fls.animecommunity.animesanctuary.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.fls.animecommunity.animesanctuary.exception.ResourceNotFoundException;
 import com.fls.animecommunity.animesanctuary.model.category.Category;
 import com.fls.animecommunity.animesanctuary.model.note.Note;
@@ -10,17 +18,8 @@ import com.fls.animecommunity.animesanctuary.repository.CategoryRepository;
 import com.fls.animecommunity.animesanctuary.repository.NoteRepository;
 import com.fls.animecommunity.animesanctuary.service.interfaces.NoteService;
 
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -123,5 +122,13 @@ public class NoteServiceImpl implements NoteService{
     	//    	log.info("delete success ID: {}", id);
     	
         return new SuccessResponseDto(true);
+    }
+    
+    //Search
+    @Override
+    @Transactional(readOnly = true)
+    public List<NoteResponseDto> searchNotes(String keyword) {
+        List<Note> notes = noteRepository.findByTitleContainingOrContentsContaining(keyword, keyword);
+        return notes.stream().map(NoteResponseDto::new).collect(Collectors.toList());
     }
 }

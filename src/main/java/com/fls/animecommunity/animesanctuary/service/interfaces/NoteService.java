@@ -13,5 +13,6 @@ public interface NoteService {
     NoteResponseDto createNote(NoteRequestsDto requestsDto);
     NoteResponseDto updateNote(Long id, NoteRequestsDto requestsDto) throws Exception;
     SuccessResponseDto deleteNote(Long id, NoteRequestsDto requestsDto) throws Exception;
+    List<NoteResponseDto> searchNotes(String keyword);
 	
 }
