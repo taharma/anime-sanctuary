@@ -34,10 +34,20 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/members/**").permitAll()  // /api/members/** 경로는 인증 없이 접근 가능
-                .requestMatchers("/api/notes/**").permitAll()  // /api/notes/** 경로는 인증 없이 접근 가능
-                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**").permitAll()  // Swagger 관련 URL 접근 허용
-                .anyRequest().authenticated()  // 나머지 모든 요청은 인증 필요
+                // /api/members/register, /api/members/login은 비인증 사용자도 접근 가능
+                .requestMatchers("/api/members/register", "/api/members/login").permitAll()
+                // 그 외의 /api/members/** 경로는 인증된 사용자만 접근 가능
+                .requestMatchers("/api/members/**").authenticated()
+                
+                // /api/notes에서 조회(GET), 검색(GET) 요청은 비인증 사용자도 가능
+                .requestMatchers("/api/notes", "/api/notes/search").permitAll()  // Note 조회 및 검색은 비인증 사용자도 가능
+                .requestMatchers("/api/notes/**").authenticated()  // 노트 생성, 수정, 삭제 등은 인증된 사용자만 접근 가능
+
+                // Swagger 관련 URL은 비인증 사용자도 접근 가능
+                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**").permitAll()
+
+                // 나머지 모든 요청은 인증 필요
+                .anyRequest().authenticated()
             )
             .oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(userInfo -> userInfo
