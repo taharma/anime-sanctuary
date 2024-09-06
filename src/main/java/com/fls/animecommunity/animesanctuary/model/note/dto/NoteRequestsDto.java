@@ -1,20 +1,19 @@
 package com.fls.animecommunity.animesanctuary.model.note.dto;
 
 import com.fls.animecommunity.animesanctuary.model.member.Member;
-
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
+import lombok.Data;
 
-/*
- * Note의 Requests 의 DataTransferObject
- */
-
-@Getter
+@Data
 public class NoteRequestsDto {
-	@NotBlank(message = "title must not be blank")
-	private String title;
-	@NotBlank(message = "contents must not be blank")
+
+    @NotBlank
+    private String title;
+
+    @NotBlank
     private String contents;
-	
-	private Long categoryId;
+
+    private Long categoryId;
+
+    private Member member;  // 작성자 정보 추가
 }

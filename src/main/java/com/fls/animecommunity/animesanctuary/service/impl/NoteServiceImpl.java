@@ -64,25 +64,20 @@ public class NoteServiceImpl implements NoteService{
     @Override
     @Transactional
     public NoteResponseDto createNote(NoteRequestsDto requestsDto) {
-    	//    	log.info("createNote()");
-    	
-    	Optional<Category> optionalCategory = categoryRepository.findById(requestsDto.getCategoryId());
+        Optional<Category> optionalCategory = categoryRepository.findById(requestsDto.getCategoryId());
 
         if (!optionalCategory.isPresent()) {
             throw new ResourceNotFoundException("Category not found with id: " + requestsDto.getCategoryId());
         }
 
         Category category = optionalCategory.get();
-    	    
-	    Note note = new Note();
-	    note.setTitle(requestsDto.getTitle());
-	    note.setContents(requestsDto.getContents());
-	    note.setCategory(category);
-	    
-	    Note savedNote = noteRepository.save(note);
-	    //      log.info("create success");
-    	return new NoteResponseDto(savedNote);
+        Note note = new Note(requestsDto.getTitle(), requestsDto.getContents(), requestsDto.getMember());  // 작성자 설정
+        note.setCategory(category);
+
+        Note savedNote = noteRepository.save(note);
+        return new NoteResponseDto(savedNote);
     }
+
     
     //update
     @Override
