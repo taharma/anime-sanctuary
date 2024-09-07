@@ -24,7 +24,7 @@ import java.util.List;
  * Method Name : createNote , getNotes , getNote , updateNote , deleteNote
  * parameter = dto: NoteResponseDto, NoteRequestsDto, SuccessResponseDto
  */
-@CrossOrigin(origins = "http://localhost:9000") // 클라이언트의 도메인을 명시
+@CrossOrigin(origins = {"http://localhost:9000", "http://localhost:5501"}) // 클라이언트의 도메인을 명시
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/notes")

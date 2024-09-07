@@ -29,7 +29,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api/members")
-@CrossOrigin(origins = "http://localhost:9000")
+@CrossOrigin(origins = {"http://localhost:9000", "http://localhost:5501"})
 public class MemberController {
 
     @Autowired
