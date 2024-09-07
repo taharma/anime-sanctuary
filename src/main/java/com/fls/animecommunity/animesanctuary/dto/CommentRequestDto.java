@@ -1,14 +1,10 @@
 package com.fls.animecommunity.animesanctuary.dto;
 
-import com.fls.animecommunity.animesanctuary.model.member.Member;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class CommentRequestDto {
-
-    private Member member;
-
-    @NotBlank
-    private String content;
+    private String content;  // 'content'로 수정
+    private Long noteId;
+    private Long memberId;
 }

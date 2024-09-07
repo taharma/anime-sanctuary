@@ -36,17 +36,17 @@ public class NoteController {
     
     //create Note
     @PostMapping
-    public ResponseEntity<?> createNote(@Valid @RequestBody NoteRequestsDto requestsDto
-    								    ,BindingResult result) {
-    	log.info("createNote 실행");
-    	log.info("Received Note request with title: {} and contents: {}", requestsDto.getTitle(), requestsDto.getContents());
-    	if (result.hasErrors()) {
+    public ResponseEntity<?> createNote(@Valid @RequestBody NoteRequestsDto requestsDto,
+                                        BindingResult result) {
+        log.info("Received Note request with title: {} and contents: {}", requestsDto.getTitle(), requestsDto.getContents());
+        
+        if (result.hasErrors()) {
             return ResponseEntity.badRequest().body(result.getAllErrors());
         }
-    	NoteResponseDto responseDto = noteService.createNote(requestsDto);
-    	return ResponseEntity.ok(responseDto);
+        NoteResponseDto responseDto = noteService.createNote(requestsDto);
+        return ResponseEntity.ok(responseDto);
     }
-    
+
     //list Note
     @GetMapping
     public ResponseEntity<List<NoteResponseDto>> getNotes() {

@@ -15,5 +15,5 @@ public class NoteRequestsDto {
 
     private Long categoryId;
 
-    private Member member;  // 작성자 정보 추가
+    private Long memberId;  // Member 대신 memberId 사용
 }

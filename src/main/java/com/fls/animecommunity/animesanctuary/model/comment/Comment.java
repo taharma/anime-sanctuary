@@ -29,7 +29,6 @@ public class Comment {
     private String content;
 
     private LocalDateTime createdAt;
-
     private LocalDateTime updatedAt;
 
     public Comment(Note note, Member member, String content) {

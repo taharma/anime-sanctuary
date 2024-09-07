@@ -28,8 +28,8 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<CommentResponseDto> addComment(@PathVariable Long noteId,
-                                                         @RequestBody CommentRequestDto requestDto) {
-        CommentResponseDto comment = commentService.addComment(noteId, requestDto);
+                                                         @RequestBody CommentRequestDto commentrequestDto) {
+        CommentResponseDto comment = commentService.addComment(noteId, commentrequestDto);
         return ResponseEntity.ok(comment);
     }
 
@@ -39,10 +39,10 @@ public class CommentController {
         return ResponseEntity.ok(comments);
     }
 
-    @PutMapping("/{commentId}")
+    @PostMapping("/{commentId}")
     public ResponseEntity<Void> updateComment(@PathVariable Long commentId,
                                               @RequestBody CommentRequestDto requestDto) {
-        commentService.updateComment(commentId, requestDto.getMember().getId(), requestDto);
+        commentService.updateComment(commentId, requestDto.getMemberId(), requestDto);
         return ResponseEntity.ok().build();
     }
 
