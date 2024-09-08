@@ -1,34 +1,21 @@
 package com.fls.animecommunity.animesanctuary.model.note;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import lombok.Data;
+import com.fls.animecommunity.animesanctuary.model.member.Member;
+import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+// import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import com.fls.animecommunity.animesanctuary.model.category.Category;
-import com.fls.animecommunity.animesanctuary.model.member.Member;
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteRequestsDto;
-import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-
-/*
- * 
- */
 @Entity
-@Data
+@Getter @Setter @ToString
 @NoArgsConstructor
 public class Note extends Timestamped {
 
@@ -56,6 +43,10 @@ public class Note extends Timestamped {
     @ElementCollection
     private List<String> tags;
 
+    // 이 노트를 저장한 사용자들 (ManyToMany 관계)
+    @ManyToMany(mappedBy = "savedNotes")
+    private Set<Member> savedByMembers;
+
     public Note(NoteRequestsDto requestsDto) {
         this.title = requestsDto.getTitle();
         this.contents = requestsDto.getContents();
@@ -76,9 +67,3 @@ public class Note extends Timestamped {
         }
     }
 }
-
-    
-    
-    
-    
-
