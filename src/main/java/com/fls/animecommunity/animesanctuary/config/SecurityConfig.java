@@ -34,6 +34,7 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
+            	.requestMatchers("/static/**","/index.html").permitAll()
                 .requestMatchers("/api/members/**").permitAll()  // /api/members/** 경로는 인증 없이 접근 가능
                 .requestMatchers("/api/notes/**").permitAll()  // /api/notes/** 경로는 인증 없이 접근 가능
                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**").permitAll()  // Swagger 관련 URL 접근 허용
