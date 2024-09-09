@@ -35,7 +35,8 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 
     private final MemberService memberService;
-
+    
+    //register 회원 등록
     @PostMapping("/register")
     public ResponseEntity<Member> register(@RequestBody MemberRegisterDto memberDto) {
         Member member = new Member();
@@ -49,7 +50,8 @@ public class MemberController {
         Member registeredMember = memberService.register(member);
         return ResponseEntity.ok(registeredMember);
     }
-
+    
+    //login 로그인
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
         Member member = memberService.login(loginRequest.getUsernameOrEmail(), loginRequest.getPassword());
@@ -61,7 +63,8 @@ public class MemberController {
             return ResponseEntity.status(401).body("Invalid username/email or password");
         }
     }
-
+    
+    //logout 로그아웃
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
         // 세션 무효화
@@ -69,6 +72,7 @@ public class MemberController {
         return ResponseEntity.ok("Logout successful");
     }
     
+    //deleteMember 회원삭제
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteMember(
         @PathVariable("id") Long id, 
@@ -90,20 +94,10 @@ public class MemberController {
             return ResponseEntity.status(401).build(); // 비밀번호가 일치하지 않음, Unauthorized
         }
     }
-
     
-    // 프로필 조회
-    @GetMapping("/profile/{id}")
-    public ResponseEntity<Member> getProfile(@PathVariable("id") Long id) {
-        Member member = memberService.getProfile(id);
-        if (member != null) {
-            return ResponseEntity.ok(member);
-        } else {
-            return ResponseEntity.status(404).build();
-        }
-    }
-    
-    // 프로필 수정
+    //update Profile = member의 모든 요소(username, password, )를 수정할수있게 함
+    //바뀐 부분이 있으면 update되는 방식, 이 메서드하나로 해결이 가능하다.분리시킬필요없음 
+    //바꾸고 싶은것만 Body에 담아서 보내면 됨
     @PostMapping("/updateProfile/{userId}")
     public ResponseEntity<?> updateProfile(
         @PathVariable("userId") Long userId,
@@ -121,6 +115,21 @@ public class MemberController {
         }
     }
     
+    
+    //Profile 프로필 관련 
+    
+    // getProfile 프로필 조회
+    @GetMapping("/profile/{id}")
+    public ResponseEntity<Member> getProfile(@PathVariable("id") Long id) {
+        Member member = memberService.getProfile(id);
+        if (member != null) {
+            return ResponseEntity.ok(member);
+        } else {
+            return ResponseEntity.status(404).build();
+        }
+    }
+    
+    //uploadProfileImage 프로필 이미지 업로드 하기
     @PostMapping("/{userId}/uploadProfileImage")
     public ResponseEntity<?> uploadProfileImage(
             @PathVariable("userId") Long userId, 
@@ -156,6 +165,7 @@ public class MemberController {
         }
     }
     
+    //deleteProfileImage 프로필 이미지 삭제
     @DeleteMapping("/{userId}/deleteProfileImage")
     public ResponseEntity<?> deleteProfileImage(@PathVariable("userId") Long userId) {
         try {
@@ -166,7 +176,7 @@ public class MemberController {
         }
     }
 
-    // 이메일로 사용자 찾기 (추가 기능)
+    // findByEmail 이메일로 사용자 찾기 
     @GetMapping("/findByEmail")
     public ResponseEntity<Member> findByEmail(@RequestParam String email) {
         Member member = memberService.findByEmail(email);

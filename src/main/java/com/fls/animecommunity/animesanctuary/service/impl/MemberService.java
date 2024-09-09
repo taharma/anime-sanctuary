@@ -75,15 +75,18 @@ public class MemberService {
         if (existingMember == null) {
             return null;
         }
-
+        
+        //새로운 password를 설정하는 로직
         if (updateRequest.getPassword() != null && !updateRequest.getPassword().isEmpty()) {
+        	// 현재 비밀번호가 null이거나, 현재 비밀번호가 기존 비밀번호와 일치하지 않는 경우 에러를 발생시킨다.
             if (updateRequest.getCurrentPassword() == null ||
                 !passwordEncoder.matches(updateRequest.getCurrentPassword(), existingMember.getPassword())) {
                 throw new IllegalArgumentException("Current password is incorrect");
             }
+            // 현재 비밀번호가 맞으면 새로운 비밀번호로 업데이트
             existingMember.setPassword(passwordEncoder.encode(updateRequest.getPassword()));
         }
-
+        //username(=id) , 이름 등 가져온 것이 null이 아니다 그러면 수정하고 , null이 라면 기존것 그대로 
         existingMember.setUsername(updateRequest.getUsername() != null ? updateRequest.getUsername() : existingMember.getUsername());
         existingMember.setName(updateRequest.getName() != null ? updateRequest.getName() : existingMember.getName());
         existingMember.setBirth(updateRequest.getBirth() != null ? updateRequest.getBirth() : existingMember.getBirth());
