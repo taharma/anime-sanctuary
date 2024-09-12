@@ -8,13 +8,13 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fls.animecommunity.animesanctuary.dto.categoryDto.CategoryRequestsDto;
+import com.fls.animecommunity.animesanctuary.dto.categoryDto.CategoryResponseDto;
+import com.fls.animecommunity.animesanctuary.dto.categoryDto.SuccessResponseDto;
+import com.fls.animecommunity.animesanctuary.dto.noteDto.NoteResponseDto;
 import com.fls.animecommunity.animesanctuary.exception.ResourceNotFoundException;
 import com.fls.animecommunity.animesanctuary.model.category.Category;
-import com.fls.animecommunity.animesanctuary.model.category.dto.CategoryRequestsDto;
-import com.fls.animecommunity.animesanctuary.model.category.dto.CategoryResponseDto;
-import com.fls.animecommunity.animesanctuary.model.category.dto.SuccessResponseDto;
 import com.fls.animecommunity.animesanctuary.model.note.Note;
-import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
 import com.fls.animecommunity.animesanctuary.repository.CategoryRepository;
 import com.fls.animecommunity.animesanctuary.repository.NoteRepository;
 import com.fls.animecommunity.animesanctuary.service.interfaces.CategoryService;

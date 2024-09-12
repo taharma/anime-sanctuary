@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
+import com.fls.animecommunity.animesanctuary.dto.noteDto.NoteResponseDto;
 import com.fls.animecommunity.animesanctuary.service.interfaces.NoteService;
 
 /*
