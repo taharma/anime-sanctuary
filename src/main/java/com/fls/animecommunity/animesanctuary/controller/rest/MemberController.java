@@ -55,7 +55,9 @@ public class MemberController {
         if (member != null) {
             // 세션 생성
             request.getSession().setAttribute("user", member);
-            return ResponseEntity.ok("Login successful");
+            
+            return ResponseEntity.ok(member);
+
         } else {
             return ResponseEntity.status(401).body("Invalid username/email or password");
         }
