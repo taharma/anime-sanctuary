@@ -1,8 +1,6 @@
 package com.fls.animecommunity.animesanctuary.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -24,111 +22,91 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class NoteServiceImpl implements NoteService{
+public class NoteServiceImpl implements NoteService {
 
     private final NoteRepository noteRepository;
     private final CategoryRepository categoryRepository;
 
-    //list
+    // List all notes
     @Override
     @Transactional(readOnly = true)
     public List<NoteResponseDto> getNotes() {
-    	//    	log.info("getNotes()");
-    	List<Note> notes = noteRepository.findAllByOrderByModifiedAtDesc();
-        List<NoteResponseDto> noteResponseDtos = new ArrayList<>();
-
-        for (Note note : notes) {
-            noteResponseDtos.add(new NoteResponseDto(note));
-        }
-
-        return noteResponseDtos;
+        log.info("Fetching all notes ordered by modified date.");
+        List<Note> notes = noteRepository.findAllByOrderByModifiedAtDesc();
+        return notes.stream()
+                    .map(NoteResponseDto::new)
+                    .collect(Collectors.toList());
     }
-    
-    //find
+
+    // Find a specific note by id
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public NoteResponseDto getNote(Long id) {
-    	//    	log.info("getNote()");
-    	//    	log.info("ID: {}", id);
-    	
-    	Optional<Note> optionalNote = noteRepository.findById(id);
-
-        if (optionalNote.isPresent()) {
-            return new NoteResponseDto(optionalNote.get());
-        } else {
-            throw new IllegalArgumentException("아이디가 존재하지 않습니다.");
-        }
+        log.info("Fetching note with ID: {}", id);
+        Note note = noteRepository.findById(id)
+                                  .orElseThrow(() -> new ResourceNotFoundException("아이디가 존재하지 않습니다.: " + id));
+        return new NoteResponseDto(note);
     }
-    
-    //write , create
+
+    // Create a new note
     @Override
     @Transactional
     public NoteResponseDto createNote(NoteRequestsDto requestsDto) {
-    	//    	log.info("createNote()");
-    	
-    	Optional<Category> optionalCategory = categoryRepository.findById(requestsDto.getCategoryId());
+        log.info("Creating a new note with title: {}", requestsDto.getTitle());
 
-        if (!optionalCategory.isPresent()) {
-            throw new ResourceNotFoundException("Category not found with id: " + requestsDto.getCategoryId());
-        }
+        Category category = categoryRepository.findById(requestsDto.getCategoryId())
+                                              .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + requestsDto.getCategoryId()));
 
-        Category category = optionalCategory.get();
-    	    
-	    Note note = new Note();
-	    note.setTitle(requestsDto.getTitle());
-	    note.setContents(requestsDto.getContents());
-	    note.setCategory(category);
-	    
-	    Note savedNote = noteRepository.save(note);
-	    //      log.info("create success");
-    	return new NoteResponseDto(savedNote);
+        Note note = new Note();
+        note.setTitle(requestsDto.getTitle());
+        note.setContents(requestsDto.getContents());
+        note.setCategory(category);
+
+        Note savedNote = noteRepository.save(note);
+        log.info("Note successfully created with ID: {}", savedNote.getId());
+
+        return new NoteResponseDto(savedNote);
     }
-    
-    //update
+
+    // Update an existing note
     @Override
     @Transactional
-    public NoteResponseDto updateNote(Long id, NoteRequestsDto requestsDto) throws Exception {
-    	//    	log.info("updateNote()");
-    	//    	log.info("ID: {}", id);
-    	
-    	 Optional<Note> optionalNote = noteRepository.findById(id);
-
-    	    if (!optionalNote.isPresent()) {
-    	        throw new IllegalArgumentException("아이디가 존재하지 않습니다.");
-    	    }
-
-    	    Note note = optionalNote.get();
+    public NoteResponseDto updateNote(Long id, NoteRequestsDto requestsDto) {
+        log.info("Updating note with ID: {}", id);
+        
+        Note note = noteRepository.findById(id)
+                                  .orElseThrow(() -> new ResourceNotFoundException("아이디가 존재하지 않습니다.: " + id));
 
         note.update(requestsDto);
-        //        log.info("update success ID: {}", id);
+        log.info("Note successfully updated with ID: {}", id);
         
         return new NoteResponseDto(note);
     }
-    
-    //delete
+
+    // Delete a note
     @Override
     @Transactional
-    public SuccessResponseDto deleteNote(Long id, NoteRequestsDto requestsDto) throws Exception{
-    	//    	log.info("deleteNote()");
-    	//    	log.info("ID: {}", id);
-    	
-    	Optional<Note> optionalNote = noteRepository.findById(id);
+    public SuccessResponseDto deleteNote(Long id, NoteRequestsDto requestsDto) {
+        log.info("Deleting note with ID: {}", id);
+        
+        Note note = noteRepository.findById(id)
+                                  .orElseThrow(() -> new ResourceNotFoundException("아이디가 존재하지 않습니다.: " + id));
 
-        if (!optionalNote.isPresent()) {
-            throw new IllegalArgumentException("아이디가 존재하지 않습니다.");
-        }
-
-    	noteRepository.deleteById(id);
-    	//    	log.info("delete success ID: {}", id);
-    	
+        noteRepository.deleteById(id);
+        log.info("Note successfully deleted with ID: {}", id);
+        
         return new SuccessResponseDto(true);
     }
-    
-    //Search
+
+    // Search notes by keyword
     @Override
     @Transactional(readOnly = true)
     public List<NoteResponseDto> searchNotes(String keyword) {
+        log.info("Searching notes by keyword: {}", keyword);
+        
         List<Note> notes = noteRepository.findByTitleContainingOrContentsContaining(keyword, keyword);
-        return notes.stream().map(NoteResponseDto::new).collect(Collectors.toList());
+        return notes.stream()
+                    .map(NoteResponseDto::new)
+                    .collect(Collectors.toList());
     }
 }

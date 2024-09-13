@@ -1,22 +1,30 @@
 package com.fls.animecommunity.animesanctuary.controller.rest;
 
-import com.fls.animecommunity.animesanctuary.model.note.Note;
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.fls.animecommunity.animesanctuary.model.member.Member;
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteRequestsDto;
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
 import com.fls.animecommunity.animesanctuary.model.note.dto.SuccessResponseDto;
-import com.fls.animecommunity.animesanctuary.service.impl.NoteServiceImpl;
+import com.fls.animecommunity.animesanctuary.service.impl.MemberService;
 import com.fls.animecommunity.animesanctuary.service.interfaces.NoteService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /*
  * NoteController class : Note의 CRUD기능 , api mapping 
@@ -33,6 +41,7 @@ public class NoteController {
 
     //DI
     private final NoteService noteService;
+    private final MemberService memberService;
     
     //create Note
     @PostMapping
@@ -93,4 +102,20 @@ public class NoteController {
         List<NoteResponseDto> results = noteService.searchNotes(keyword);
         return ResponseEntity.ok(results);
     }
+
+    @PostMapping("/save/{noteId}")
+    public ResponseEntity<?> saveNote(@PathVariable("noteId") Long noteId, HttpServletRequest request) {
+        Member member = (Member) request.getSession().getAttribute("user");
+        if (member == null) {
+            return ResponseEntity.status(403).body("User must be logged in to save a note.");
+        }
+
+        boolean success = memberService.saveNoteForUser(member.getId(), noteId);
+        if (success) {
+            return ResponseEntity.ok("Note saved successfully.");
+        } else {
+            return ResponseEntity.status(404).body("Note not found.");
+        }
+    }
+
 }

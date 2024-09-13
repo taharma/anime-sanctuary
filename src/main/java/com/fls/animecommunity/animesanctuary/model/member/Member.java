@@ -1,8 +1,20 @@
 package com.fls.animecommunity.animesanctuary.model.member;
 
 import java.time.LocalDate;
+import java.util.Set;
 
-import jakarta.persistence.*;
+import com.fls.animecommunity.animesanctuary.model.note.Note;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -46,6 +58,15 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role;  // USER, ADMIN 등
 
+    // 사용자가 저장한 노트 리스트 (ManyToMany 관계)
+    @ManyToMany
+    @JoinTable(
+        name = "member_saved_notes",
+        joinColumns = @JoinColumn(name = "member_id"),
+        inverseJoinColumns = @JoinColumn(name = "note_id")
+    )
+    private Set<Note> savedNotes;  // 사용자가 저장한 노트 리스트
+
     // 기본 생성자
     public Member() {}
 
@@ -70,6 +91,4 @@ public class Member {
         this.birth = LocalDate.of(1900, 1, 1);  // 기본 생년월일 설정
         this.gender = GenderType.OTHER;  // 기본 성별 설정
     }
-
-    // Getters and Setters 생략 (Lombok 사용으로 이미 포함)
 }
