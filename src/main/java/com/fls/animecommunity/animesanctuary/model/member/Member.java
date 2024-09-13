@@ -1,8 +1,21 @@
 package com.fls.animecommunity.animesanctuary.model.member;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
-import jakarta.persistence.*;
+import com.fls.animecommunity.animesanctuary.model.note.Note;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -45,6 +58,25 @@ public class Member {
     
     @Enumerated(EnumType.STRING)
     private Role role;  // USER, ADMIN 등
+
+    // 스크랩 - notes
+    @ManyToMany
+    @JoinTable(
+        name = "member_saved_notes",
+        joinColumns = @JoinColumn(name = "member_id"),
+        inverseJoinColumns = @JoinColumn(name = "note_id")
+    )
+    private Set<Note> savedNotes = new HashSet<>();
+
+    // Constructors, Getters, Setters
+
+    public Set<Note> getSavedNotes() {
+        return savedNotes;
+    }
+
+    public void setSavedNotes(Set<Note> savedNotes) {
+        this.savedNotes = savedNotes;
+    }
 
     // 기본 생성자
     public Member() {}
