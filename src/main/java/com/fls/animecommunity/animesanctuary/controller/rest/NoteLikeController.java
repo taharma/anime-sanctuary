@@ -27,6 +27,9 @@ DELETE api/notes/{noteId}/noteLike
 GET api/notes/{noteId}/noteLike
 좋아요 수 조회: 
 GET api/notes/{noteId}/noteLike/count
+
+//Body에 좋아요에 대한 정보를 담아 요청을 보낸다. 
+ * 필요한 정보 noteid / memberid
  * 
  */
 
@@ -38,7 +41,7 @@ public class NoteLikeController {
 	
 	private final NoteLikeService noteLikeService;
 	
-	@PostMapping					//Body에 좋아요에 대한 정보를 담아 요청을 보낸다.
+	@PostMapping					 
     public ResponseEntity<?> insert(@RequestBody @Valid NoteLikeRequestDto noteLikeRequestDto) {
         
 		log.info("Success insert()");
