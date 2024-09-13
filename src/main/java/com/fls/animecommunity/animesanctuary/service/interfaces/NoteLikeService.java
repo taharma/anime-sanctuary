@@ -7,6 +7,12 @@ import jakarta.validation.Valid;
 
 public interface NoteLikeService {
 
-	NoteLikeResponseDto insert(@Valid NoteLikeRequestDto noteLikeRequestDto);
+	NoteLikeResponseDto addLike(@Valid NoteLikeRequestDto noteLikeRequestDto);
+
+	NoteLikeResponseDto removeLike(@Valid NoteLikeRequestDto noteLikeRequestDto);
+
+	NoteLikeResponseDto getLikeStatus(Long noteId);
+
+	NoteLikeResponseDto getLikeCount(Long noteId);
 
 }
