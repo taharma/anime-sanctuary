@@ -1,7 +1,6 @@
 package com.fls.animecommunity.animesanctuary.model.member;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 import com.fls.animecommunity.animesanctuary.model.note.Note;
@@ -59,24 +58,14 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role;  // USER, ADMIN 등
 
-    // 스크랩 - notes
+    // 사용자가 저장한 노트 리스트 (ManyToMany 관계)
     @ManyToMany
     @JoinTable(
         name = "member_saved_notes",
         joinColumns = @JoinColumn(name = "member_id"),
         inverseJoinColumns = @JoinColumn(name = "note_id")
     )
-    private Set<Note> savedNotes = new HashSet<>();
-
-    // Constructors, Getters, Setters
-
-    public Set<Note> getSavedNotes() {
-        return savedNotes;
-    }
-
-    public void setSavedNotes(Set<Note> savedNotes) {
-        this.savedNotes = savedNotes;
-    }
+    private Set<Note> savedNotes;  // 사용자가 저장한 노트 리스트
 
     // 기본 생성자
     public Member() {}
@@ -102,6 +91,4 @@ public class Member {
         this.birth = LocalDate.of(1900, 1, 1);  // 기본 생년월일 설정
         this.gender = GenderType.OTHER;  // 기본 성별 설정
     }
-
-    // Getters and Setters 생략 (Lombok 사용으로 이미 포함)
 }
