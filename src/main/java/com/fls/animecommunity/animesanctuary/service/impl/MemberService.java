@@ -100,6 +100,7 @@ public class MemberService {
         Optional.ofNullable(updateRequest.getGender()).ifPresent(existingMember::setGender);
 
         // 비밀번호 업데이트 로직
+        // 현재 비밀번호가 null이거나, 현재 비밀번호가 기존 비밀번호와 일치하지 않는 경우 에러를 발생시킨다.
         if (updateRequest.getPassword() != null && !updateRequest.getPassword().isEmpty()) {
             // 현재 비밀번호가 일치하는지 확인
             if (updateRequest.getCurrentPassword() == null ||
