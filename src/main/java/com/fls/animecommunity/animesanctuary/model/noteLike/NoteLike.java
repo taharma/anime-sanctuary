@@ -38,4 +38,9 @@ public class NoteLike {
 	@JoinColumn(name = "note_id")
 	private Note note;
 	
+//	//생성자
+	public NoteLike(Note note, Member member) {
+		this.note = note;
+		this.member = member;
+	}
 }

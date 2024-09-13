@@ -36,4 +36,15 @@ public class NoteLikeResponseDto {
 	private Long likeCount;  // 게시물의 총 좋아요 수
 	
 	private String message;  // 사용자에게 반환할 메시지
+	
+	//Custom Constructor
+	public NoteLikeResponseDto(Long noteId, boolean isLiked, Long likeCount, String message) {
+		// TODO Auto-generated constructor stub
+		this.noteId = noteId;
+		this.isLiked = isLiked;
+		this.likeCount = likeCount;
+		this.message = message;
+	}
+
+
 }
