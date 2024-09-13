@@ -17,16 +17,19 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import com.fls.animecommunity.animesanctuary.model.member.Member;
 import com.fls.animecommunity.animesanctuary.repository.MemberRepository;
+import com.fls.animecommunity.animesanctuary.repository.NoteRepository;
 import com.fls.animecommunity.animesanctuary.service.impl.MemberService;
 
 @Configuration
 public class SecurityConfig {
 
     private final MemberRepository memberRepository;
+    private final NoteRepository noteRepository;
 
-    // 생성자를 통해 MemberRepository를 주입받음
-    public SecurityConfig(MemberRepository memberRepository) {
+    // 생성자를 통해 MemberRepository + NoteRepository를 주입받음
+    public SecurityConfig(MemberRepository memberRepository, NoteRepository noteRepository) {
         this.memberRepository = memberRepository;
+        this.noteRepository = noteRepository;
     }
 
     @Bean
@@ -65,8 +68,8 @@ public class SecurityConfig {
             String email = oAuth2User.getAttribute("email");
             String name = oAuth2User.getAttribute("name");
 
-            // Gender와 Birth 기본값을 설정한 생성자를 사용
-            MemberService memberService = new MemberService(memberRepository, passwordEncoder());
+            // MemberService 생성 시 NoteRepository도 전달
+            MemberService memberService = new MemberService(memberRepository, noteRepository, passwordEncoder());
             Member member = memberService.registerOrLoginWithSocial(name, email, provider, providerId);
 
             return new DefaultOAuth2User(
