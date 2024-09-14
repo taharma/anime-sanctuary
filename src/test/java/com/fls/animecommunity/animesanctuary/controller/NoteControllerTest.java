@@ -36,13 +36,16 @@ class NoteControllerTest {
     @Test
     void createNote_shouldReturnOk_whenValidRequestIsGiven() {
         NoteRequestsDto requestDto = new NoteRequestsDto();
+        requestDto.setTitle("Test Note");
+        requestDto.setContents("Test Contents");
+        requestDto.setMemberId(1L);  // Logged-in user ID
+
         NoteResponseDto responseDto = new NoteResponseDto();
-        
+
         when(noteService.createNote(any(NoteRequestsDto.class))).thenReturn(responseDto);
 
         ResponseEntity<?> response = noteController.createNote(requestDto, bindingResult);
 
-        // Deprecated된 getStatusCodeValue() 대신 getStatusCode() 사용
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
@@ -54,7 +57,6 @@ class NoteControllerTest {
 
         ResponseEntity<NoteResponseDto> response = noteController.getNote(1L);
 
-        // Deprecated된 getStatusCodeValue() 대신 getStatusCode() 사용
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
     }

@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,6 +38,7 @@ public class MemberController {
     //register 회원 등록
     @PostMapping("/register")
     public ResponseEntity<Member> register(@RequestBody MemberRegisterDto memberDto) {
+        // Create a new Member object from the DTO
         Member member = new Member();
         member.setUsername(memberDto.getUsername());
         member.setPassword(memberDto.getPassword());
@@ -46,11 +46,13 @@ public class MemberController {
         member.setEmail(memberDto.getEmail());
         member.setGender(GenderType.valueOf(memberDto.getGender().toUpperCase()));
         member.setBirth(memberDto.getBirth());
-        
+
+        // Register the member using the service
         Member registeredMember = memberService.register(member);
+        
         return ResponseEntity.ok(registeredMember);
     }
-    
+
     //login 로그인
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
