@@ -50,7 +50,8 @@ GET api/notes/{noteId}/noteLike/count
 public class NoteLikeController {
 
 	private final NoteLikeService noteLikeService;
-
+	
+	//addLike
 	@PostMapping
 	public ResponseEntity<NoteLikeResponseDto> addLike(@PathVariable("noteId") Long noteId,
 			@RequestBody @Valid NoteLikeRequestDto noteLikeRequestDto) {
@@ -68,7 +69,8 @@ public class NoteLikeController {
 		// 그후 client에게 noteLikeResponseDto를 리턴
 		return ResponseEntity.ok(noteLikeResponseDto);
 	}
-
+	
+	//removeLike
 	@DeleteMapping
 	public ResponseEntity<NoteLikeResponseDto> removeLike(@PathVariable("noteId") Long noteId,
 			@RequestBody @Valid NoteLikeRequestDto noteLikeRequestDto) {
@@ -86,7 +88,8 @@ public class NoteLikeController {
 		// 그후 client에게 noteLikeResponseDto를 리턴
 		return ResponseEntity.ok(noteLikeResponseDto);
 	}
-
+	
+	//getLikeStatus
 	@GetMapping
 	public ResponseEntity<NoteLikeResponseDto> getLikeStatus(@PathVariable("noteId") Long noteId) {
 
@@ -100,6 +103,7 @@ public class NoteLikeController {
 		return ResponseEntity.ok(noteLikeResponseDto);
 	}
 	
+	//getLikeCount
 	@GetMapping("/count")
 	public ResponseEntity<NoteLikeResponseDto> getLikeCount(@PathVariable("noteId") Long noteId) {
 
