@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fls.animecommunity.animesanctuary.dto.NoteLikeDto.NoteLikeRequestDto;
@@ -26,7 +27,7 @@ POST api/notes/{noteId}/noteLike
 좋아요 취소: 
 DELETE api/notes/{noteId}/noteLike
 
-좋아요 상태 조회: 좋아요 했는지 안했는지 랑 memberid 사용자정보 
+좋아요 상태 조회: 현재 로그인된 사용자가 이 게시물에 좋아요를 눌렀는가? 에 대한 정보
 GET api/notes/{noteId}/noteLike
 
 좋아요 수 조회: 그냥 수만 
@@ -40,6 +41,12 @@ GET api/notes/{noteId}/noteLike/count
  * 
  * method name : 
  * addLike() / removeLike()
+ * 
+ * 
+ * //getLikeStatus Get에 @RequestBody를 쓰는것은 일반적이지 않음.
+ * 현재는 @RequestParam으로 했음 보안적 문제
+ * @AuthenticationPrincipal 도입고려
+ * 
  * 
  */
 
@@ -55,7 +62,8 @@ public class NoteLikeController {
 	@PostMapping
 	public ResponseEntity<NoteLikeResponseDto> addLike(@PathVariable("noteId") Long noteId,
 			@RequestBody @Valid NoteLikeRequestDto noteLikeRequestDto) {
-
+		
+		//호출확인
 		log.info("call addLike()");
 
 		// RequestDto에 noteId를 설정
@@ -90,18 +98,19 @@ public class NoteLikeController {
 	}
 	
 	//getLikeStatus
-	@GetMapping
-	public ResponseEntity<NoteLikeResponseDto> getLikeStatus(@PathVariable("noteId") Long noteId) {
+	@GetMapping("/{noteId}")
+	public ResponseEntity<NoteLikeResponseDto> getLikeStatus(@PathVariable("noteId") Long noteId,
+	                                                         @RequestParam("memberId") Long memberId) {
+	    log.info("call getLikeStatus() for noteId: {} and memberId: {}", noteId, memberId);
 
-		log.info("call getLikeStatus()");
-
-		// 그다음 noteLikeService의 getLikeStatus호출 하여 noteLikeResponseDto를 생성
-		NoteLikeResponseDto noteLikeResponseDto = noteLikeService.getLikeStatus(noteId);
-		
-		log.info("noteLikeResponseDto : {} ", noteLikeResponseDto);
-		
-		return ResponseEntity.ok(noteLikeResponseDto);
+	    // NoteLikeService를 통해 좋아요 상태 확인
+	    NoteLikeResponseDto noteLikeResponseDto = noteLikeService.getLikeStatus(noteId, memberId);
+	    
+	    log.info("noteLikeResponseDto: {}", noteLikeResponseDto);
+	    
+	    return ResponseEntity.ok(noteLikeResponseDto);
 	}
+
 	
 	//getLikeCount
 	@GetMapping("/count")

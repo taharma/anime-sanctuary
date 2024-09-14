@@ -11,7 +11,7 @@ public interface NoteLikeService {
 
 	NoteLikeResponseDto removeLike(@Valid NoteLikeRequestDto noteLikeRequestDto);
 
-	NoteLikeResponseDto getLikeStatus(Long noteId);
+	NoteLikeResponseDto getLikeStatus(Long noteId, Long memberId);
 
 	NoteLikeResponseDto getLikeCount(Long noteId);
 
