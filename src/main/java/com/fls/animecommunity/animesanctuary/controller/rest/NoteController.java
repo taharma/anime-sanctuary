@@ -27,82 +27,86 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /*
- * NoteController class : Note의 CRUD기능 , api mapping 
- * DI : 의존성 주입 NoteServiceImpl
- * Method Name : createNote , getNotes , getNote , updateNote , deleteNote
- * parameter = dto: NoteResponseDto, NoteRequestsDto, SuccessResponseDto
+ * NoteController 클래스 : Note의 CRUD 기능을 담당하며, API 매핑을 처리
+ * 의존성 주입 : NoteService와 MemberService
+ * 주요 메소드 : createNote, getNotes, getNote, updateNote, deleteNote
+ * 파라미터 : NoteResponseDto, NoteRequestsDto, SuccessResponseDto
  */
-@CrossOrigin(origins = "http://localhost:9000") // 클라이언트의 도메인을 명시
+@CrossOrigin(origins = "http://localhost:9000") // 클라이언트의 도메인 명시
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/notes")
 @Slf4j
 public class NoteController {
 
-    //DI
+    // 의존성 주입
     private final NoteService noteService;
     private final MemberService memberService;
-    
-    //create Note
+
+    // 노트 생성
     @PostMapping
     public ResponseEntity<?> createNote(@Valid @RequestBody NoteRequestsDto requestsDto
-    								    ,BindingResult result) {
-    	log.info("createNote 실행");
-    	log.info("Received Note request with title: {} and contents: {}", requestsDto.getTitle(), requestsDto.getContents());
-    	if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(result.getAllErrors());
-        }
-    	NoteResponseDto responseDto = noteService.createNote(requestsDto);
-    	return ResponseEntity.ok(responseDto);
-    }
-    
-    //list Note
-    @GetMapping
-    public ResponseEntity<List<NoteResponseDto>> getNotes() {
-    	//log.info("getNotes 실행");
-    	List<NoteResponseDto> list = noteService.getNotes();
-        return ResponseEntity.ok(list);
-    }
-    
-    //find Note
-    @GetMapping("/{noteId}")
-    public ResponseEntity<NoteResponseDto> getNote(@PathVariable("noteId") Long id) {
-    	//log.info("getNote 실행");
-    	NoteResponseDto note = noteService.getNote(id);
-    	return ResponseEntity.ok(note);
-    }
-    
-    
-    //update Note
-    @PostMapping("/{noteId}")
-    public ResponseEntity<?> updateNote(@Valid @PathVariable("noteId") Long id, 
-    								    @RequestBody NoteRequestsDto requestsDto
-    								    ,BindingResult result) throws Exception {
-    	//log.info("updateNote 실행");
-    	// 유효성 검사 오류 확인
+                                        ,BindingResult result) {
+        log.info("createNote 실행");
+        log.info("Received Note request with title: {} and contents: {}", requestsDto.getTitle(), requestsDto.getContents());
+        
+        // 유효성 검사 오류 확인
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body(result.getAllErrors());
         }
-    	NoteResponseDto updateNote = noteService.updateNote(id, requestsDto);
-    	return ResponseEntity.ok(updateNote);
+        
+        NoteResponseDto responseDto = noteService.createNote(requestsDto);
+        return ResponseEntity.ok(responseDto);
     }
-    
-    //delete Note
+
+    // 노트 목록 조회
+    @GetMapping
+    public ResponseEntity<List<NoteResponseDto>> getNotes() {
+        //log.info("getNotes 실행");
+        List<NoteResponseDto> list = noteService.getNotes();
+        return ResponseEntity.ok(list);
+    }
+
+    // 특정 ID로 노트 조회
+    @GetMapping("/{noteId}")
+    public ResponseEntity<NoteResponseDto> getNote(@PathVariable("noteId") Long id) {
+        //log.info("getNote 실행");
+        NoteResponseDto note = noteService.getNote(id);
+        return ResponseEntity.ok(note);
+    }
+
+    // 노트 업데이트
+    @PostMapping("/{noteId}")
+    public ResponseEntity<?> updateNote(@Valid @PathVariable("noteId") Long id, 
+                                        @RequestBody NoteRequestsDto requestsDto
+                                        ,BindingResult result) throws Exception {
+        //log.info("updateNote 실행");
+        // 유효성 검사 오류 확인
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body(result.getAllErrors());
+        }
+        
+        NoteResponseDto updateNote = noteService.updateNote(id, requestsDto);
+        return ResponseEntity.ok(updateNote);
+    }
+
+    // 노트 삭제
     @DeleteMapping("/{noteId}")
     public ResponseEntity<SuccessResponseDto> deleteNote(@PathVariable("noteId") Long id, 
-    									 				 @RequestBody NoteRequestsDto requestsDto) throws Exception {
-    	//log.info("deleteNote 실행");
-    	SuccessResponseDto responseDto = noteService.deleteNote(id, requestsDto);
-    	return ResponseEntity.ok(responseDto);
+                                                        @RequestParam("memberId") Long memberId) throws Exception {
+        //log.info("deleteNote 실행");
+        SuccessResponseDto responseDto = noteService.deleteNote(id, memberId);
+        return ResponseEntity.ok(responseDto);
     }
-    
-    //Search Note
+
+    // 노트 검색
     @GetMapping("/search")
     public ResponseEntity<List<NoteResponseDto>> searchNotes(@RequestParam("keyword") String keyword) {
         List<NoteResponseDto> results = noteService.searchNotes(keyword);
         return ResponseEntity.ok(results);
     }
 
+    // 노트 저장
     @PostMapping("/save/{noteId}")
     public ResponseEntity<?> saveNote(@PathVariable("noteId") Long noteId, HttpServletRequest request) {
         Member member = (Member) request.getSession().getAttribute("user");
