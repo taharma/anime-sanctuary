@@ -98,7 +98,7 @@ public class NoteLikeController {
 	}
 	
 	//getLikeStatus
-	@GetMapping("/{noteId}")
+	@GetMapping
 	public ResponseEntity<NoteLikeResponseDto> getLikeStatus(@PathVariable("noteId") Long noteId,
 	                                                         @RequestParam("memberId") Long memberId) {
 	    log.info("call getLikeStatus() for noteId: {} and memberId: {}", noteId, memberId);

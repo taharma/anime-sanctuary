@@ -12,13 +12,9 @@ import lombok.Setter;
  * 		좋아요 여부 isLiked
  * 		좋아요 수 likeCount 
  * 		성공여부 message
- * 		
  * 
- * 		좋아요를 누른 사용자의 정보 memberid 는 좋아요를 누른 사람이 1000 ~2000 되는데 그 모든 정보가 필요하지도 않고 개인정보니까 노출되면 안되지
- * 		그러므로 뺐음 ...라고 생각했으나 그때는 null처리하면 되고 
- * 		지금 dto를 분리하지않은 상황이라 memberId도 넣음
- * 
- * 		
+ * 		좋아요를 누른 사용자의 정보 memberId는 개인정보보호 때문에 노출되지 않도록 처리하지만, 
+ * 		지금은 DTO를 분리하지 않았으므로 필요 시 null로 처리할 수 있음.
  */
 
 @Getter @Setter
@@ -31,26 +27,16 @@ public class NoteLikeResponseDto {
 	
 	private Long memberId; // 좋아요를 누른 사용자 ID
 	
-	private Boolean isLiked; // 좋아요 여부 (true = 좋아요, false = 좋아요 취소)
+	private Boolean isLiked; // 사용자가 이미 그 게시물에 좋아요를 눌렀는지 여부
 	
 	private Long likeCount;  // 게시물의 총 좋아요 수
 	
 	private String message;  // 사용자에게 반환할 메시지
 	
-	//Custom Constructor
-	
-	public NoteLikeResponseDto(Long noteId, boolean isLiked, Long likeCount, String message) {
-		this.noteId = noteId;
-		this.isLiked = isLiked;
-		this.likeCount = likeCount;
-		this.message = message;
-	}
-	
-	// getLikeCount 관련
+	// 게시물의 ID와 좋아요 수, 메시지를 입력받는 생성자
 	public NoteLikeResponseDto(Long noteId, Long likeCount, String message) {
 		this.noteId = noteId;
 		this.likeCount = likeCount;
 		this.message = message;
 	}
-
 }

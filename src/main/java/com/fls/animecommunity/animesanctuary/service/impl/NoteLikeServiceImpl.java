@@ -47,151 +47,157 @@ public class NoteLikeServiceImpl implements NoteLikeService {
 		Long noteId = noteLikeRequestDto.getNoteId();
 		Long memberId = noteLikeRequestDto.getMemberId();
 
-		// 2. Id console 출력
+		// 2.console 출력
 		log.info("noteId : {}", noteId);
 		log.info("memberId : {}", memberId);
 
 		// 3. Note 객체 가져오기
 		Optional<Note> noteOptional = noteRepository.findById(noteId);
 		Note note = noteOptional.orElseThrow(() -> new RuntimeException("Note not found with id: " + noteId));
-
+		
+		
 		// 4. memberId가 null인 경우 : 익명 사용자 처리 (분기점)
 		if (memberId == null) {
-			// memberId가 null이면 익명 사용자로 처리
-			// 익명 사용자의 경우 중복 체크는 noteId로만 확인
-			// 해당 noteId, MemberIdIsNull인 NoteLike가 있는지 없는지 확인
+			// 익명 사용자는 noteId만으로 중복 확인
 			boolean isLikedByAnonymous = noteLikeRepository.existsByNoteIdAndMemberIdIsNull(noteId);
-
+			//이미 존재한다 = true , 아니면 false
+			
+			Long likeCount = noteLikeRepository.countByNoteId(noteId); // 좋아요 수 계산
+			
 			if (!isLikedByAnonymous) {
 				// 익명 사용자는 Member 없이 좋아요를 추가
 				noteLikeRepository.save(new NoteLike(note, null));
 				log.info("익명 사용자가 좋아요를 추가했습니다: noteId = {}", noteId);
+				return new NoteLikeResponseDto(noteId, null, true, likeCount + 1, "익명 사용자의 좋아요가 추가되었습니다.");
 			} else {
 				log.info("익명 사용자가 이미 좋아요를 눌렀습니다: noteId = {}", noteId);
+				return new NoteLikeResponseDto(noteId, null, true, likeCount, "익명 사용자가 이미 좋아요를 눌렀습니다.");
 			}
 		} else {
-			// 5. memberId가 있을 경우 처리
+			// 5. 로그인한 사용자 ,memberId가 있을 경우 처리
 			Optional<Member> memberOptional = memberRepository.findById(memberId);
 			Member member = memberOptional
 					.orElseThrow(() -> new RuntimeException("Member not found with id: " + memberId));
 
-			// 이미 좋아요를 눌렀는지 확인 (중복 방지)
+			// 6.이미 좋아요를 눌렀는지 확인 (중복 방지)
 			boolean isLikedByMember = noteLikeRepository.existsByNoteIdAndMemberId(noteId, memberId);
-
+			Long likeCount = noteLikeRepository.countByNoteId(noteId); // 좋아요 수 계산
+			
 			if (!isLikedByMember) {
 				// 좋아요 추가
 				noteLikeRepository.save(new NoteLike(note, member));
 				log.info("좋아요 추가: noteId = {}, memberId = {}", noteId, memberId);
+				return new NoteLikeResponseDto(noteId, memberId, true, likeCount + 1, memberId + "의 좋아요가 추가되었습니다.");
 			} else {
 				log.info("이미 좋아요를 누른 상태입니다: noteId = {}, memberId = {}", noteId, memberId);
+				return new NoteLikeResponseDto(noteId, memberId, true, likeCount, "이미 좋아요를 누른 상태입니다.");
 			}
 		}
-
-		// 현재 좋아요 수 계산
-		Long likeCount = noteLikeRepository.countByNoteId(noteId);
-
-		// 응답 생성
-		return new NoteLikeResponseDto(noteId, true, likeCount, "좋아요가 추가되었습니다.");
 	}
 
-	// removeLike
 	@Override
 	public NoteLikeResponseDto removeLike(@Valid NoteLikeRequestDto noteLikeRequestDto) {
-		// 호출확인
-		log.info("call NoteLikeService removeLike()");
+	    // 호출 확인
+	    log.info("call NoteLikeService removeLike()");
 
-		// 1. noteLikeRequestDto 안의 noteId , memberId 가져오기
-		Long noteId = noteLikeRequestDto.getNoteId();
-		Long memberId = noteLikeRequestDto.getMemberId();
+	    // 1. noteLikeRequestDto 안의 noteId, memberId 가져오기
+	    Long noteId = noteLikeRequestDto.getNoteId();
+	    Long memberId = noteLikeRequestDto.getMemberId();
 
-		// 2. Id console 출력
-		log.info("noteId : {}", noteId);
-		log.info("memberId : {}", memberId);
+	    // 2. 콘솔 출력
+	    log.info("noteId : {}", noteId);
+	    log.info("memberId : {}", memberId);
 
-		// 3. Note 객체 가져오기
-		Optional<Note> noteOptional = noteRepository.findById(noteId);
-		Note note = noteOptional.orElseThrow(() -> new RuntimeException("Note not found with id: " + noteId));
+	    // 3. Note 객체 가져오기
+	    Optional<Note> noteOptional = noteRepository.findById(noteId);
+	    Note note = noteOptional.orElseThrow(() -> new RuntimeException("Note not found with id: " + noteId));
 
-		if (memberId == null) {
-			// 4. memberId가 null인 경우 익명 사용자 처리
-			boolean isLikedByAnonymous = noteLikeRepository.existsByNoteIdAndMemberIdIsNull(noteId);
+	    if (memberId == null) {
+	        // 4. memberId가 null인 경우 익명 사용자 처리
+	        boolean isLikedByAnonymous = noteLikeRepository.existsByNoteIdAndMemberIdIsNull(noteId);
 
-			if (isLikedByAnonymous) {
-				// 익명 사용자의 좋아요 삭제
-				NoteLike noteLike = noteLikeRepository.findByNoteIdAndMemberIdIsNull(noteId)
-						.orElseThrow(() -> new RuntimeException("Like not found for noteId: " + noteId));
-				noteLikeRepository.delete(noteLike);
-				log.info("익명 사용자의 좋아요가 삭제되었습니다: noteId = {}", noteId);
-			} else {
-				log.info("익명 사용자가 좋아요를 누르지 않았습니다: noteId = {}", noteId);
-				throw new RuntimeException("Like not found for anonymous user on noteId: " + noteId);
-			}
-		} else {
-			// 5. memberId가 있는 경우 처리
-			Optional<Member> memberOptional = memberRepository.findById(memberId);
-			Member member = memberOptional
-					.orElseThrow(() -> new RuntimeException("Member not found with id: " + memberId));
+	        if (isLikedByAnonymous) {
+	            // 익명 사용자의 좋아요 삭제
+	            NoteLike noteLike = noteLikeRepository.findByNoteIdAndMemberIdIsNull(noteId)
+	                    .orElseThrow(() -> new RuntimeException("Like not found for noteId: " + noteId));
+	            noteLikeRepository.delete(noteLike);
+	            log.info("익명 사용자의 좋아요가 삭제되었습니다: noteId = {}", noteId);
 
-			boolean isLikedByMember = noteLikeRepository.existsByNoteIdAndMemberId(noteId, memberId);
+	            // 좋아요 수 계산
+	            Long likeCount = noteLikeRepository.countByNoteId(noteId);
+	            return new NoteLikeResponseDto(noteId, null, false, likeCount, "익명 사용자의 좋아요가 삭제되었습니다.");
+	        } else {
+	            log.info("익명 사용자가 좋아요를 누르지 않았습니다: noteId = {}", noteId);
+	            throw new RuntimeException("익명 사용자가 이 게시물에 좋아요를 누르지 않았습니다: noteId = " + noteId);
+	        }
+	    } else {
+	        // 5. 로그인한 사용자 처리
+	        Optional<Member> memberOptional = memberRepository.findById(memberId);
+	        Member member = memberOptional
+	                .orElseThrow(() -> new RuntimeException("Member not found with id: " + memberId));
 
-			if (isLikedByMember) {
-				// 사용자의 좋아요 삭제
-				NoteLike noteLike = noteLikeRepository.findByNoteIdAndMemberId(noteId, memberId)
-						.orElseThrow(() -> new RuntimeException(
-								"Like not found for noteId: " + noteId + " and memberId: " + memberId));
-				noteLikeRepository.delete(noteLike);
-				log.info("좋아요가 삭제되었습니다: noteId = {}, memberId = {}", noteId, memberId);
-			} else {
-				log.info("해당 사용자가 좋아요를 누르지 않았습니다: noteId = {}, memberId = {}", noteId, memberId);
-				throw new RuntimeException("Like not found for noteId: " + noteId + " and memberId: " + memberId);
-			}
-		}
+	        boolean isLikedByMember = noteLikeRepository.existsByNoteIdAndMemberId(noteId, memberId);
 
-		// 현재 좋아요 수 계산
-		Long likeCount = noteLikeRepository.countByNoteId(noteId);
+	        if (isLikedByMember) {
+	            // 사용자의 좋아요 삭제
+	            NoteLike noteLike = noteLikeRepository.findByNoteIdAndMemberId(noteId, memberId)
+	                    .orElseThrow(() -> new RuntimeException(
+	                            "Like not found for noteId: " + noteId + " and memberId: " + memberId));
+	            noteLikeRepository.delete(noteLike);
+	            log.info("좋아요가 삭제되었습니다: noteId = {}, memberId = {}", noteId, memberId);
 
-		// 응답 생성
-		return new NoteLikeResponseDto(noteId, false, likeCount, "좋아요가 삭제되었습니다.");
+	            // 좋아요 수 계산
+	            Long likeCount = noteLikeRepository.countByNoteId(noteId);
+	            return new NoteLikeResponseDto(noteId, memberId, false, likeCount, memberId + "의 좋아요가 삭제되었습니다.");
+	        } else {
+	            log.info("해당 사용자가 좋아요를 누르지 않았습니다: noteId = {}, memberId = {}", noteId, memberId);
+	            throw new RuntimeException("이 사용자가 이 게시물에 좋아요를 누르지 않았습니다: noteId = " + noteId + ", memberId = " + memberId);
+	        }
+	    }
 	}
 
-	// getLikeStatus : 비로그인 고려안함 
 	@Override
-	public NoteLikeResponseDto getLikeStatus(Long noteId ,Long memberId) {
-		// 호출확인
-		log.info("call NoteLikeService getLikeStatus()");
+	public NoteLikeResponseDto getLikeStatus(Long noteId, Long memberId) {
+	    // 호출 확인
+	    log.info("call NoteLikeService getLikeStatus()");
 
-		// 2. Id console 출력
-		log.info("noteId : {}", noteId);
+	    // 1. Note 객체 확인
+	    Optional<Note> noteOptional = noteRepository.findById(noteId);
+	    Note note = noteOptional.orElseThrow(() -> new RuntimeException("Note not found with id: " + noteId));
 
-		
-		
-		boolean isLiked = noteLikeRepository.existsByNoteIdAndMemberId(noteId, memberId);
-		
-		NoteLikeResponseDto noteLikeResponseDto = new NoteLikeResponseDto();
-		noteLikeResponseDto.setIsLiked(isLiked);
-		noteLikeResponseDto.setNoteId(noteId);
-		noteLikeResponseDto.setMemberId(memberId);
-		
-		return noteLikeResponseDto;
+	    // 2. 좋아요 여부 확인
+	    boolean isLiked = noteLikeRepository.existsByNoteIdAndMemberId(noteId, memberId);
+	    
+	    // 3. 좋아요 수 확인
+	    Long likeCount = noteLikeRepository.countByNoteId(noteId);
+
+	    // 4. 응답 생성
+	    NoteLikeResponseDto noteLikeResponseDto = new NoteLikeResponseDto();
+	    noteLikeResponseDto.setIsLiked(isLiked);
+	    noteLikeResponseDto.setNoteId(noteId);
+	    noteLikeResponseDto.setMemberId(memberId);
+	    noteLikeResponseDto.setLikeCount(likeCount);
+	    noteLikeResponseDto.setMessage(isLiked ? "사용자가 이 게시물에 좋아요를 눌렀습니다." : "사용자가 이 게시물에 좋아요를 누르지 않았습니다.");
+
+	    return noteLikeResponseDto;
 	}
 
-	// getLikeCount
+
 	@Override
 	public NoteLikeResponseDto getLikeCount(Long noteId) {
-		// 호출 확인
-		log.info("call NoteLikeService getLikeCount()");
+	    // 호출 확인
+	    log.info("call NoteLikeService getLikeCount()");
 
-		// 1. noteId로 게시물 확인
-		log.info("noteId : {}", noteId);
-		Optional<Note> noteOptional = noteRepository.findById(noteId);
-		Note note = noteOptional.orElseThrow(() -> new RuntimeException("Note not found with id: " + noteId));
+	    // 1. noteId로 게시물 확인
+	    Optional<Note> noteOptional = noteRepository.findById(noteId);
+	    Note note = noteOptional.orElseThrow(() -> new RuntimeException("Note not found with id: " + noteId));
 
-		// 2. 좋아요 수 확인
-		Long likeCount = noteLikeRepository.countByNoteId(noteId);
-		log.info("Like count for noteId {} : {}", noteId, likeCount);
+	    // 2. 좋아요 수 확인
+	    Long likeCount = noteLikeRepository.countByNoteId(noteId);
+	    log.info("Like count for noteId {} : {}", noteId, likeCount);
 
-		// 3. 좋아요 수를 반환
-		return new NoteLikeResponseDto(noteId, likeCount, "좋아요 수 조회 성공");
+	    // 3. 좋아요 수 반환
+	    String message = likeCount > 0 ? "좋아요 수 조회 성공" : "좋아요가 없습니다.";
+	    return new NoteLikeResponseDto(noteId, likeCount, message);
 	}
-
 }

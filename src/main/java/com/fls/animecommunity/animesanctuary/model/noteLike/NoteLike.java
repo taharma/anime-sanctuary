@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /*
  * class 이름이 SQL예약어 like랑 겹치기 때문에 NoteLike로 했음
@@ -23,6 +24,7 @@ import lombok.Getter;
 @Entity
 @Getter
 @Table(name = "noteLike")
+@NoArgsConstructor
 public class NoteLike {
 	
 	@Id
