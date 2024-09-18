@@ -47,6 +47,7 @@ GET api/notes/{noteId}/noteLike/count
  * 현재는 @RequestParam으로 했음 보안적 문제
  * @AuthenticationPrincipal 도입고려
  * 
+ * BindingResult 없음..
  * 
  */
 
