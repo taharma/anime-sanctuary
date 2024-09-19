@@ -38,6 +38,8 @@ public class Note extends Timestamped {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = true)
     private Category category;
+    
+    private String imagePath;  // 이미지 경로 추가
 
     public Note(String title, String contents, Member member) {
         this.title = title;

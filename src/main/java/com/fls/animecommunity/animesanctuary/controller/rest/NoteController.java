@@ -1,22 +1,30 @@
 package com.fls.animecommunity.animesanctuary.controller.rest;
 
-import com.fls.animecommunity.animesanctuary.model.note.Note;
+import java.io.IOException;
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteRequestsDto;
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
 import com.fls.animecommunity.animesanctuary.model.note.dto.SuccessResponseDto;
-import com.fls.animecommunity.animesanctuary.service.impl.NoteServiceImpl;
 import com.fls.animecommunity.animesanctuary.service.interfaces.NoteService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /*
  * NoteController class : Note의 CRUD기능 , api mapping 
@@ -35,17 +43,26 @@ public class NoteController {
     private final NoteService noteService;
     
     //create Note
-    @PostMapping
-    public ResponseEntity<?> createNote(@Valid @RequestBody NoteRequestsDto requestsDto,
+    @PostMapping(consumes = { "multipart/form-data" })
+    public ResponseEntity<?> createNote(@RequestPart("note") @Valid NoteRequestsDto requestsDto,
+                                        @RequestPart("image") MultipartFile image,
                                         BindingResult result) {
         log.info("Received Note request with title: {} and contents: {}", requestsDto.getTitle(), requestsDto.getContents());
-        
+
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body(result.getAllErrors());
         }
-        NoteResponseDto responseDto = noteService.createNote(requestsDto);
-        return ResponseEntity.ok(responseDto);
+
+        try {
+            NoteResponseDto responseDto = noteService.createNoteWithImage(requestsDto, image);
+            return ResponseEntity.ok(responseDto);
+        } catch (IOException e) {
+            log.error("Error occurred while uploading the image: {}", e.getMessage());
+            return ResponseEntity.status(500).body("Image upload failed: " + e.getMessage());
+        }
     }
+
+
 
     //list Note
     @GetMapping
