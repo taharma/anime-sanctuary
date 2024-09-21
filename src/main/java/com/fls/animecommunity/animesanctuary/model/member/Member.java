@@ -1,5 +1,6 @@
 package com.fls.animecommunity.animesanctuary.model.member;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -21,7 +22,9 @@ import lombok.ToString;
 
 @Entity
 @Getter @Setter @ToString
-public class Member {
+public class Member implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
