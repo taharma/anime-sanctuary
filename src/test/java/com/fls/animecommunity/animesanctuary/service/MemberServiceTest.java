@@ -2,6 +2,10 @@ package com.fls.animecommunity.animesanctuary.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
@@ -55,11 +59,21 @@ class MemberServiceTest {
         member.setUsername("testUser");
         member.setPassword("encodedPassword");
 
-        when(memberRepository.findByUsernameOrEmail(anyString(), anyString())).thenReturn(member);
+        when(memberRepository.findByUsernameOrEmail(anyString(), anyString())).thenReturn(Optional.of(member));
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
 
         Member loggedInMember = memberService.login("testUser", "password");
 
         assertNotNull(loggedInMember);
+    }
+    
+    @Test
+    void login_shouldReturnNull_whenInvalidCredentialsAreGiven() {
+        when(memberRepository.findByUsernameOrEmail(anyString(), anyString())).thenReturn(Optional.empty());
+        when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
+
+        Member loggedInMember = memberService.login("testUser", "wrongPassword");
+
+        assertNull(loggedInMember);
     }
 }
