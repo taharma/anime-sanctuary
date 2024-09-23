@@ -106,7 +106,7 @@ public class NoteController {
         return ResponseEntity.ok(results);
     }
 
-    // 노트 저장
+    // 노트 저장 (bookmark)
     @PostMapping("/save/{noteId}")
     public ResponseEntity<?> saveNote(@PathVariable("noteId") Long noteId, HttpServletRequest request) {
         Member member = (Member) request.getSession().getAttribute("user");
