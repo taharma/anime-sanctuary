@@ -22,7 +22,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class NoteLikeResponseDto {
 	
-	@NotNull(message = "Note ID is required")
+//	@NotNull(message = "Note ID is required")
 	private Long noteId; // 해당 게시물 ID
 	
 	private Long memberId; // 좋아요를 누른 사용자 ID

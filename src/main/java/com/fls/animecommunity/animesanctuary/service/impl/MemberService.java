@@ -50,7 +50,7 @@ public class MemberService {
     public Member login(String usernameOrEmail, String password) {
         
     	log.info("login() 호출");
-    	Member member = memberRepository.findByUsernameOrEmail(usernameOrEmail);
+    	Member member = memberRepository.findByUsernameOrEmail(usernameOrEmail,usernameOrEmail);
         if (member != null && passwordEncoder.matches(password, member.getPassword())) {
             return member;
         }

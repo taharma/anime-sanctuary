@@ -64,16 +64,19 @@ public class NoteLikeController {
 	//addLike
 	@PostMapping
 	public ResponseEntity<?> addLike(@PathVariable("noteId") Long noteId,
-													   @RequestBody @Valid NoteLikeRequestDto noteLikeRequestDto,
-													   @SessionAttribute(name = "loginMember",required = false)Member loginMember) {
-
-		// 로그인 여부 확인
-	    if (loginMember == null) {
-	        return ResponseEntity.status(403).body("User must be logged in to create a note.");
-	    }
-		
+													   @SessionAttribute(name = "user",required = false) Member loginMember) {
 		//호출확인
 		log.info("call addLike()");
+		
+		log.info("loginMember : {}",loginMember);
+		// 로그인 여부 확인
+	    if (loginMember == null) {
+	        return ResponseEntity.status(403).body("User must be logged in to create a noteLike.");
+	    }
+		
+		
+		//NoteLikeRequestDto 생성
+		NoteLikeRequestDto noteLikeRequestDto = new NoteLikeRequestDto();
 		
 		// RequestDto에 noteId,memberId를 설정
 		noteLikeRequestDto.setNoteId(noteId);
@@ -92,22 +95,25 @@ public class NoteLikeController {
 	//removeLike
 	@DeleteMapping
 	public ResponseEntity<?> removeLike(@PathVariable("noteId") Long noteId,
-														  @RequestBody @Valid NoteLikeRequestDto noteLikeRequestDto,
-														  @SessionAttribute(name = "loginMember",required = false)Member loginMember) {
+														  @SessionAttribute(name = "user",required = false) Member loginMember) {
+		log.info("call removeLike()");
+		log.info("loginMember : {}",loginMember);
+		
 		// 로그인 여부 확인
 	    if (loginMember == null) {
-	        return ResponseEntity.status(403).body("User must be logged in to create a note.");
+	        return ResponseEntity.status(403).body("User must be logged in to create a noteLike.");
 	    }
 	    
-		log.info("call removeLike()");
-
+	    //NoteLikeRequestDto 생성
+	  	NoteLikeRequestDto removeLikeRequestDto = new NoteLikeRequestDto();
+	    
 		// RequestDto에 noteId,memberId를 설정
-		noteLikeRequestDto.setNoteId(noteId);
+	  	removeLikeRequestDto.setNoteId(noteId);
 		Long memberId = loginMember.getId();
-		noteLikeRequestDto.setMemberId(memberId);
+		removeLikeRequestDto.setMemberId(memberId);
 		
 		// 그다음 noteLikeService의 removeLike호출 하여 noteLikeResponseDto를 생성
-		NoteLikeResponseDto noteLikeResponseDto = noteLikeService.removeLike(noteLikeRequestDto);
+		NoteLikeResponseDto noteLikeResponseDto = noteLikeService.removeLike(removeLikeRequestDto);
 
 		log.info("noteLikeResponseDto : {} ", noteLikeResponseDto);
 		
