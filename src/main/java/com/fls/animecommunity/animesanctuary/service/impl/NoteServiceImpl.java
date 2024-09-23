@@ -1,8 +1,6 @@
 package com.fls.animecommunity.animesanctuary.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -10,11 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fls.animecommunity.animesanctuary.exception.ResourceNotFoundException;
 import com.fls.animecommunity.animesanctuary.model.category.Category;
+import com.fls.animecommunity.animesanctuary.model.member.Member;
 import com.fls.animecommunity.animesanctuary.model.note.Note;
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteRequestsDto;
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
 import com.fls.animecommunity.animesanctuary.model.note.dto.SuccessResponseDto;
 import com.fls.animecommunity.animesanctuary.repository.CategoryRepository;
+import com.fls.animecommunity.animesanctuary.repository.MemberRepository;
 import com.fls.animecommunity.animesanctuary.repository.NoteRepository;
 import com.fls.animecommunity.animesanctuary.service.interfaces.NoteService;
 
@@ -24,111 +24,112 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class NoteServiceImpl implements NoteService{
+public class NoteServiceImpl implements NoteService {
 
     private final NoteRepository noteRepository;
     private final CategoryRepository categoryRepository;
+    private final MemberRepository memberRepository;
 
-    //list
+    // 상수로 중복된 메시지 정의
+    private static final String ID_NOT_FOUND_MESSAGE = "아이디가 존재하지 않습니다.: ";
+
+    // 모든 노트 목록 조회
     @Override
     @Transactional(readOnly = true)
     public List<NoteResponseDto> getNotes() {
-    	//    	log.info("getNotes()");
-    	List<Note> notes = noteRepository.findAllByOrderByModifiedAtDesc();
-        List<NoteResponseDto> noteResponseDtos = new ArrayList<>();
-
-        for (Note note : notes) {
-            noteResponseDtos.add(new NoteResponseDto(note));
-        }
-
-        return noteResponseDtos;
+        log.info("수정일 기준으로 정렬된 모든 노트를 가져옵니다.");
+        List<Note> notes = noteRepository.findAllByOrderByModifiedAtDesc();
+        return notes.stream()
+                    .map(NoteResponseDto::new)
+                    .collect(Collectors.toList());
     }
-    
-    //find
+
+    // 특정 ID로 노트 조회
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public NoteResponseDto getNote(Long id) {
-    	//    	log.info("getNote()");
-    	//    	log.info("ID: {}", id);
-    	
-    	Optional<Note> optionalNote = noteRepository.findById(id);
-
-        if (optionalNote.isPresent()) {
-            return new NoteResponseDto(optionalNote.get());
-        } else {
-            throw new IllegalArgumentException("아이디가 존재하지 않습니다.");
-        }
+        log.info("ID로 노트를 조회합니다. ID: {}", id);
+        Note note = noteRepository.findById(id)
+                                .orElseThrow(() -> new ResourceNotFoundException(ID_NOT_FOUND_MESSAGE + id));
+        return new NoteResponseDto(note);
     }
-    
-    //write , create
+
+    // 새로운 노트 생성 (인증된 사용자 필요)
     @Override
     @Transactional
     public NoteResponseDto createNote(NoteRequestsDto requestsDto) {
-    	//    	log.info("createNote()");
-    	
-    	Optional<Category> optionalCategory = categoryRepository.findById(requestsDto.getCategoryId());
+        log.info("새로운 노트를 생성합니다. 제목: {}", requestsDto.getTitle());
 
-        if (!optionalCategory.isPresent()) {
-            throw new ResourceNotFoundException("Category not found with id: " + requestsDto.getCategoryId());
-        }
+        // 로그인된 사용자 확인
+        Member member = memberRepository.findById(requestsDto.getMemberId())
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-        Category category = optionalCategory.get();
-    	    
-	    Note note = new Note();
-	    note.setTitle(requestsDto.getTitle());
-	    note.setContents(requestsDto.getContents());
-	    note.setCategory(category);
-	    
-	    Note savedNote = noteRepository.save(note);
-	    //      log.info("create success");
-    	return new NoteResponseDto(savedNote);
+        // 카테고리 유효성 검사
+        Category category = categoryRepository.findById(requestsDto.getCategoryId())
+                                .orElseThrow(() -> new ResourceNotFoundException("카테고리를 찾을 수 없습니다. ID: " + requestsDto.getCategoryId()));
+
+        // 노트 생성
+        Note note = new Note();
+        note.setTitle(requestsDto.getTitle());
+        note.setContents(requestsDto.getContents());
+        note.setCategory(category);
+        note.setMember(member);  // 작성자 정보 추가
+
+        Note savedNote = noteRepository.save(note);
+        log.info("노트가 성공적으로 생성되었습니다. ID: {}", savedNote.getId());
+
+        return new NoteResponseDto(savedNote);
     }
-    
-    //update
+
+    // 기존 노트 수정 (인증된 사용자 필요)
     @Override
     @Transactional
-    public NoteResponseDto updateNote(Long id, NoteRequestsDto requestsDto) throws Exception {
-    	//    	log.info("updateNote()");
-    	//    	log.info("ID: {}", id);
-    	
-    	 Optional<Note> optionalNote = noteRepository.findById(id);
+    public NoteResponseDto updateNote(Long id, NoteRequestsDto requestsDto) {
+        log.info("ID로 노트를 수정합니다. ID: {}", id);
 
-    	    if (!optionalNote.isPresent()) {
-    	        throw new IllegalArgumentException("아이디가 존재하지 않습니다.");
-    	    }
+        Note note = noteRepository.findById(id)
+                                .orElseThrow(() -> new ResourceNotFoundException(ID_NOT_FOUND_MESSAGE + id));
 
-    	    Note note = optionalNote.get();
+        // 작성자가 일치하는지 확인
+        if (!note.getMember().getId().equals(requestsDto.getMemberId())) {
+            throw new IllegalStateException("이 노트를 수정할 권한이 없습니다.");
+        }
 
         note.update(requestsDto);
-        //        log.info("update success ID: {}", id);
-        
+        log.info("노트가 성공적으로 수정되었습니다. ID: {}", id);
+
         return new NoteResponseDto(note);
     }
-    
-    //delete
+
+    // 노트 삭제 (인증된 사용자 필요)
     @Override
     @Transactional
-    public SuccessResponseDto deleteNote(Long id, NoteRequestsDto requestsDto) throws Exception{
-    	//    	log.info("deleteNote()");
-    	//    	log.info("ID: {}", id);
-    	
-    	Optional<Note> optionalNote = noteRepository.findById(id);
+    public SuccessResponseDto deleteNote(Long id, Long memberId) {
+        log.info("ID로 노트를 삭제합니다. ID: {}", id);
 
-        if (!optionalNote.isPresent()) {
-            throw new IllegalArgumentException("아이디가 존재하지 않습니다.");
+        Note note = noteRepository.findById(id)
+                                .orElseThrow(() -> new ResourceNotFoundException(ID_NOT_FOUND_MESSAGE + id));
+
+        // 작성자가 일치하는지 확인
+        if (!note.getMember().getId().equals(memberId)) {
+            throw new IllegalStateException("이 노트를 삭제할 권한이 없습니다.");
         }
 
-    	noteRepository.deleteById(id);
-    	//    	log.info("delete success ID: {}", id);
-    	
+        noteRepository.deleteById(id);
+        log.info("노트가 성공적으로 삭제되었습니다. ID: {}", id);
+
         return new SuccessResponseDto(true);
     }
-    
-    //Search
+
+    // 키워드로 노트 검색
     @Override
     @Transactional(readOnly = true)
     public List<NoteResponseDto> searchNotes(String keyword) {
+        log.info("키워드로 노트를 검색합니다. 키워드: {}", keyword);
+
         List<Note> notes = noteRepository.findByTitleContainingOrContentsContaining(keyword, keyword);
-        return notes.stream().map(NoteResponseDto::new).collect(Collectors.toList());
+        return notes.stream()
+                    .map(NoteResponseDto::new)
+                    .collect(Collectors.toList());
     }
 }

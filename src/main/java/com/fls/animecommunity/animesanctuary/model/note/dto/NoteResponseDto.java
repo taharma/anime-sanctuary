@@ -2,7 +2,6 @@ package com.fls.animecommunity.animesanctuary.model.note.dto;
 
 import java.time.LocalDateTime;
 
-import com.fls.animecommunity.animesanctuary.model.member.Member;
 import com.fls.animecommunity.animesanctuary.model.note.Note;
 
 import lombok.Getter;
@@ -24,16 +23,11 @@ public class NoteResponseDto {
     
     public NoteResponseDto(Note entity) {
         this.id = entity.getId();
-        this.title = entity.getTitle();
-        this.contents = entity.getContents();
+        this.title = entity.getTitle() != null ? entity.getTitle() : "No title";  // null 체크
+        this.contents = entity.getContents() != null ? entity.getContents() : "No contents";  // null 체크
         this.createdAt = entity.getCreatedAt();
         this.modifiedAt = entity.getModifiedAt();
-        // Null 체크 후 categoryId 설정
-        if (entity.getCategory() != null) {
-            this.categoryId = entity.getCategory().getId();
-        } else {
-            this.categoryId = null; // 또는 기본값 설정
-        }
-    }
+        this.categoryId = entity.getCategory() != null ? entity.getCategory().getId() : null;
+    }    
 }
 

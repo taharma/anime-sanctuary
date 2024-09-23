@@ -2,9 +2,10 @@ package com.fls.animecommunity.animesanctuary.controller.rest;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,6 +42,7 @@ public class MemberController {
     //register 회원 등록
     @PostMapping("/register")
     public ResponseEntity<Member> register(@RequestBody MemberRegisterDto memberDto) {
+        // Create a new Member object from the DTO
         Member member = new Member();
         member.setUsername(memberDto.getUsername());
         member.setPassword(memberDto.getPassword());
@@ -48,11 +50,13 @@ public class MemberController {
         member.setEmail(memberDto.getEmail());
         member.setGender(GenderType.valueOf(memberDto.getGender().toUpperCase()));
         member.setBirth(memberDto.getBirth());
-        
+
+        // Register the member using the service
         Member registeredMember = memberService.register(member);
+        
         return ResponseEntity.ok(registeredMember);
     }
-    
+
     //login 로그인
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
@@ -136,25 +140,22 @@ public class MemberController {
     
     //uploadProfileImage 프로필 이미지 업로드 하기
     @PostMapping("/{userId}/uploadProfileImage")
-    public ResponseEntity<?> uploadProfileImage(
+    public ResponseEntity<String> uploadProfileImage(
             @PathVariable("userId") Long userId, 
             @RequestParam("image") MultipartFile image) {
         try {
-            // 저장할 파일 경로를 지정합니다 (절대 경로 사용).
-            String uploadDir = System.getProperty("user.dir") + "/uploads/profile-images/" + userId;
+            // 저장할 파일 경로를 지정합니다 (경로 구분자를 명시적으로 사용하지 않음).
+            String uploadDir = Paths.get(System.getProperty("user.dir"), "uploads", "profile-images", userId.toString()).toString();
             
             // 파일 저장 경로를 확인하고 디렉토리가 존재하지 않으면 생성합니다.
             File directory = new File(uploadDir);
-            if (!directory.exists()) {
-                boolean created = directory.mkdirs();  // 여러 디렉토리를 한 번에 생성합니다.
-                if (!created) {
-                    throw new IOException("Failed to create directory: " + uploadDir);
-                }
+            if (!directory.exists() && !directory.mkdirs()) {
+                throw new IOException("Failed to create directory: " + uploadDir);
             }
 
             // 파일 이름을 설정합니다.
             String originalFilename = image.getOriginalFilename();
-            String filePath = uploadDir + "/" + UUID.randomUUID().toString() + "_" + originalFilename; // 파일 이름 앞에 UUID 추가
+            String filePath = Paths.get(uploadDir, UUID.randomUUID().toString() + "_" + originalFilename).toString();
 
             // 파일을 저장합니다.
             File destinationFile = new File(filePath);
@@ -165,28 +166,33 @@ public class MemberController {
 
             // 저장된 파일의 경로 또는 URL을 반환합니다.
             return ResponseEntity.ok(filePath);
-        } catch (Exception e) {
-            return ResponseEntity.status(400).body("Error: " + e.getMessage());
-        }
-    }
-    
-    //deleteProfileImage 프로필 이미지 삭제
-    @DeleteMapping("/{userId}/deleteProfileImage")
-    public ResponseEntity<?> deleteProfileImage(@PathVariable("userId") Long userId) {
-        try {
-            memberService.deleteProfileImage(userId);
-            return ResponseEntity.ok("Profile image deleted successfully");
+        } catch (IOException | IllegalStateException e) {
+            return ResponseEntity.status(500).body("File I/O error: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(400).body("Error: " + e.getMessage());
         }
     }
 
+    //deleteProfileImage 프로필 이미지 삭제
+    @DeleteMapping("/{userId}/deleteProfileImage")
+    public ResponseEntity<String> deleteProfileImage(@PathVariable("userId") Long userId) {
+        try {
+            memberService.deleteProfileImage(userId);
+            return ResponseEntity.ok("Profile image deleted successfully");
+        } catch (IOException e) {
+            return ResponseEntity.status(500).body("File I/O error: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body("Error: " + e.getMessage());
+        }
+    }
+
+
     // findByEmail 이메일로 사용자 찾기 
     @GetMapping("/findByEmail")
     public ResponseEntity<Member> findByEmail(@RequestParam String email) {
-        Member member = memberService.findByEmail(email);
-        if (member != null) {
-            return ResponseEntity.ok(member);
+        Optional<Member> member = memberService.findByEmail(email);
+        if (member.isPresent()) {
+            return ResponseEntity.ok(member.get());
         } else {
             return ResponseEntity.status(404).build(); // Not Found
         }
