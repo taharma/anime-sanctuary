@@ -49,8 +49,6 @@ class CommentServiceTest {
         member.setUsername("testUser");
         Note note = new Note();
         note.setId(1L);
-        Comment parentComment = new Comment();
-        parentComment.setId(1L);
         Comment comment = new Comment();
         comment.setId(2L);
         comment.setMember(member);
@@ -103,6 +101,37 @@ class CommentServiceTest {
         assertNotNull(comments);
         assertEquals(1, comments.size());
         assertEquals("This is a comment.", comments.get(0).getContent());
+    }
+
+    @Test
+    void addComment_shouldAddReply_whenParentCommentIdIsProvided() {
+        Member member = new Member();
+        member.setId(1L);
+        member.setUsername("testUser");
+        Note note = new Note();
+        note.setId(1L);
+        Comment parentComment = new Comment();
+        parentComment.setId(1L);
+        parentComment.setMember(member);
+        parentComment.setNote(note);
+
+        Comment reply = new Comment();
+        reply.setId(2L);
+        reply.setMember(member);
+        reply.setNote(note);
+        reply.setContent("This is a reply.");
+        reply.setParentComment(parentComment);
+
+        when(memberRepository.findByUsername(anyString())).thenReturn(Optional.of(member));
+        when(noteRepository.findById(anyLong())).thenReturn(Optional.of(note));
+        when(commentRepository.findById(anyLong())).thenReturn(Optional.of(parentComment));
+        when(commentRepository.save(any(Comment.class))).thenReturn(reply);
+
+        Comment savedReply = commentService.addComment("testUser", 1L, "This is a reply.", 1L);
+
+        assertNotNull(savedReply);
+        assertEquals("This is a reply.", savedReply.getContent());
+        assertEquals(parentComment.getId(), savedReply.getParentComment().getId());
     }
 
     @Test
