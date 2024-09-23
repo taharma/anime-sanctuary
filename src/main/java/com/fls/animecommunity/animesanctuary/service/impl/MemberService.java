@@ -16,7 +16,10 @@ import com.fls.animecommunity.animesanctuary.model.member.Member;
 import com.fls.animecommunity.animesanctuary.model.member.Role;
 import com.fls.animecommunity.animesanctuary.repository.MemberRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -42,9 +45,12 @@ public class MemberService {
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         return memberRepository.save(member);
     }
-
+    
+    //login
     public Member login(String usernameOrEmail, String password) {
-        Member member = memberRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
+        
+    	log.info("login() 호출");
+    	Member member = memberRepository.findByUsernameOrEmail(usernameOrEmail);
         if (member != null && passwordEncoder.matches(password, member.getPassword())) {
             return member;
         }
@@ -53,6 +59,7 @@ public class MemberService {
 
     @Transactional
     public boolean deleteMember(Long id, String password) {
+    	
         Member member = memberRepository.findById(id).orElse(null);
         if (member != null && passwordEncoder.matches(password, member.getPassword())) {
             memberRepository.deleteById(id);

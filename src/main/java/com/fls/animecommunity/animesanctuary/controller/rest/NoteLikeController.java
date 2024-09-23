@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.fls.animecommunity.animesanctuary.dto.noteLikeDto.NoteLikeRequestDto;
 import com.fls.animecommunity.animesanctuary.dto.noteLikeDto.NoteLikeResponseDto;
+import com.fls.animecommunity.animesanctuary.model.member.Member;
 import com.fls.animecommunity.animesanctuary.service.interfaces.NoteLikeService;
 
 import jakarta.validation.Valid;
@@ -61,15 +63,23 @@ public class NoteLikeController {
 	
 	//addLike
 	@PostMapping
-	public ResponseEntity<NoteLikeResponseDto> addLike(@PathVariable("noteId") Long noteId,
-			@RequestBody @Valid NoteLikeRequestDto noteLikeRequestDto) {
+	public ResponseEntity<?> addLike(@PathVariable("noteId") Long noteId,
+													   @RequestBody @Valid NoteLikeRequestDto noteLikeRequestDto,
+													   @SessionAttribute(name = "loginMember",required = false)Member loginMember) {
+
+		// 로그인 여부 확인
+	    if (loginMember == null) {
+	        return ResponseEntity.status(403).body("User must be logged in to create a note.");
+	    }
 		
 		//호출확인
 		log.info("call addLike()");
-
-		// RequestDto에 noteId를 설정
+		
+		// RequestDto에 noteId,memberId를 설정
 		noteLikeRequestDto.setNoteId(noteId);
-
+		Long memberId = loginMember.getId();
+		noteLikeRequestDto.setMemberId(memberId);
+		
 		// 그다음 noteLikeService의 addLike호출 하여 noteLikeResponseDto를 생성
 		NoteLikeResponseDto noteLikeResponseDto = noteLikeService.addLike(noteLikeRequestDto);
 
@@ -81,14 +91,21 @@ public class NoteLikeController {
 	
 	//removeLike
 	@DeleteMapping
-	public ResponseEntity<NoteLikeResponseDto> removeLike(@PathVariable("noteId") Long noteId,
-			@RequestBody @Valid NoteLikeRequestDto noteLikeRequestDto) {
-
+	public ResponseEntity<?> removeLike(@PathVariable("noteId") Long noteId,
+														  @RequestBody @Valid NoteLikeRequestDto noteLikeRequestDto,
+														  @SessionAttribute(name = "loginMember",required = false)Member loginMember) {
+		// 로그인 여부 확인
+	    if (loginMember == null) {
+	        return ResponseEntity.status(403).body("User must be logged in to create a note.");
+	    }
+	    
 		log.info("call removeLike()");
 
-		// RequestDto에 noteId를 설정
+		// RequestDto에 noteId,memberId를 설정
 		noteLikeRequestDto.setNoteId(noteId);
-
+		Long memberId = loginMember.getId();
+		noteLikeRequestDto.setMemberId(memberId);
+		
 		// 그다음 noteLikeService의 removeLike호출 하여 noteLikeResponseDto를 생성
 		NoteLikeResponseDto noteLikeResponseDto = noteLikeService.removeLike(noteLikeRequestDto);
 
@@ -98,10 +115,11 @@ public class NoteLikeController {
 		return ResponseEntity.ok(noteLikeResponseDto);
 	}
 	
-	//getLikeStatus
+	//getLikeStatus : @SessionAttribute 추가하지 않음, 로그인하지 않아도 조회할수있도록
 	@GetMapping
-	public ResponseEntity<NoteLikeResponseDto> getLikeStatus(@PathVariable("noteId") Long noteId,
-	                                                         @RequestParam("memberId") Long memberId) {
+	public ResponseEntity<?> getLikeStatus(@PathVariable("noteId") Long noteId,
+	                                       @RequestParam("memberId") Long memberId) {
+		
 	    log.info("call getLikeStatus() for noteId: {} and memberId: {}", noteId, memberId);
 
 	    // NoteLikeService를 통해 좋아요 상태 확인
@@ -113,7 +131,7 @@ public class NoteLikeController {
 	}
 
 	
-	//getLikeCount
+	//getLikeCount : @SessionAttribute 추가하지 않음, 로그인하지 않아도 조회할수있도록
 	@GetMapping("/count")
 	public ResponseEntity<NoteLikeResponseDto> getLikeCount(@PathVariable("noteId") Long noteId) {
 
