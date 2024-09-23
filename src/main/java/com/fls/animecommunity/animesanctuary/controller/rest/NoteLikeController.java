@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fls.animecommunity.animesanctuary.dto.NoteLikeDto.NoteLikeRequestDto;
-import com.fls.animecommunity.animesanctuary.dto.NoteLikeDto.NoteLikeResponseDto;
+import com.fls.animecommunity.animesanctuary.dto.noteLikeDto.NoteLikeRequestDto;
+import com.fls.animecommunity.animesanctuary.dto.noteLikeDto.NoteLikeResponseDto;
 import com.fls.animecommunity.animesanctuary.service.interfaces.NoteLikeService;
 
 import jakarta.validation.Valid;

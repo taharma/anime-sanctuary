@@ -4,8 +4,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.fls.animecommunity.animesanctuary.dto.NoteLikeDto.NoteLikeRequestDto;
-import com.fls.animecommunity.animesanctuary.dto.NoteLikeDto.NoteLikeResponseDto;
+import com.fls.animecommunity.animesanctuary.dto.noteLikeDto.NoteLikeRequestDto;
+import com.fls.animecommunity.animesanctuary.dto.noteLikeDto.NoteLikeResponseDto;
 import com.fls.animecommunity.animesanctuary.model.member.Member;
 import com.fls.animecommunity.animesanctuary.model.note.Note;
 import com.fls.animecommunity.animesanctuary.model.noteLike.NoteLike;

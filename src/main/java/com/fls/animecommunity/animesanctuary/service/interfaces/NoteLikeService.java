@@ -1,7 +1,7 @@
 package com.fls.animecommunity.animesanctuary.service.interfaces;
 
-import com.fls.animecommunity.animesanctuary.dto.NoteLikeDto.NoteLikeRequestDto;
-import com.fls.animecommunity.animesanctuary.dto.NoteLikeDto.NoteLikeResponseDto;
+import com.fls.animecommunity.animesanctuary.dto.noteLikeDto.NoteLikeRequestDto;
+import com.fls.animecommunity.animesanctuary.dto.noteLikeDto.NoteLikeResponseDto;
 
 import jakarta.validation.Valid;
 
