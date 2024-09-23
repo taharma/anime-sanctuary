@@ -22,6 +22,10 @@ import com.fls.animecommunity.animesanctuary.repository.CommentRepository;
 import com.fls.animecommunity.animesanctuary.repository.MemberRepository;
 import com.fls.animecommunity.animesanctuary.repository.NoteRepository;
 import com.fls.animecommunity.animesanctuary.service.impl.CommentService;
+import com.fls.animecommunity.animesanctuary.service.impl.NotificationService;
+
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.never;
 
 class CommentServiceTest {
 
@@ -34,6 +38,9 @@ class CommentServiceTest {
     @Mock
     private NoteRepository noteRepository;
 
+    @Mock
+    private NotificationService notificationService;
+
     @InjectMocks
     private CommentService commentService;
 
@@ -43,28 +50,68 @@ class CommentServiceTest {
     }
 
     @Test
-    void addComment_shouldAddComment_whenValidRequestIsGiven() {
+    void addComment_shouldAddReply_whenParentCommentIdIsProvided() {
         Member member = new Member();
         member.setId(1L);
         member.setUsername("testUser");
         Note note = new Note();
         note.setId(1L);
-        Comment comment = new Comment();
-        comment.setId(2L);
-        comment.setMember(member);
-        comment.setNote(note);
-        comment.setContent("This is a comment.");
+        Comment parentComment = new Comment();
+        parentComment.setId(1L);
+        parentComment.setMember(member);
+        parentComment.setNote(note);
+
+        Comment reply = new Comment();
+        reply.setId(2L);
+        reply.setMember(member);
+        reply.setNote(note);
+        reply.setContent("This is a reply.");
+        reply.setParentComment(parentComment);
 
         when(memberRepository.findByUsername(anyString())).thenReturn(Optional.of(member));
         when(noteRepository.findById(anyLong())).thenReturn(Optional.of(note));
-        when(commentRepository.save(any(Comment.class))).thenReturn(comment);
+        when(commentRepository.findById(anyLong())).thenReturn(Optional.of(parentComment));
+        when(commentRepository.save(any(Comment.class))).thenReturn(reply);
 
-        Comment savedComment = commentService.addComment("testUser", 1L, "This is a comment.", null);
+        Comment savedReply = commentService.addComment("testUser", 1L, "This is a reply.", 1L);
 
-        assertNotNull(savedComment);
-        assertEquals("This is a comment.", savedComment.getContent());
-        assertEquals(member.getUsername(), savedComment.getMember().getUsername());
-        assertEquals(note.getId(), savedComment.getNote().getId());
+        assertNotNull(savedReply);
+        assertEquals("This is a reply.", savedReply.getContent());
+        assertEquals(parentComment.getId(), savedReply.getParentComment().getId());
+
+        // Verify that the notification service was called
+        verify(notificationService).sendNotification(any(Member.class), any(Comment.class), anyString());
+    }
+
+    @Test
+    void addComment_shouldNotAllowNestedReplies_whenParentCommentIdIsProvided() {
+        Member member = new Member();
+        member.setId(1L);
+        member.setUsername("testUser");
+        Note note = new Note();
+        note.setId(1L);
+        Comment parentComment = new Comment();
+        parentComment.setId(1L);
+        parentComment.setMember(member);
+        parentComment.setNote(note);
+
+        // Simulate that the parent comment is a reply itself (nested reply scenario)
+        Comment grandParentComment = new Comment();
+        grandParentComment.setId(2L);
+        parentComment.setParentComment(grandParentComment);
+
+        when(memberRepository.findByUsername(anyString())).thenReturn(Optional.of(member));
+        when(noteRepository.findById(anyLong())).thenReturn(Optional.of(note));
+        when(commentRepository.findById(anyLong())).thenReturn(Optional.of(parentComment));
+
+        try {
+            commentService.addComment("testUser", 1L, "This should not be allowed", 1L);
+        } catch (IllegalArgumentException e) {
+            assertEquals("Nested replies are not allowed", e.getMessage());
+        }
+
+        // Verify that the notification service was not called
+        verify(notificationService, never()).sendNotification(any(Member.class), any(Comment.class), anyString());
     }
 
     @Test
@@ -101,37 +148,6 @@ class CommentServiceTest {
         assertNotNull(comments);
         assertEquals(1, comments.size());
         assertEquals("This is a comment.", comments.get(0).getContent());
-    }
-
-    @Test
-    void addComment_shouldAddReply_whenParentCommentIdIsProvided() {
-        Member member = new Member();
-        member.setId(1L);
-        member.setUsername("testUser");
-        Note note = new Note();
-        note.setId(1L);
-        Comment parentComment = new Comment();
-        parentComment.setId(1L);
-        parentComment.setMember(member);
-        parentComment.setNote(note);
-
-        Comment reply = new Comment();
-        reply.setId(2L);
-        reply.setMember(member);
-        reply.setNote(note);
-        reply.setContent("This is a reply.");
-        reply.setParentComment(parentComment);
-
-        when(memberRepository.findByUsername(anyString())).thenReturn(Optional.of(member));
-        when(noteRepository.findById(anyLong())).thenReturn(Optional.of(note));
-        when(commentRepository.findById(anyLong())).thenReturn(Optional.of(parentComment));
-        when(commentRepository.save(any(Comment.class))).thenReturn(reply);
-
-        Comment savedReply = commentService.addComment("testUser", 1L, "This is a reply.", 1L);
-
-        assertNotNull(savedReply);
-        assertEquals("This is a reply.", savedReply.getContent());
-        assertEquals(parentComment.getId(), savedReply.getParentComment().getId());
     }
 
     @Test
