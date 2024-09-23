@@ -12,18 +12,16 @@ import com.fls.animecommunity.animesanctuary.repository.CommentRepository;
 import com.fls.animecommunity.animesanctuary.repository.MemberRepository;
 import com.fls.animecommunity.animesanctuary.repository.NoteRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class CommentService {
 
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final NoteRepository noteRepository;
-
-    public CommentService(CommentRepository commentRepository, MemberRepository memberRepository, NoteRepository noteRepository) {
-        this.commentRepository = commentRepository;
-        this.memberRepository = memberRepository;
-        this.noteRepository = noteRepository;
-    }
+    private final NotificationService notificationService;
 
     @Transactional
     public Comment addComment(String username, Long noteId, String content, Long parentCommentId) {
@@ -41,15 +39,20 @@ public class CommentService {
             Comment parentComment = commentRepository.findById(parentCommentId)
                 .orElseThrow(() -> new IllegalArgumentException("Parent comment not found"));
 
-            // 대댓글에 또 대댓글을 달 수 없도록 제한
+            // 중첩된 댓글이 있는지 확인 (Check any duplicated comment exist)
             if (parentComment.getParentComment() != null) {
-                throw new IllegalArgumentException("Cannot reply to a reply.");
+                throw new IllegalArgumentException("Nested replies are not allowed");
             }
+
             comment.setParentComment(parentComment);
+            
+            // 대댓글이 달린 경우 원 댓글 작성자에게 알림 전송 (Notify to parentComment author when detected reply)
+            notificationService.sendNotification(parentComment.getMember(), comment, "당신의 댓글에 답글이 달렸습니다.");
         }
 
         return commentRepository.save(comment);
     }
+
 
     public List<Comment> getCommentsByNoteId(Long noteId) {
         return commentRepository.findByNoteId(noteId);
