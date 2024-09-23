@@ -40,6 +40,11 @@ public class CommentService {
         if (parentCommentId != null) {
             Comment parentComment = commentRepository.findById(parentCommentId)
                 .orElseThrow(() -> new IllegalArgumentException("Parent comment not found"));
+
+            // 대댓글에 또 대댓글을 달 수 없도록 제한
+            if (parentComment.getParentComment() != null) {
+                throw new IllegalArgumentException("Cannot reply to a reply.");
+            }
             comment.setParentComment(parentComment);
         }
 
