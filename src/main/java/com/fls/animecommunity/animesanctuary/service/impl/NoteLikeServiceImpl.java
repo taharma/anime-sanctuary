@@ -6,11 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.fls.animecommunity.animesanctuary.dto.noteLikeDto.NoteLikeRequestDto;
-import com.fls.animecommunity.animesanctuary.dto.noteLikeDto.NoteLikeResponseDto;
 import com.fls.animecommunity.animesanctuary.model.member.Member;
 import com.fls.animecommunity.animesanctuary.model.note.Note;
 import com.fls.animecommunity.animesanctuary.model.noteLike.NoteLike;
+import com.fls.animecommunity.animesanctuary.model.noteLike.dto.NoteLikeRequestDto;
+import com.fls.animecommunity.animesanctuary.model.noteLike.dto.NoteLikeResponseDto;
 import com.fls.animecommunity.animesanctuary.repository.MemberRepository;
 import com.fls.animecommunity.animesanctuary.repository.NoteLikeRepository;
 import com.fls.animecommunity.animesanctuary.repository.NoteRepository;

@@ -2,9 +2,9 @@ package com.fls.animecommunity.animesanctuary.service.interfaces;
 
 import java.util.List;
 
-import com.fls.animecommunity.animesanctuary.dto.noteDto.NoteRequestsDto;
-import com.fls.animecommunity.animesanctuary.dto.noteDto.NoteResponseDto;
-import com.fls.animecommunity.animesanctuary.dto.noteDto.SuccessResponseDto;
+import com.fls.animecommunity.animesanctuary.model.note.dto.NoteRequestsDto;
+import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
+import com.fls.animecommunity.animesanctuary.model.note.dto.SuccessResponseDto;
 
 public interface NoteService {
 	//

@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
-import com.fls.animecommunity.animesanctuary.dto.noteLikeDto.NoteLikeRequestDto;
-import com.fls.animecommunity.animesanctuary.dto.noteLikeDto.NoteLikeResponseDto;
 import com.fls.animecommunity.animesanctuary.model.member.Member;
+import com.fls.animecommunity.animesanctuary.model.noteLike.dto.NoteLikeRequestDto;
+import com.fls.animecommunity.animesanctuary.model.noteLike.dto.NoteLikeResponseDto;
 import com.fls.animecommunity.animesanctuary.service.interfaces.NoteLikeService;
 
 import jakarta.validation.Valid;

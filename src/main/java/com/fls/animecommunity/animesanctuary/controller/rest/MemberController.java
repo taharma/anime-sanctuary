@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fls.animecommunity.animesanctuary.dto.memberDto.LoginRequest;
-import com.fls.animecommunity.animesanctuary.dto.memberDto.MemberRegisterDto;
-import com.fls.animecommunity.animesanctuary.dto.profileDto.UpdateProfileRequest;
+import com.fls.animecommunity.animesanctuary.dto.LoginRequest;
+import com.fls.animecommunity.animesanctuary.dto.MemberRegisterDto;
+import com.fls.animecommunity.animesanctuary.model.UpdateProfileRequest;
 import com.fls.animecommunity.animesanctuary.model.member.GenderType;
 import com.fls.animecommunity.animesanctuary.model.member.Member;
 import com.fls.animecommunity.animesanctuary.service.impl.MemberService;

@@ -1,4 +1,4 @@
-package com.fls.animecommunity.animesanctuary.dto.categoryDto;
+package com.fls.animecommunity.animesanctuary.model.category.dto;
 
 import lombok.Data;
 import lombok.Getter;

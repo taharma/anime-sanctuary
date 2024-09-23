@@ -15,10 +15,10 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.fls.animecommunity.animesanctuary.dto.noteDto.NoteRequestsDto;
-import com.fls.animecommunity.animesanctuary.dto.noteDto.NoteResponseDto;
 import com.fls.animecommunity.animesanctuary.model.category.Category;
 import com.fls.animecommunity.animesanctuary.model.member.Member;
+import com.fls.animecommunity.animesanctuary.model.note.dto.NoteRequestsDto;
+import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;

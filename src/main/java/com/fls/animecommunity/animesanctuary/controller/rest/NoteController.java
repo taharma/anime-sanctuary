@@ -1,9 +1,9 @@
 package com.fls.animecommunity.animesanctuary.controller.rest;
 
-import com.fls.animecommunity.animesanctuary.dto.noteDto.NoteRequestsDto;
-import com.fls.animecommunity.animesanctuary.dto.noteDto.NoteResponseDto;
-import com.fls.animecommunity.animesanctuary.dto.noteDto.SuccessResponseDto;
 import com.fls.animecommunity.animesanctuary.model.note.Note;
+import com.fls.animecommunity.animesanctuary.model.note.dto.NoteRequestsDto;
+import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
+import com.fls.animecommunity.animesanctuary.model.note.dto.SuccessResponseDto;
 import com.fls.animecommunity.animesanctuary.service.impl.NoteServiceImpl;
 import com.fls.animecommunity.animesanctuary.service.interfaces.NoteService;
 
