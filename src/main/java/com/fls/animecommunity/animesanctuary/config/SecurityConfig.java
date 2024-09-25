@@ -1,5 +1,6 @@
 package com.fls.animecommunity.animesanctuary.config;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.springframework.context.annotation.Bean;
@@ -21,22 +22,29 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.fls.animecommunity.animesanctuary.model.member.Member;
 import com.fls.animecommunity.animesanctuary.repository.MemberRepository;
+import com.fls.animecommunity.animesanctuary.repository.NoteRepository;
 import com.fls.animecommunity.animesanctuary.service.impl.MemberService;
+
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 public class SecurityConfig {
 
     private final MemberRepository memberRepository;
+    private final NoteRepository noteRepository;
 
-    // 생성자를 통해 MemberRepository를 주입받음
-    public SecurityConfig(MemberRepository memberRepository) {
+    // 생성자를 통해 MemberRepository + NoteRepository를 주입받음
+    public SecurityConfig(MemberRepository memberRepository, NoteRepository noteRepository) {
         this.memberRepository = memberRepository;
+        this.noteRepository = noteRepository;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
             	// 회원가입 및 로그인은 인증 없이 접근 가능
                 .requestMatchers("/api/members/register", "/api/members/login").permitAll()
@@ -89,8 +97,8 @@ public class SecurityConfig {
             String email = oAuth2User.getAttribute("email");
             String name = oAuth2User.getAttribute("name");
 
-            // Gender와 Birth 기본값을 설정한 생성자를 사용
-            MemberService memberService = new MemberService(memberRepository, passwordEncoder());
+            // MemberService 생성 시 NoteRepository도 전달
+            MemberService memberService = new MemberService(memberRepository, noteRepository, passwordEncoder());
             Member member = memberService.registerOrLoginWithSocial(name, email, provider, providerId);
 
             return new DefaultOAuth2User(
@@ -101,3 +109,5 @@ public class SecurityConfig {
         };
     }
 }
+
+

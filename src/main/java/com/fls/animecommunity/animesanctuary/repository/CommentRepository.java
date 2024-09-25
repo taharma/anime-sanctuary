@@ -8,10 +8,7 @@ import java.util.List;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-
     List<Comment> findByNoteId(Long noteId);
-
-    void deleteByIdAndMemberId(Long id, Long memberId);
-
-	boolean existsByIdAndMemberId(Long commentId, Long memberId);
+    List<Comment> findByMemberId(Long memberId);
+    List<Comment> findByParentCommentId(Long parentCommentId);
 }

@@ -1,9 +1,9 @@
-package com.fls.animecommunity.animesanctuary.model.comment;
+package com.fls.animecommunity.animesanctuary.model.notification;
 
 import java.time.LocalDateTime;
 
+import com.fls.animecommunity.animesanctuary.model.comment.Comment;
 import com.fls.animecommunity.animesanctuary.model.member.Member;
-import com.fls.animecommunity.animesanctuary.model.note.Note;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,8 +19,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "comments")
-public class Comment {
+@Table(name = "notifications")
+public class Notification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,19 +28,28 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    private Member recipient;
 
     @ManyToOne
-    @JoinColumn(name = "note_id", nullable = false)
-    private Note note;
-
-    @ManyToOne
-    @JoinColumn(name = "parent_comment_id")
-    private Comment parentComment;  // For replies
+    @JoinColumn(name = "comment_id", nullable = false)
+    private Comment comment;
 
     @Column(nullable = false)
-    private String content;
+    private String message;
 
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "read_status", nullable = false)
+    private boolean readStatus = false;
+    
+    // 알림 생성자
+    public Notification(Member recipient, Comment comment, String message) {
+        this.recipient = recipient;
+        this.comment = comment;
+        this.message = message;
+    }
+
+    // 기본 생성자
+    public Notification() {}
 }
