@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.fls.animecommunity.animesanctuary.model.comment.Comment;
 import com.fls.animecommunity.animesanctuary.service.impl.CommentService;
 
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class CommentController {
 
     private final CommentService commentService;
+
     @PostMapping("/add")
     public ResponseEntity<Comment> addComment(@RequestParam Long noteId,
                                               @RequestParam String content,
