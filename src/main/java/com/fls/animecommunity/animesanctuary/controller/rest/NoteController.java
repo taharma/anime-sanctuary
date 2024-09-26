@@ -1,6 +1,5 @@
 package com.fls.animecommunity.animesanctuary.controller.rest;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -13,9 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fls.animecommunity.animesanctuary.model.member.Member;
@@ -36,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
  * 주요 메소드 : createNote, getNotes, getNote, updateNote, deleteNote
  * 파라미터 : NoteResponseDto, NoteRequestsDto, SuccessResponseDto
  */
-@CrossOrigin(origins = {"http://localhost:9000", "http://127.0.0.1:5501"}) // 클라이언트의 도메인을 명시
+@CrossOrigin(origins = "http://localhost:9000") // 클라이언트의 도메인 명시
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/notes")
@@ -45,28 +41,25 @@ public class NoteController {
 
     // 의존성 주입
     private final NoteService noteService;
-    
-    //create Note
-    @PostMapping(consumes = { "multipart/form-data" })
-    public ResponseEntity<?> createNote(@RequestPart("note") @Valid NoteRequestsDto requestsDto,
-                                        @RequestPart("image") MultipartFile image,
-                                        BindingResult result) {
-        log.info("Received Note request with title: {} and contents: {}", requestsDto.getTitle(), requestsDto.getContents());
+    private final MemberService memberService;
 
+    // 노트 생성
+    @PostMapping
+    public ResponseEntity<?> createNote(@Valid @RequestBody NoteRequestsDto requestsDto
+                                        ,BindingResult result) {
+        log.info("createNote 실행");
+        log.info("Received Note request with title: {} and contents: {}", requestsDto.getTitle(), requestsDto.getContents());
+        
+        // 유효성 검사 오류 확인
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body(result.getAllErrors());
         }
-
-        try {
-            NoteResponseDto responseDto = noteService.createNoteWithImage(requestsDto, image);
-            return ResponseEntity.ok(responseDto);
-        } catch (IOException e) {
-            log.error("Error occurred while uploading the image: {}", e.getMessage());
-            return ResponseEntity.status(500).body("Image upload failed: " + e.getMessage());
-        }
+        
+        NoteResponseDto responseDto = noteService.createNote(requestsDto);
+        return ResponseEntity.ok(responseDto);
     }
 
-    //list Note
+    // 노트 목록 조회
     @GetMapping
     public ResponseEntity<List<NoteResponseDto>> getNotes() {
         //log.info("getNotes 실행");
