@@ -1,4 +1,4 @@
-package com.fls.animecommunity.animesanctuary.controller.rest;
+package com.fls.animecommunity.animesanctuary.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 

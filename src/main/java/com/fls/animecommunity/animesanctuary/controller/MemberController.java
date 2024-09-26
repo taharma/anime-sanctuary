@@ -1,4 +1,4 @@
-package com.fls.animecommunity.animesanctuary.controller.rest;
+package com.fls.animecommunity.animesanctuary.controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -101,7 +101,9 @@ public class MemberController {
 			// 세션 생성
 			log.info("in if member : {} ", member);
 			request.getSession().setAttribute("user", member);
-			return ResponseEntity.ok(member);
+			
+			// 성공 메시지 반환
+	        return ResponseEntity.ok("Login Success! Welcome, " + member.getUsername());
 		} else {
 			log.info("in else member : {} ", member);
 			return ResponseEntity.status(401).body("Invalid username/email or password");
