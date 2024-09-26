@@ -14,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import lombok.Data;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
@@ -30,22 +31,31 @@ public class Note extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 제목
     @Column(nullable = false)
     private String title;
 
-    // 내용
     @Column(nullable = false)
     private String contents;
 
-    // 조회수
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;  // 작성자를 나타내는 필드 추가
+
     private Long hit;
 
-    // 카테고리
     @ManyToOne
-    @JoinColumn(name = "categoryId", nullable = true)
+    @JoinColumn(name = "category_id", nullable = true)
     private Category category;
+    
+    private String imagePath;  // 이미지 경로 추가
 
+    public Note(String title, String contents, Member member) {
+        this.title = title;
+        this.contents = contents;
+        this.member = member;
+    }
+
+    public void update(NoteRequestsDto requestsDto) {
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
@@ -71,19 +81,11 @@ public class Note extends Timestamped {
         this.title = requestsDto.getTitle();
         this.contents = requestsDto.getContents();
         if (requestsDto.getCategoryId() != null) {
-            // Category를 가져와서 설정하는 로직 추가 (예: CategoryService를 사용해 가져오기)
-            // this.category = categoryService.getCategoryById(requestsDto.getCategoryId());
+            // 필요 시 카테고리 업데이트 로직 추가
         }
     }
-
-    public void update(NoteRequestsDto requestsDto) {
-        setContents(requestsDto.getContents());
-        setTitle(requestsDto.getTitle());
-        if (requestsDto.getCategoryId() != null) {
-            // Category를 가져와서 설정하는 로직 추가 (예: CategoryService를 사용해 가져오기)
-            // this.category = categoryService.getCategoryById(requestsDto.getCategoryId());
-        } else {
-            this.category = null;
-        }
+    
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }
