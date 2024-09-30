@@ -10,8 +10,17 @@ import java.time.LocalDate;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
+
+/*
+ * Regex : 
+ * 기본적으로 다 필수 입력
+ * username(id) : 영어 대문자 소문자 숫자 허용 , 5-20자 
+ * password : 영어 대문자 소문자 특수기호 , 8-72 , 영어 소문자, 득수문자 ,숫자 적어도 하나 포함 , 대문자는 필수아님
+ * 
+ */
 
 @Data
 @AllArgsConstructor
@@ -40,6 +49,7 @@ public class MemberRegisterDto {
     @Pattern(regexp = "^(MALE|FEMALE|OTHER)$", message = "성별은 MALE, FEMALE, OTHER 중 하나여야 합니다.")
     private String gender;
 	
+	@NotNull(message = "생년월일은 필수 입력값입니다.")
 	@Past(message = "생년월일은 과거의 날짜여야 합니다.")
     private LocalDate birth;
 }
