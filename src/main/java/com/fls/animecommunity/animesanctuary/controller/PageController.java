@@ -1,4 +1,4 @@
-package com.fls.animecommunity.animesanctuary.controller.rest;
+package com.fls.animecommunity.animesanctuary.controller;
 
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
 import com.fls.animecommunity.animesanctuary.service.interfaces.NoteService;

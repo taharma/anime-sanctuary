@@ -35,7 +35,7 @@ public class Note extends Timestamped {
     private String title;
 
     // 내용
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String contents;
 
     // 조회수
