@@ -46,28 +46,25 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-            	// 회원가입 및 로그인은 인증 없이 접근 가능
-                .requestMatchers("/api/members/register", "/api/members/login").permitAll()
-                // 그 외의 /api/members/** 경로는 인증된 사용자만 접근 가능
+                // 회원가입과 로그인 경로는 인증 없이 접근 가능
+                .requestMatchers("/api/members/register", "/api/members/login","/api/members/logout","/api/categories","/api/admin/categories","/api/notes").permitAll()
+                // OAuth2 경로는 인증 필요
                 .requestMatchers("/api/members/**").authenticated()
-                // 노트 조회와 검색은 GET 요청에 한해서 인증 없이 접근 가능
                 .requestMatchers(HttpMethod.GET, "/api/notes", "/api/notes/search").permitAll()
-                // GET 메소드에 대해서만 노트 조회 허용, 그 외 POST, PUT, DELETE 등은 인증 필요
-                .requestMatchers("/api/notes/**").authenticated()  // 노트 생성, 수정, 삭제 등은 인증 필요
-
-                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**").permitAll()  // Swagger 관련 URL 접근 허용
-                .anyRequest().authenticated()  // 나머지 모든 요청은 인증 필요
+                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**").permitAll()
+                .anyRequest().authenticated()
             )
             .oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(userInfo -> userInfo
                     .userService(this.oauth2UserService())
                 )
-                .defaultSuccessUrl("http://localhost:5501/index.html")  // 성공 후 리다이렉트할 URL
-                .failureUrl("http://localhost:5501/login.html")  // 로그인 실패 시 리다이렉트할 URL
+                .defaultSuccessUrl("http://localhost:5501/index.html")
+                .failureUrl("http://localhost:5501/login.html")
             );
 
         return http.build();
     }
+
     
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

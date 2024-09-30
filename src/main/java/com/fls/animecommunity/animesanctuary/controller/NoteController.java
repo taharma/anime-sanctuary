@@ -1,6 +1,7 @@
-package com.fls.animecommunity.animesanctuary.controller.rest;
+package com.fls.animecommunity.animesanctuary.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -52,7 +53,12 @@ public class NoteController {
         
         // 유효성 검사 오류 확인
         if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(result.getAllErrors());
+            // 오류 메시지를 리스트로 변환
+            List<String> errorMessages = result.getAllErrors().stream()
+                .map(error -> error.getDefaultMessage())
+                .collect(Collectors.toList());
+
+            return ResponseEntity.badRequest().body(errorMessages); // 에러 메시지를 JSON 배열로 반환
         }
         
         NoteResponseDto responseDto = noteService.createNote(requestsDto);
@@ -82,8 +88,13 @@ public class NoteController {
                                         ,BindingResult result) throws Exception {
         //log.info("updateNote 실행");
         // 유효성 검사 오류 확인
-        if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(result.getAllErrors());
+    	if (result.hasErrors()) {
+            // 오류 메시지를 리스트로 변환
+            List<String> errorMessages = result.getAllErrors().stream()
+                .map(error -> error.getDefaultMessage())
+                .collect(Collectors.toList());
+
+            return ResponseEntity.badRequest().body(errorMessages); // 에러 메시지를 JSON 배열로 반환
         }
         
         NoteResponseDto updateNote = noteService.updateNote(id, requestsDto);
@@ -106,7 +117,7 @@ public class NoteController {
         return ResponseEntity.ok(results);
     }
 
-    // 노트 저장
+    // 노트 저장 (bookmark)
     @PostMapping("/save/{noteId}")
     public ResponseEntity<?> saveNote(@PathVariable("noteId") Long noteId, HttpServletRequest request) {
         Member member = (Member) request.getSession().getAttribute("user");

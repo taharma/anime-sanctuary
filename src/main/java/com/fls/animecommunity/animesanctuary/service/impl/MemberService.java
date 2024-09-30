@@ -35,13 +35,18 @@ public class MemberService {
         this.noteRepository = noteRepository;
         this.passwordEncoder = passwordEncoder;
     }
-
+    
+    //register
     @Transactional
     public Member register(Member member) {
         if (memberRepository.existsByUsername(member.getUsername())) {
             throw new IllegalArgumentException("Username already exists");
         }
-
+        
+        if (memberRepository.existsByEmail(member.getEmail())) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+        
         if (member.getPassword() == null || member.getPassword().isEmpty()) {
             throw new IllegalArgumentException("Password cannot be null or empty");
         }

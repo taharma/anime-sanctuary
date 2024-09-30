@@ -1,6 +1,6 @@
 package com.fls.animecommunity.animesanctuary.controller;
 
-import com.fls.animecommunity.animesanctuary.controller.rest.PageController;
+import com.fls.animecommunity.animesanctuary.controller.PageController;
 import com.fls.animecommunity.animesanctuary.model.note.dto.NoteResponseDto;
 import com.fls.animecommunity.animesanctuary.service.interfaces.NoteService;
 import org.junit.jupiter.api.BeforeEach;
