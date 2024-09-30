@@ -48,6 +48,7 @@ dependencies {
 
 	// test
 	testImplementation 'org.mockito:mockito-core:5.13.0'
+	testImplementation 'org.mockito:mockito-junit-jupiter' // 테스트에 필요한 패키지!
 
 }
 
