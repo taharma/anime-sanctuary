@@ -25,9 +25,6 @@ import com.fls.animecommunity.animesanctuary.repository.MemberRepository;
 import com.fls.animecommunity.animesanctuary.repository.NoteRepository;
 import com.fls.animecommunity.animesanctuary.service.impl.MemberService;
 
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.cors.CorsConfigurationSource;
-
 @Configuration
 public class SecurityConfig {
 
@@ -69,7 +66,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:5501"); // 허용할 도메인 추가
+        configuration.setAllowedOriginPatterns(Collections.singletonList("*")); // 허용할 도메인 추가
         configuration.addAllowedMethod("*"); // 모든 HTTP 메소드 허용
         configuration.addAllowedHeader("*"); // 모든 헤더 허용
         configuration.setAllowCredentials(true); // 인증 정보 허용
