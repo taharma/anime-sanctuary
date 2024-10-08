@@ -19,8 +19,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOriginPatterns("http://localhost:9000")  // 프론트엔드 URL로 교체
+        registry.addMapping("/api/**")
+                .allowedOriginPatterns("http://localhost:5501")  // 프론트엔드 URL로 교체
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowCredentials(true)
                 .allowedHeaders("*");
