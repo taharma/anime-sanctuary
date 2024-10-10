@@ -38,5 +38,5 @@ public class NoteRequestsDto {
 
     private Long categoryId;
 
-    private Long memberId;
+    private String memberId;
 }

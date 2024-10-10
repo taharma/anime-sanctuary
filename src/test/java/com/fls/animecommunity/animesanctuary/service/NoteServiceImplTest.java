@@ -70,7 +70,7 @@ class NoteServiceImplTest {
         requestDto.setTitle("Test Note");
         requestDto.setContents("Test Contents");
         requestDto.setCategoryId(1L);
-        requestDto.setMemberId(1L);  // 로그인된 사용자 ID 설정
+//        requestDto.setMemberId(1L);  // 로그인된 사용자 ID 설정
 
         // 카테고리 목 객체 생성 및 반환
         Category category = new Category();
@@ -103,7 +103,7 @@ class NoteServiceImplTest {
         NoteRequestsDto requestDto = new NoteRequestsDto();
         requestDto.setTitle("Updated Title");
         requestDto.setContents("Updated Contents");
-        requestDto.setMemberId(2L);  // 다른 사용자 ID 설정
+//        requestDto.setMemberId(2L);  // 다른 사용자 ID 설정
 
         // 멤버 목 객체 생성 및 반환 (로그인된 사용자)
         Member member = new Member();
