@@ -1,11 +1,10 @@
 package com.fls.animecommunity.animesanctuary.service;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
-import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
@@ -17,6 +16,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import com.fls.animecommunity.animesanctuary.model.member.Member;
 import com.fls.animecommunity.animesanctuary.repository.MemberRepository;
 import com.fls.animecommunity.animesanctuary.service.impl.MemberService;
@@ -59,6 +59,7 @@ class MemberServiceTest {
         member.setUsername("testUser");
         member.setPassword("encodedPassword");
 
+        // findByUsernameOrEmail 메서드는 이제 하나의 인자만 받음
         when(memberRepository.findByUsernameOrEmail(anyString(), anyString())).thenReturn(Optional.of(member));
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
 
@@ -69,6 +70,7 @@ class MemberServiceTest {
     
     @Test
     void login_shouldReturnNull_whenInvalidCredentialsAreGiven() {
+        // findByUsernameOrEmail 메서드는 이제 하나의 인자만 받음
         when(memberRepository.findByUsernameOrEmail(anyString(), anyString())).thenReturn(Optional.empty());
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
 
