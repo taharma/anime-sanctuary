@@ -24,6 +24,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorizeRequests -> 
                 authorizeRequests
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // OPTIONS 메서드는 모두 허용
+                    .requestMatchers(HttpMethod.DELETE, "/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/**").permitAll()
                     .requestMatchers("/", "/login**", "/error**", "/api/members/**","/api/notes","/api/notes/{noteId}","/api/categories","api/admin/categories","api/admin/categories/{categoryId}").permitAll() // 로그인, 회원가입 등 공용 경로 허용
                     .anyRequest().authenticated() // 나머지는 인증 필요
             );
