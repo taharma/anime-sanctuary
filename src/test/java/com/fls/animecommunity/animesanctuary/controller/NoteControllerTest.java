@@ -38,7 +38,7 @@ class NoteControllerTest {
         NoteRequestsDto requestDto = new NoteRequestsDto();
         requestDto.setTitle("Test Note");
         requestDto.setContents("Test Contents");
-//        requestDto.setMemberId(1L);  // Logged-in user ID
+        requestDto.setMemberId(1L);  // Logged-in user ID
 
         NoteResponseDto responseDto = new NoteResponseDto();
 
