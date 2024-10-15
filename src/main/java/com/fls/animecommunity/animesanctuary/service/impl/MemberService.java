@@ -58,8 +58,17 @@ public class MemberService {
     //login
     public Member login(String usernameOrEmail, String password) {
         Optional<Member> member = memberRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
+        return member.filter(m -> passwordEncoder.matches(password, m.getPassword())).orElse(null);
+    }
+    
+
+    // 로그인 검증 메서드
+    public Long validateLogin(String usernameOrEmail, String password) {
+        Optional<Member> member = memberRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
+        
         return member.filter(m -> passwordEncoder.matches(password, m.getPassword()))
-                     .orElse(null);
+                    .map(Member::getId)
+                    .orElse(null); // 로그인 실패 시 null 반환
     }
 
     @Transactional

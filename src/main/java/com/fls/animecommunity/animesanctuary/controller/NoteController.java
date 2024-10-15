@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
  * 주요 메소드 : createNote, getNotes, getNote, updateNote, deleteNote
  * 파라미터 : NoteResponseDto, NoteRequestsDto, SuccessResponseDto
  */
-@CrossOrigin(origins = "http://localhost:9000") // 클라이언트의 도메인 명시
+// @CrossOrigin(origins = { "http://localhost:9000/", "http://127.0.0.1:5501" }) // 클라이언트의 도메인 명시
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/notes")
