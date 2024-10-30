@@ -4,6 +4,13 @@
 
 ORIGINAL : https://github.com/Five-Lights-Studio/anime-sanctuary
 
+| 担当者      | 作業内容                                          |
+| ----------- | ------------------------------------------------ |
+| キム・ジョンワン      | Nginx 実装、Docker 実装、CI/CD 実装               |
+| ペ・ジンヒ   |                  |
+| ウギボム   |          |
+| チョン・ジュヨン   |        |
+
 
 # Anime Sanctuary
 
