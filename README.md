@@ -4,7 +4,7 @@
 
 ORIGINAL : https://github.com/Five-Lights-Studio/anime-sanctuary
 
-| 担当者      | 作業内容                                          |
+| 担当者      | 高度化作業内容                                          |
 | ----------- | ------------------------------------------------ |
 | [キム・ジョンワン](https://github.com/mireu-san)      | Nginx、Docker、CI/CDの実装               |
 | [ペ・ジンヒ]()   |                  |
