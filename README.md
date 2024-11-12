@@ -12,6 +12,7 @@ ORIGINAL : https://github.com/Five-Lights-Studio/anime-sanctuary
 | [チョン・ジュヨン]()   |        |
 
 
+
 # Anime Sanctuary
 
 **Anime Sanctuary** は、Five Lights Studio によって開発された、アーティストとファンが交流できるコミュニティプラットフォームです。RESTController をベースに、高速かつ柔軟な API サービスを提供し、テストコードと簡易 CI を通じて機能の無欠性を保証します。
