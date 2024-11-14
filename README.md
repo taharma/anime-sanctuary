@@ -8,7 +8,6 @@ ORIGINAL : https://github.com/Five-Lights-Studio/anime-sanctuary
 | ----------- | ------------------------------------------------ |
 | [キム・ジョンワン](https://github.com/mireu-san) & ウギボム| Nginx、Docker、CI/CDの実装               |
 | [ペ・ジンヒ]()   |                  |
-| [ウギボム]()   |          |
 | [チョン・ジュヨン]()   |        |
 
 
