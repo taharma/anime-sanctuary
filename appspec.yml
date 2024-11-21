@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source:  /
-    destination: /home/ec2-user/webservice/step2/userservice/
+    destination: /home/ec2-user/webservice/step2/animesanctuary/
     overwrite: yes
 
 permissions:
